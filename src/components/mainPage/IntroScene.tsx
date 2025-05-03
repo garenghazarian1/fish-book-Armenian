@@ -21,7 +21,7 @@ export default function IntroScene() {
 
       <div className={styles.fishArea}>
         <motion.img
-          src="/fish/happy.png"
+          src="/fishBlue/happy.png"
           alt="Ուրախ ձուկ"
           className={styles.fish}
           initial={{ x: "-100vw" }}
@@ -29,14 +29,15 @@ export default function IntroScene() {
           transition={{ type: "spring", stiffness: 50, delay: 0.5 }}
         />
         <motion.img
-          src="/fish/surprised.png"
-          alt="Զարմացած ձուկ"
+          src="/fishBlue/angry.png"
+          alt="Բարկացած ձուկ"
           className={styles.fishReverse}
           initial={{ x: "100vw" }}
           animate={{ x: "0" }}
           transition={{ type: "spring", stiffness: 50, delay: 0.8 }}
         />
       </div>
+
       <footer className={styles.footer}>
         Ստեղծվել է Կարէն Ղազարեանի եւ Նաիրա Պետրոսյանի կողմից
       </footer>

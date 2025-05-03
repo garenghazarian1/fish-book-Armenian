@@ -1,50 +1,80 @@
 .introWrapper {
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
-  background: linear-gradient(to bottom, #cceeff, #99ddff);
+  background-color: var(--background);
+  color: var(--foreground);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   overflow: hidden;
+  padding: 1.5rem 1rem;
   position: relative;
+  box-sizing: border-box;
 }
 
 .titleContainer {
   z-index: 2;
-  padding: 1rem;
-  max-width: 800px;
+  max-width: 90%;
+  margin-bottom: 2rem;
 }
 
 .title {
-  font-size: 2.5rem;
-  color: #003366;
-  margin-bottom: 1rem;
-  font-family: "Noto Sans Armenian", sans-serif;
+  font-size: 1.8rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  background: linear-gradient(90deg, #ff4d4d, #ffaa00, #00ccff, #cc66ff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientMove 5s ease infinite;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .subtitle {
-  font-size: 1.2rem;
-  color: #003366;
-  font-family: "Noto Sans Armenian", sans-serif;
+  font-size: 1rem;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  background: linear-gradient(90deg, #00ff99, #3399ff, #ff66cc);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientMove 6s ease infinite;
+  line-height: 1.6;
+  margin-top: 0.5rem;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .fishArea {
   position: absolute;
-  bottom: 10%;
+  bottom: 8%;
   width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 0 5%;
   pointer-events: none;
+  z-index: 1;
 }
 
 .fish,
 .fishReverse {
-  width: 100px;
+  width: 80px;
   height: auto;
   opacity: 0.9;
+  transition: transform 0.3s ease;
 }
 
 .fishReverse {
@@ -53,11 +83,58 @@
 
 .footer {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: 1.2rem;
   width: 100%;
   text-align: center;
-  font-size: 1rem;
-  color: #003366;
-  font-family: "Noto Sans Armenian", sans-serif;
-  opacity: 0.8;
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: #ffaa00; /* Golden yellow for author credit */
+  opacity: 0.9;
+  padding: 0 1rem;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* ========== RESPONSIVE STYLES ========== */
+
+@media (min-width: 600px) {
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+
+  .fish,
+  .fishReverse {
+    width: 100px;
+  }
+
+  .footer {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .title {
+    font-size: 2.8rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+  }
+
+  .fish,
+  .fishReverse {
+    width: 120px;
+  }
+
+  .footer {
+    font-size: 1.1rem;
+  }
+
+  .titleContainer {
+    max-width: 800px;
+  }
 }
