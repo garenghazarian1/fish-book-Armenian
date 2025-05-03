@@ -1,0 +1,63 @@
+.introWrapper {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(to bottom, #cceeff, #99ddff);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.titleContainer {
+  z-index: 2;
+  padding: 1rem;
+  max-width: 800px;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #003366;
+  margin-bottom: 1rem;
+  font-family: "Noto Sans Armenian", sans-serif;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #003366;
+  font-family: "Noto Sans Armenian", sans-serif;
+}
+
+.fishArea {
+  position: absolute;
+  bottom: 10%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5%;
+  pointer-events: none;
+}
+
+.fish,
+.fishReverse {
+  width: 100px;
+  height: auto;
+  opacity: 0.9;
+}
+
+.fishReverse {
+  transform: scaleX(-1);
+}
+
+.footer {
+  position: absolute;
+  bottom: 1.5rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+  color: #003366;
+  font-family: "Noto Sans Armenian", sans-serif;
+  opacity: 0.8;
+}
