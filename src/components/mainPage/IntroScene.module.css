@@ -1,57 +1,45 @@
 /* ================================
-   🌊 Layout
-================================== */
+🌊 Base Layout
+================================ */
 .introWrapper {
+  height: 100vh;
   min-height: 100vh;
-  width: 100%;
-  background-color: var(--background);
-  color: var(--foreground);
+  width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  overflow: hidden;
-  padding: 1.5rem 1rem;
-  position: relative;
+  background-color: var(--background);
+  color: var(--foreground);
   box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
 }
 
 .titleContainer {
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   z-index: 2;
-  max-width: 90%;
-  margin-bottom: 2rem;
 }
 
 /* ================================
-     ✨ Title Animation + Bubbles
-  ================================== */
+  ✨ Animated Title & Bubbles
+  ================================ */
 .title {
-  position: relative;
-  font-family: var(--font-cartoon);
-  font-weight: 400;
-  font-size: clamp(2rem, 6vw, 5rem);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
-  text-align: center;
+  gap: 1rem;
+  font-family: var(--font-cartoon);
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: 400;
   cursor: pointer;
-}
-
-.title::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-/* Bubble behavior */
-.title:hover .bubble,
-.title:active .bubble {
-  opacity: 1;
-  transform: scale(1);
-  animation: popBubble 1.2s ease-out forwards;
+  text-align: center;
 }
 
 .bubble {
@@ -61,12 +49,17 @@
   border-radius: 50%;
   background: var(--bubble-mid);
   opacity: 0;
-  pointer-events: none;
   transform: scale(0.5);
-  animation: none;
+  pointer-events: none;
 }
 
-/* Bubbles fly outward */
+.title:hover .bubble,
+.title:active .bubble {
+  opacity: 1;
+  transform: scale(1);
+  animation: popBubble 1.2s ease-out forwards;
+}
+
 @keyframes popBubble {
   0% {
     opacity: 1;
@@ -79,23 +72,22 @@
 }
 
 /* ================================
-     🎨 Word Animations & Gradients
-  ================================== */
+  🎨 Word Animations & Gradients
+  ================================ */
 .wordRed,
 .wordBlue,
 .wordOrange {
   display: inline-block;
   font-weight: 700;
+  line-height: 1.2;
   background-clip: text;
   color: transparent;
-  line-height: 1.2;
   background-size: 500% 500%;
   background-repeat: no-repeat;
   animation: floatBreathe 3.5s ease-in-out infinite,
     gradientShift 3s ease-in-out infinite;
 }
 
-/* Individual colors from variables */
 .wordRed {
   background-image: linear-gradient(
     90deg,
@@ -124,7 +116,6 @@
   animation-delay: 0.4s, 0.6s;
 }
 
-/* Floating animation */
 @keyframes floatBreathe {
   0% {
     transform: translateY(0);
@@ -143,7 +134,6 @@
   }
 }
 
-/* Gradient shift for shimmer */
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;
@@ -157,21 +147,18 @@
 }
 
 /* ================================
-     💬 Subtitle
-  ================================== */
+  💬 Subtitle
+  ================================ */
 .subtitle {
-  display: inline-block;
   font-family: var(--font-sans);
   font-weight: 400;
   font-size: clamp(1rem, 2.5vw, 1.4rem);
   color: var(--blue-light);
   line-height: 1.6;
-  margin-top: 0.5rem;
   text-align: center;
-  text-shadow: 0 0 6px var(--bubble-shadow),
-    1px 1px 2px var(--text-glow-dark, rgba(0, 0, 0, 0.2));
-  white-space: pre-wrap;
+  text-shadow: 0 0 6px var(--bubble-shadow), 1px 1px 2px rgba(0, 0, 0, 0.2);
   pointer-events: none;
+  white-space: pre-wrap;
 }
 
 .letter {
@@ -181,61 +168,29 @@
 }
 
 /* ================================
-     🐟 Fish Images
-  ================================== */
-.fishArea {
-  position: absolute;
-  bottom: 8%;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 5%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.fish,
-.fishReverse {
-  width: clamp(60px, 10vw, 120px);
-  height: auto;
-  opacity: 0.9;
-  transition: transform 0.3s ease;
-}
-
-.fishReverse {
-  transform: scaleX(-1);
-}
+  🐟 Fish Area (with 3D support)
+  ================================ */
 
 /* ================================
-     👣 Footer
-  ================================== */
+  👣 Footer
+  ================================ */
 .footer {
-  position: absolute;
-  bottom: 1.2rem;
-  width: 100%;
-  text-align: center;
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
   font-family: var(--font-sans);
   font-weight: 600;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
   color: var(--orange-shiny);
+  text-align: center;
+  padding: 1rem;
   opacity: 0.9;
-  padding: 0 1rem;
-  text-shadow: 1px 1px 1px var(--text-glow-dark, rgba(0, 0, 0, 0.2));
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 /* ================================
-     📱 Responsive
-  ================================== */
+  📱 Responsive (optional fine-tune)
+  ================================ */
 @media (max-width: 600px) {
-  .title {
-    font-size: 2.2rem;
-  }
   .subtitle {
     font-size: 1.1rem;
-  }
-  .fish,
-  .fishReverse {
-    width: 100px;
   }
   .footer {
     font-size: 1rem;
@@ -243,47 +198,10 @@
 }
 
 @media (max-width: 900px) {
-  .title {
-    font-size: 4rem;
-  }
   .subtitle {
     font-size: 0.8rem;
   }
-  .fish,
-  .fishReverse {
-    width: 120px;
-  }
   .footer {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
-  .titleContainer {
-    max-width: 800px;
-  }
-}
-
-.fishArea {
-  position: absolute;
-  bottom: 8%;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 5%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.fish {
-  width: 150px;
-  height: 150px;
-  pointer-events: none;
-}
-
-.fishReverse {
-  width: 100px;
-  height: auto;
-  transform: scaleX(-1);
-  opacity: 0.9;
-  pointer-events: none;
-  transition: transform 0.3s ease;
 }

@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { motion } from "framer-motion";
-import BubbleBurst from "./BubbleBurst/BubbleBurst";
+import BubbleBurst from "../BubbleBurst/BubbleBurst";
 import styles from "./IntroScene.module.css";
+import FishModel from "@/components/FishModel/FishModel";
+import { Canvas } from "@react-three/fiber";
 
 export default function IntroScene() {
   const [burstKey, setBurstKey] = useState(0);
@@ -58,8 +60,8 @@ export default function IntroScene() {
           onPointerEnter={handleHover}
           onPointerLeave={handleLeave}
         >
-          <span className={styles.wordRed}>Սկսենք</span>{" "}
-          <span className={styles.wordBlue}>հույզերի</span>{" "}
+          <span className={styles.wordRed}>Սկսենք</span>
+          <span className={styles.wordBlue}>հույզերի</span>
           <span className={styles.wordOrange}>ծովաշխարհ</span>
           {hasMounted && <BubbleBurst triggerKey={burstKey} />}
         </h1>
@@ -78,29 +80,45 @@ export default function IntroScene() {
           զգացմունքները։
         </motion.p>
       </motion.div>
-
-      <div className={styles.fishArea}>
-        <motion.img
-          src="/fishBlue/happy.png"
-          alt="Ուրախ ձուկ"
-          className={styles.fish}
-          initial={{ x: "-100vw" }}
-          animate={{ x: "0" }}
-          transition={{ type: "spring", stiffness: 50, delay: 0.5 }}
-        />
-        <motion.img
-          src="/fishBlue/angry.png"
-          alt="Բարկացած ձուկ"
-          className={styles.fishReverse}
-          initial={{ x: "100vw" }}
-          animate={{ x: "0" }}
-          transition={{ type: "spring", stiffness: 50, delay: 0.8 }}
-        />
-      </div>
-
-      <footer className={styles.footer}>
+      <motion.div
+        initial={{ opacity: 0, y: 60, scale: 0.8 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{
+          duration: 1.6,
+          ease: [0.25, 0.46, 0.45, 0.94], // easeOutBack
+          delay: 1.2,
+        }}
+      >
+        <Canvas
+          className={styles.fullscreenCanvas}
+          style={{
+            background: "transparent",
+            zIndex: "0",
+            width: "100vw",
+            height: "200px",
+            overflow: "visible",
+          }}
+          camera={{ position: [0, 0, 2.5], fov: 45 }}
+        >
+          <ambientLight intensity={1.2} />
+          <directionalLight position={[1, 1, 1]} intensity={2} />
+          <Suspense fallback={null}>
+            <FishModel />
+          </Suspense>
+        </Canvas>
+      </motion.div>
+      <motion.footer
+        className={styles.footer}
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 1.4,
+          ease: [0.25, 0.46, 0.45, 0.94], // easeOutBack
+          delay: 1.2,
+        }}
+      >
         Ստեղծվել է Կարէն Ղազարեանի եւ Նաիրա Պետրոսյանի կողմից
-      </footer>
+      </motion.footer>
     </section>
   );
 }
