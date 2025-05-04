@@ -1,0 +1,61 @@
+@font-face {
+  font-family: "Noto Sans Armenian";
+  src: url("/fonts/noto-sans-armenian/NotoSansArmenian-Medium.woff2")
+    format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans Armenian";
+  src: url("/fonts/noto-sans-armenian/NotoSansArmenian-SemiBold.woff2")
+    format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans Armenian SC";
+  src: url("/fonts/noto-sans-armenian/NotoSansArmenianSemicondensed-ExtraBold.woff2")
+    format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans Armenian SC";
+  src: url("/fonts/noto-sans-armenian/NotoSansArmenianSemicondensed-ExtraLight.woff2")
+    format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Serif Armenian Co";
+  src: url("/fonts/noto-serif-armenian/NotoSerifArmenianExtraCondensed-Light.woff2")
+    format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Serif Armenian Co";
+  src: url("/fonts/noto-serif-armenian/NotoSerifArmenian-SemiBold.woff2")
+    format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cartoon";
+  src: url("/fonts/Cartoon/Cartoon.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

@@ -1,9 +1,49 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import BubbleBurst from "./BubbleBurst/BubbleBurst";
 import styles from "./IntroScene.module.css";
 
 export default function IntroScene() {
+  const [burstKey, setBurstKey] = useState(0);
+  const [hasMounted, setHasMounted] = useState(false);
+  const [showSubtitle, setShowSubtitle] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
+
+  const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    setHasMounted(true);
+    if (typeof window !== "undefined") {
+      setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
+      bubbleSoundRef.current = new Audio("/sounds/bubble.mp3");
+      bubbleSoundRef.current.volume = 0.7;
+    }
+  }, []);
+
+  const handleInteraction = () => {
+    setBurstKey((k) => k + 1);
+    setShowSubtitle((prev) => !prev);
+
+    if (navigator.vibrate) {
+      navigator.vibrate(40);
+    }
+
+    if (bubbleSoundRef.current) {
+      bubbleSoundRef.current.currentTime = 0;
+      bubbleSoundRef.current.play().catch(() => {});
+    }
+  };
+
+  const handleHover = () => {
+    if (!isTouch) setShowSubtitle(true);
+  };
+
+  const handleLeave = () => {
+    if (!isTouch) setShowSubtitle(false);
+  };
+
   return (
     <section className={styles.introWrapper}>
       <motion.div
@@ -12,11 +52,31 @@ export default function IntroScene() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2 }}
       >
-        <h1 className={styles.title}>Բարի գալուստ հույզերի ծովաշխարհ</h1>
-        <p className={styles.subtitle}>
-          Այստեղ կծանոթանաս 21 ձկների, որոնք ցույց են տալիս իրենց հույզերն ու
+        <h1
+          className={styles.title}
+          onPointerDown={handleInteraction}
+          onPointerEnter={handleHover}
+          onPointerLeave={handleLeave}
+        >
+          <span className={styles.wordRed}>Սկսենք</span>{" "}
+          <span className={styles.wordBlue}>հույզերի</span>{" "}
+          <span className={styles.wordOrange}>ծովաշխարհ</span>
+          {hasMounted && <BubbleBurst triggerKey={burstKey} />}
+        </h1>
+
+        <motion.p
+          className={styles.subtitle}
+          initial={false}
+          animate={{
+            opacity: showSubtitle ? 1 : 0,
+            y: showSubtitle ? 20 : -20,
+            pointerEvents: showSubtitle ? "auto" : "none",
+          }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          Այստեղ կծանոթանաս 20 ձկների, որոնք ցույց են տալիս իրենց հույզերն ու
           զգացմունքները։
-        </p>
+        </motion.p>
       </motion.div>
 
       <div className={styles.fishArea}>

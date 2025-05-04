@@ -1,81 +1,57 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
+/* ===================================
+   🌍 Root Theme Variables
+   =================================== */
 :root {
+  /* ========== Background & Base ========== */
   --background: #0a0a0a;
   --foreground: #ffffff;
 
-  --font-sans: var(--font-noto-armenian);
-  --font-display: var(--font-fredoka);
+  /* ========== Font Families ========== */
+  --font-sans: "Noto Sans Armenian", sans-serif;
+  --font-sans-sc: "Noto Sans Armenian SC", sans-serif;
+  --font-serif: "Noto Serif Armenian Co", serif;
+  --font-cartoon: "Cartoon", sans-serif;
+
+  /* ========== Blue Shades ========== */
+  --blue-light: #cce7ff;
+  --blue: #0033a0;
+  --blue-dark: #004080;
+  --blue-shiny: #3399ff;
+
+  /* ========== Red Shades ========== */
+  --red-light: #ffd6d6;
+  --red: #d90012;
+  --red-dark: #800000;
+  --red-shiny: #ff4d6d;
+
+  /* ========== Orange Shades ========== */
+  --orange-light: #ffe5cc;
+  --orange: #f2a800;
+  --orange-dark: #804000;
+  --orange-shiny: #ffc04d;
+
+  /* ========== Bubble Effects ========== */
+  --bubble-core: rgba(255, 255, 255, 0.7);
+  --bubble-mid: rgba(255, 255, 255, 0.3);
+  --bubble-edge: rgba(173, 216, 230, 0.1);
+  --bubble-inner-glow: rgba(255, 255, 255, 0.3);
+  --bubble-outer-glow: rgba(255, 255, 255, 0.1);
+  --bubble-shadow: rgba(255, 255, 255, 0.3);
 }
 
+/* ===================================
+   🔤 Base Typography & Global Styles
+   =================================== */
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-sans);
   margin: 0;
   padding: 0;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-h1,
-h2,
-h3 {
-  font-family: var(--font-display), var(--font-sans), sans-serif;
-}
-
-@import "tailwindcss";
-
-/* Global CSS Variables */
-:root {
-  --background: #0a0a0a;
-  --foreground: #ffffff;
-
-  --font-sans: var(--font-noto-armenian);
-  --font-display: var(--font-fredoka);
-}
-
-/* Typography & Base Setup */
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
-  margin: 0;
-  padding: 0;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-h1,
-h2,
-h3 {
-  font-family: var(--font-display), var(--font-sans), sans-serif;
-}
-
-/* Theme Variants for Pages */
-.theme-intro {
-  --background: #cceeff;
-  --foreground: #003366;
-}
-
-.theme-happy {
-  --background: #e6ffe6;
-  --foreground: #005500;
-}
-
-.theme-sad {
-  --background: #ddeeff;
-  --foreground: #003355;
-}
-
-.theme-angry {
-  --background: #ffe6e6;
-  --foreground: #770000;
-}
-
-.theme-surprised {
-  --background: #fffbe6;
-  --foreground: #665500;
 }
