@@ -81,32 +81,41 @@ export default function IntroScene() {
         </motion.p>
       </motion.div>
       <motion.div
+        className={styles.canvasContainer}
         initial={{ opacity: 0, y: 60, scale: 0.8 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{
           duration: 1.6,
-          ease: [0.25, 0.46, 0.45, 0.94], // easeOutBack
+          ease: [0.25, 0.46, 0.45, 0.94],
           delay: 1.2,
         }}
       >
         <Canvas
-          className={styles.fullscreenCanvas}
           style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
             background: "transparent",
-            zIndex: "0",
-            width: "100vw",
-            height: "200px",
-            overflow: "visible",
+            // zIndex: "1",
+            // pointerEvents: "none",
           }}
-          camera={{ position: [0, 0, 2.5], fov: 45 }}
+          camera={{ position: [0, 0, 2.5], fov: 60 }}
         >
-          <ambientLight intensity={1.2} />
-          <directionalLight position={[1, 1, 1]} intensity={2} />
-          <Suspense fallback={null}>
-            <FishModel />
-          </Suspense>
+          <mesh>
+            {/* <boxGeometry args={[2, 2, 2]} /> */}
+            <meshStandardMaterial />
+
+            <ambientLight intensity={1.2} />
+            <directionalLight position={[0, 0, 1]} intensity={2} />
+            <Suspense fallback={null}>
+              <FishModel />
+            </Suspense>
+          </mesh>
         </Canvas>
       </motion.div>
+
       <motion.footer
         className={styles.footer}
         initial={{ opacity: 0, y: 40 }}
