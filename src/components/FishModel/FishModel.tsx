@@ -112,7 +112,7 @@ export default function FishModel({
         maxDistance={8}
         minPolarAngle={Math.PI / 4}
         maxPolarAngle={Math.PI / 1.75}
-        enableZoom={true}
+        enableZoom={false}
         enablePan={false}
         onChange={handleControlsChange}
       />

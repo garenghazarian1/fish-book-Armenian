@@ -1,0 +1,45 @@
+/* .pageBackground {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: black;
+  position: relative;
+  overflow: hidden;
+  scroll-snap-align: center;
+} */
+
+.fishImageWrapper {
+  position: relative;
+  width: 80vw;
+  height: 50vh;
+  z-index: 10;
+}
+
+.fishImage {
+  max-height: 100%;
+  width: auto;
+  object-fit: contain;
+  animation: floatFish 6s ease-in-out infinite;
+}
+
+@keyframes floatFish {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.moodLabel {
+  font-family: var(--font-cartoon);
+  font-size: clamp(4rem, 6vw, 5rem);
+  color: #0c7700;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+}

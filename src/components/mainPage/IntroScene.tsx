@@ -6,6 +6,8 @@ import BubbleBurst from "../BubbleBurst/BubbleBurst";
 import styles from "./IntroScene.module.css";
 import FishModel from "@/components/FishModel/FishModel";
 import { Canvas } from "@react-three/fiber";
+import BubbleParticles from "../BubbleParticles/BubbleParticles";
+import { Environment } from "@react-three/drei";
 
 export default function IntroScene() {
   const [burstKey, setBurstKey] = useState(0);
@@ -48,6 +50,25 @@ export default function IntroScene() {
 
   return (
     <section className={styles.introWrapper}>
+      <div className={styles.bubbleCanvasContainer}>
+        <Canvas
+          camera={{ position: [0, 0, 2.5], fov: 60 }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
+        >
+          <ambientLight intensity={0.7} />
+          <directionalLight position={[3, 3, 5]} intensity={1.2} />
+          <Suspense fallback={null}>
+            <Environment preset="sunset" background={false} />
+            <BubbleParticles count={20} />
+          </Suspense>
+        </Canvas>
+      </div>
+
       <motion.div
         className={styles.titleContainer}
         initial={{ opacity: 0, y: -50 }}
@@ -79,6 +100,18 @@ export default function IntroScene() {
           Այստեղ կծանոթանաս 20 ձկների, որոնք ցույց են տալիս իրենց հույզերն ու
           զգացմունքները։
         </motion.p>
+        <motion.p
+          className={styles.subtitle}
+          initial={false}
+          animate={{
+            opacity: showSubtitle ? 1 : 0,
+            y: showSubtitle ? 20 : -20,
+            pointerEvents: showSubtitle ? "auto" : "none",
+          }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          2 տաեկանից սկսած
+        </motion.p>
       </motion.div>
       <motion.div
         className={styles.canvasContainer}
@@ -95,16 +128,13 @@ export default function IntroScene() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            width: "100%",
+            width: "200%",
             height: "100%",
             background: "transparent",
-            // zIndex: "1",
-            // pointerEvents: "none",
           }}
           camera={{ position: [0, 0, 2.5], fov: 60 }}
         >
-          <mesh>
-            {/* <boxGeometry args={[2, 2, 2]} /> */}
+          <>
             <meshStandardMaterial />
 
             <ambientLight intensity={1.2} />
@@ -112,7 +142,7 @@ export default function IntroScene() {
             <Suspense fallback={null}>
               <FishModel />
             </Suspense>
-          </mesh>
+          </>
         </Canvas>
       </motion.div>
 
