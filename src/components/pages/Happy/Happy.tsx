@@ -1,62 +1,207 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { Suspense, useEffect, useRef } from "react";
 import styles from "./Happy.module.css";
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
+import { useRouter } from "next/navigation";
 
-interface HappyProps {
-  imageSrc?: string;
-}
+const moods = [
+  {
+    image: "/fishBlue/happy.png",
+    text: "Ես ուրախ եմ",
+    audio: "/sounds/yesOraxEm.m4a",
+  },
+  {
+    image: "/fishBlue/angry.png",
+    text: "Ես զայրացած եմ",
+    audio: "/sounds/yesZairatsazEm.mp3",
+  },
+  {
+    image: "/fishBlue/astonished.png",
+    text: "Ես զարմացած եմ",
+    audio: "/sounds/yesZarmatsazEm.mp3",
+  },
+  {
+    image: "/fishBlue/bored.png",
+    text: "ես ձանձրացել եմ",
+    audio: "/sounds/yesTsantsraselEm.mp3",
+  },
+  {
+    image: "/fishBlue/brave.png",
+    text: "ես քաջ եմ",
+    audio: "/sounds/yesKachEm.mp3",
+  },
+  {
+    image: "/fishBlue/carefree.png",
+    text: "ես անհոգ եմ",
+    audio: "/sounds/yesAnhokEm.mp3",
+  },
+  {
+    image: "/fishBlue/confused.png",
+    text: "ես շփոթված եմ",
+    audio: "/sounds/yesShpotvazEm.mp3",
+  },
+  {
+    image: "/fishBlue/embarrassed.png",
+    text: "ես ամաչում եմ",
+    audio: "/sounds/yesAmachumEm.mp3",
+  },
+  {
+    image: "/fishBlue/envious.png",
+    text: "ես նախանձում եմ",
+    audio: "/sounds/yesNaxantsumEm.mp3",
+  },
+  {
+    image: "/fishBlue/evil.png",
+    text: "ես չար եմ",
+    audio: "/sounds/yesCharEm.mp3",
+  },
+  {
+    image: "/fishBlue/frightened.png",
+    text: "ես վախեցած եմ",
+    audio: "/sounds/yesVaxetsazEm.mp3",
+  },
+  {
+    image: "/fishBlue/inLove.png",
+    text: "ես սիրահարված եմ",
+    audio: "/sounds/yesSiraharvazEm.mp3",
+  },
+  {
+    image: "/fishBlue/proud.png",
+    text: "ես հպարտ եմ",
+    audio: "/sounds/yesHbardEm.mp3",
+  },
+];
 
-export default function Happy({
-  imageSrc = "/fishBlue/happySh.png",
-}: HappyProps) {
-  const sectionRef = useRef<HTMLElement | null>(null);
+export default function Happy() {
+  const [index, setIndex] = useState(0);
+  const [showText, setShowText] = useState(false);
+  const [direction, setDirection] = useState<"next" | "prev">("next");
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [exitEnabled, setExitEnabled] = useState(false);
+  const router = useRouter();
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const toggleTooltip = () => {
+    setShowTooltip((prev) => !prev);
+  };
+
+  const handleBackClick = () => {
+    router.push("/fishSelect");
+  };
+
+  const fishVariants = {
+    initial: (direction: "next" | "prev") => ({
+      opacity: 0,
+      rotate: direction === "next" ? -90 : 90,
+      y: direction === "next" ? 100 : -100,
+      scale: 0.8,
+    }),
+    animate: {
+      opacity: 1,
+      rotate: 0,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.6, ease: "easeInOut" },
+    },
+    exit: (direction: "next" | "prev") => ({
+      opacity: 0,
+      rotate: direction === "next" ? 90 : -90,
+      y: direction === "next" ? -100 : 100,
+      scale: 0.8,
+      transition: { duration: 0.6, ease: "easeInOut" },
+    }),
+  };
 
   useEffect(() => {
-    if (!sectionRef.current) return;
+    if (index === 0) setExitEnabled(true);
+  }, [index]);
 
-    let lastPlayed = 0;
-    const cooldown = 2000; // time in ms between plays
+  const handleFishClick = () => {
+    setShowText((prev) => {
+      const next = !prev;
+      if (next && audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
+      }
+      return next;
+    });
+  };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        const now = Date.now();
+  const handleScroll = (dir: "next" | "prev") => {
+    if (timeoutRef.current) return;
 
-        if (
-          entry.isIntersecting &&
-          audioRef.current &&
-          now - lastPlayed > cooldown
-        ) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(() => {});
-          lastPlayed = now;
-        }
-      },
-      { threshold: 0.6 }
+    setDirection(dir); // ✅ set direction for animation
+    setShowText(false);
+    setIndex((prev) =>
+      dir === "next"
+        ? (prev + 1) % moods.length
+        : (prev - 1 + moods.length) % moods.length
     );
 
-    observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    timeoutRef.current = setTimeout(() => {
+      timeoutRef.current = null;
+    }, 800);
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY > 20) handleScroll("next");
+      else if (e.deltaY < -20) handleScroll("prev");
+    };
+
+    let touchStartY = 0;
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      const delta = e.changedTouches[0].clientY - touchStartY;
+      if (delta < -30) handleScroll("next");
+      else if (delta > 30) handleScroll("prev");
+    };
+
+    container.addEventListener("wheel", onWheel);
+    container.addEventListener("touchstart", onTouchStart);
+    container.addEventListener("touchend", onTouchEnd);
+
+    return () => {
+      container.removeEventListener("wheel", onWheel);
+      container.removeEventListener("touchstart", onTouchStart);
+      container.removeEventListener("touchend", onTouchEnd);
+    };
   }, []);
 
   return (
-    <motion.section
-      ref={sectionRef}
-      // className="pageBackground"
-      className={styles.pageBackground}
-      initial={{ opacity: 0, y: 60 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1, ease: "easeOut" }}
-    >
-      <div className={styles.bubbleCanvasContainer}>
+    <div className={styles.swipeContainer} ref={containerRef}>
+      <div className={styles.helpWrapper}>
+        <button onClick={toggleTooltip} className={styles.helpButton}>
+          ❓
+        </button>
+        {showTooltip && (
+          <motion.div
+            className={styles.tooltip}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            Կտտացրու ձկան վրա՝ տեսնելու հույզը և լսելու ձայնը։
+            <br />
+            Քաշիր ներքև՝ հաջորդ ձուկը տեսնելու համար։
+          </motion.div>
+        )}
+      </div>
+
+      <div className={styles.canvasOverlay}>
         <Canvas
           camera={{ position: [0, 0, 2.5], fov: 60 }}
           style={{
@@ -68,41 +213,49 @@ export default function Happy({
         >
           <ambientLight intensity={0.7} />
           <directionalLight position={[3, 3, 5]} intensity={1.2} />
-          <Suspense fallback={null}>
-            <Environment preset="sunset" background={false} />
-            <BubbleParticles count={20} />
-          </Suspense>
+          <Environment preset="sunset" background={false} />
+          <BubbleParticles count={20} />
         </Canvas>
       </div>
-      <motion.div
-        className={styles.fishImageWrapper}
-        initial={{ scale: 0.95, opacity: 0 }}
-        whileInView={{ scale: 1.02, opacity: 1 }}
-        whileHover={{ scale: 1.05 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
-      >
-        <Image
-          src={imageSrc}
-          alt="Ուրախ ձուկ"
-          className={styles.fishImage}
-          fill
-          priority
-          style={{ objectFit: "contain" }}
-        />
-      </motion.div>
 
-      {/* <motion.h2
-        className={styles.moodLabel}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
-      >
-        ուրախ
-      </motion.h2> */}
+      <AnimatePresence mode="wait" custom={direction}>
+        <motion.div
+          key={index}
+          custom={direction}
+          className={styles.slide}
+          variants={fishVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          <div className={styles.fishImageWrapper} onClick={handleFishClick}>
+            <Image
+              src={moods[index].image}
+              alt="Fish"
+              fill
+              priority
+              className={styles.fishImage}
+            />
+            {showText && (
+              <motion.div
+                className={styles.speechBubble}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+              >
+                {moods[index].text}
+              </motion.div>
+            )}
+          </div>
+          <audio ref={audioRef} src={moods[index].audio} preload="auto" />
+        </motion.div>
+      </AnimatePresence>
 
-      <audio ref={audioRef} src="/sounds/bubble.mp3" preload="auto" />
-    </motion.section>
+      {exitEnabled && (
+        <button className={styles.backButton} onClick={handleBackClick}>
+          ⬅️ Վերադառնալ
+        </button>
+      )}
+    </div>
   );
 }

@@ -8,15 +8,21 @@ import FishModel from "@/components/FishModel/FishModel";
 import { Canvas } from "@react-three/fiber";
 import BubbleParticles from "../BubbleParticles/BubbleParticles";
 import { Environment } from "@react-three/drei";
+import { useRouter } from "next/navigation";
 
 export default function IntroScene() {
   const [burstKey, setBurstKey] = useState(0);
   const [hasMounted, setHasMounted] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
-
+  const router = useRouter();
   const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
 
+  const handleStartClick = () => {
+    console.log("Navigating to /fishSelect");
+    router.push("/fishSelect");
+  };
+  console.log("Navigating to /fishSelect");
   useEffect(() => {
     setHasMounted(true);
     if (typeof window !== "undefined") {
@@ -97,7 +103,7 @@ export default function IntroScene() {
           }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          Այստեղ կծանոթանաս 20 ձկների, որոնք ցույց են տալիս իրենց հույզերն ու
+          Այստեղ կծանոթանաս 13 ձկների, որոնք ցույց են տալիս իրենց հույզերն ու
           զգացմունքները։
         </motion.p>
         <motion.p
@@ -113,6 +119,15 @@ export default function IntroScene() {
           2 տաեկանից սկսած
         </motion.p>
       </motion.div>
+      <motion.button
+        onClick={handleStartClick}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut", delay: 1.5 }}
+        className={styles.startButton}
+      >
+        Սկսել
+      </motion.button>
       <motion.div
         className={styles.canvasContainer}
         initial={{ opacity: 0, y: 60, scale: 0.8 }}

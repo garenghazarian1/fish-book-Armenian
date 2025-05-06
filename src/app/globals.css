@@ -62,78 +62,7 @@ html {
   box-sizing: border-box;
 }
 
-/* .pageBackground {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--background);
-  color: var(--foreground);
-  overflow: hidden;
-  position: relative;
-  z-index: -1;
-}
-
-.pageBackground::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    #021e3f 0%,
-    #033f63 25%,
-    #03658c 50%,
-    #0392cf 75%,
-    #38bdf8 100%
-  );
-  background-size: 200% 200%;
-  animation: seaFlow 10s ease-in-out infinite;
-  z-index: 0;
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-.pageBackground::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("/caustics.png") repeat;
-  background-size: cover;
-  opacity: 0.4;
-  mix-blend-mode: overlay;
-  animation: causticDrift 18s ease-in-out infinite;
-  z-index: 1;
-  pointer-events: none;
-}
-
-@keyframes seaFlow {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
-}
-
-@keyframes causticDrift {
-  0% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(15px, -15px);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-} */
-/* scroll section */
-
-.scrollContainer {
+/* .scrollContainer {
   height: 100vh;
   width: 100vw;
   overflow-y: scroll;
@@ -146,13 +75,4 @@ html {
   scroll-snap-align: start;
   height: 100vh;
   width: 100vw;
-}
-
-/* @keyframes hologram {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 } */
