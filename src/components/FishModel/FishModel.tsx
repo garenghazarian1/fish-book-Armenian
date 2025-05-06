@@ -4,7 +4,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useGLTF, OrbitControls } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 interface FishModelProps {
@@ -18,11 +18,9 @@ export default function FishModel({
 }: FishModelProps) {
   const modelRef = useRef<THREE.Object3D>(null);
   const { scene } = useGLTF("/threeDGLB/sampleMeshy.glb");
-  const { camera } = useThree();
   const [isInteracting, setIsInteracting] = useState(false);
 
   const moveDuration = 2.5;
-  const easeFactor = 0.08;
   const swimAmplitude = 0.15;
   const swimFrequency = 2.5;
 
@@ -33,6 +31,7 @@ export default function FishModel({
   };
   finalTransform.quaternion.setFromEuler(finalTransform.rotation);
 
+  // Material setup on mount
   useEffect(() => {
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
@@ -48,6 +47,7 @@ export default function FishModel({
     });
   }, [scene]);
 
+  // Animate fish position + subtle floating motion
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     const fish = modelRef.current;
@@ -75,7 +75,6 @@ export default function FishModel({
       progress
     );
 
-    // Extra subtle motion
     if (progress < 1) {
       fish.rotation.x += Math.sin(t * 1.5) * 0.005;
       fish.position.y += Math.sin(t * 2) * 0.01;
