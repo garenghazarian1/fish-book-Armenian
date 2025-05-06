@@ -6,7 +6,7 @@
   height: 0;
   z-index: 10;
   pointer-events: none;
-  overflow: visible;
+  /* overflow: visible; */
 }
 
 .bubble {

@@ -1,16 +1,49 @@
-/* .pageBackground {
+.pageBackground {
   height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  background-color: black;
-  position: relative;
+
+  background-image: url("/fishBlue/backgroundB.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: var(--foreground);
   overflow: hidden;
-  scroll-snap-align: center;
-} */
+  position: relative;
+  z-index: -1;
+}
+/* test */
+
+.pageBackground {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background-image: url("/fishBlue/backgroundB.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lightEffect {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.1),
+    transparent 60%
+  );
+}
+
+/* test */
 
 .fishImageWrapper {
   position: relative;
@@ -24,6 +57,11 @@
   width: auto;
   object-fit: contain;
   animation: floatFish 6s ease-in-out infinite;
+
+  /* Add shiny glow */
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
+    drop-shadow(0 0 20px rgba(0, 200, 255, 0.6))
+    drop-shadow(0 0 30px rgba(0, 200, 255, 0.4));
 }
 
 @keyframes floatFish {
