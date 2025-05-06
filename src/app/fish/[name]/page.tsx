@@ -12,7 +12,7 @@ export default function FishMoodPage() {
 
   return (
     <div style={{ padding: "2rem", textAlign: "center", color: "white" }}>
-      Ձուկը՝ "{name}" դեռ պատրաստ չէ։
+      Ձուկը՝ &quot;{name}&quot; դեռ պատրաստ չէ։
     </div>
   );
 }

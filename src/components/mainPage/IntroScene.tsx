@@ -2,29 +2,27 @@
 
 import { useEffect, useRef, useState, Suspense } from "react";
 import { motion } from "framer-motion";
-import BubbleBurst from "../BubbleBurst/BubbleBurst";
-import styles from "./IntroScene.module.css";
-import FishModel from "@/components/FishModel/FishModel";
 import { Canvas } from "@react-three/fiber";
-import BubbleParticles from "../BubbleParticles/BubbleParticles";
 import { Environment } from "@react-three/drei";
 import { useRouter } from "next/navigation";
+
+import BubbleParticles from "../BubbleParticles/BubbleParticles";
+import BubbleBurst from "../BubbleBurst/BubbleBurst";
+import FishModel from "@/components/FishModel/FishModel";
+import styles from "./IntroScene.module.css";
 
 export default function IntroScene() {
   const [burstKey, setBurstKey] = useState(0);
   const [hasMounted, setHasMounted] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
-  const router = useRouter();
-  const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
 
-  const handleStartClick = () => {
-    console.log("Navigating to /fishSelect");
-    router.push("/fishSelect");
-  };
-  console.log("Navigating to /fishSelect");
+  const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
+  const router = useRouter();
+
   useEffect(() => {
     setHasMounted(true);
+
     if (typeof window !== "undefined") {
       setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
       bubbleSoundRef.current = new Audio("/sounds/bubble.mp3");
@@ -36,14 +34,9 @@ export default function IntroScene() {
     setBurstKey((k) => k + 1);
     setShowSubtitle((prev) => !prev);
 
-    if (navigator.vibrate) {
-      navigator.vibrate(40);
-    }
+    if (navigator.vibrate) navigator.vibrate(40);
 
-    if (bubbleSoundRef.current) {
-      bubbleSoundRef.current.currentTime = 0;
-      bubbleSoundRef.current.play().catch(() => {});
-    }
+    bubbleSoundRef.current?.play().catch(() => {});
   };
 
   const handleHover = () => {
@@ -54,8 +47,13 @@ export default function IntroScene() {
     if (!isTouch) setShowSubtitle(false);
   };
 
+  const handleStartClick = () => {
+    router.push("/fishSelect");
+  };
+
   return (
     <section className={styles.introWrapper}>
+      {/* Background bubble animation */}
       <div className={styles.bubbleCanvasContainer}>
         <Canvas
           camera={{ position: [0, 0, 2.5], fov: 60 }}
@@ -75,6 +73,7 @@ export default function IntroScene() {
         </Canvas>
       </div>
 
+      {/* Title and subtitle area */}
       <motion.div
         className={styles.titleContainer}
         initial={{ opacity: 0, y: -50 }}
@@ -95,7 +94,6 @@ export default function IntroScene() {
 
         <motion.p
           className={styles.subtitle}
-          initial={false}
           animate={{
             opacity: showSubtitle ? 1 : 0,
             y: showSubtitle ? 20 : -20,
@@ -106,9 +104,9 @@ export default function IntroScene() {
           Այստեղ կծանոթանաս 13 ձկների, որոնք ցույց են տալիս իրենց հույզերն ու
           զգացմունքները։
         </motion.p>
+
         <motion.p
           className={styles.subtitle}
-          initial={false}
           animate={{
             opacity: showSubtitle ? 1 : 0,
             y: showSubtitle ? 20 : -20,
@@ -119,6 +117,8 @@ export default function IntroScene() {
           2 տաեկանից սկսած
         </motion.p>
       </motion.div>
+
+      {/* CTA button */}
       <motion.button
         onClick={handleStartClick}
         initial={{ opacity: 0, y: 30 }}
@@ -128,6 +128,8 @@ export default function IntroScene() {
       >
         Սկսել
       </motion.button>
+
+      {/* Fish model canvas */}
       <motion.div
         className={styles.canvasContainer}
         initial={{ opacity: 0, y: 60, scale: 0.8 }}
@@ -149,25 +151,22 @@ export default function IntroScene() {
           }}
           camera={{ position: [0, 0, 2.5], fov: 60 }}
         >
-          <>
-            <meshStandardMaterial />
-
-            <ambientLight intensity={1.2} />
-            <directionalLight position={[0, 0, 1]} intensity={2} />
-            <Suspense fallback={null}>
-              <FishModel />
-            </Suspense>
-          </>
+          <ambientLight intensity={1.2} />
+          <directionalLight position={[0, 0, 1]} intensity={2} />
+          <Suspense fallback={null}>
+            <FishModel />
+          </Suspense>
         </Canvas>
       </motion.div>
 
+      {/* Footer */}
       <motion.footer
         className={styles.footer}
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
           duration: 1.4,
-          ease: [0.25, 0.46, 0.45, 0.94], // easeOutBack
+          ease: [0.25, 0.46, 0.45, 0.94],
           delay: 1.2,
         }}
       >
