@@ -88,6 +88,57 @@ export default function Happy() {
   const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
 
+  // autoplay
+  // autoplay
+  const [autoplayState, setAutoplayState] = useState<"play" | "pause" | "stop">(
+    "stop"
+  );
+  const [isPlaying, setIsPlaying] = useState(false);
+  const autoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startAutoplay = () => {
+    if (isPlaying) return;
+    setIsPlaying(true);
+    setAutoplayState("play");
+    autoplayStep(index);
+  };
+
+  const pauseAutoplay = () => {
+    setIsPlaying(false);
+    setAutoplayState("pause");
+    if (autoplayTimeoutRef.current) {
+      clearTimeout(autoplayTimeoutRef.current);
+      autoplayTimeoutRef.current = null;
+    }
+  };
+
+  const stopAutoplay = () => {
+    pauseAutoplay();
+    setIndex(0);
+    setShowText(false);
+    setAutoplayState("stop");
+  };
+
+  const autoplayStep = (currentIndex: number) => {
+    setIndex(currentIndex); // Step 1: Show image
+    setShowText(false); // Hide text initially
+
+    autoplayTimeoutRef.current = setTimeout(() => {
+      setShowText(true); // Step 2: Show text + play audio
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
+      }
+
+      autoplayTimeoutRef.current = setTimeout(() => {
+        const nextIndex = (currentIndex + 1) % moods.length;
+        autoplayStep(nextIndex); // Step 3: Move to next
+      }, 4000); // wait 4s after showing text/audio
+    }, 1000); // wait 1s after image
+  };
+
+  // end
+
   const toggleTooltip = () => {
     setShowTooltip((prev) => !prev);
   };
@@ -256,6 +307,35 @@ export default function Happy() {
           ⬅️ Վերադառնալ
         </button>
       )}
+      <div className={styles.autoplayControls}>
+        <button
+          className={`${styles.controlButton} ${
+            autoplayState === "play" ? styles.active : ""
+          }`}
+          onClick={startAutoplay}
+          title="Play"
+        >
+          ▶️
+        </button>
+        <button
+          className={`${styles.controlButton} ${
+            autoplayState === "pause" ? styles.active : ""
+          }`}
+          onClick={pauseAutoplay}
+          title="Pause"
+        >
+          ⏸️
+        </button>
+        <button
+          className={`${styles.controlButton} ${
+            autoplayState === "stop" ? styles.active : ""
+          }`}
+          onClick={stopAutoplay}
+          title="Stop"
+        >
+          ⏹️
+        </button>
+      </div>
     </div>
   );
 }

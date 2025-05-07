@@ -140,3 +140,38 @@
   backdrop-filter: blur(6px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+
+/* play pause buttons  */
+
+.autoplayControls {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  z-index: 5;
+}
+
+.controlButton {
+  font-size: 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  backdrop-filter: blur(4px);
+  outline: none;
+}
+
+.controlButton:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.active {
+  background: rgba(255, 255, 255, 0.4);
+  color: #0ff;
+  box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+}
