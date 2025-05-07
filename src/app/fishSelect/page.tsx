@@ -22,7 +22,7 @@ export default function FishSelectPage() {
     <div className={styles.fishPage}>
       <h1 className={styles.heading}>Ընտրիր ձուկ</h1>
       <button className={styles.backButton} onClick={handleBack}>
-        ← Վերադառնալ
+        ⬅️ Վերադառնալ
       </button>
 
       <div className={styles.fishGrid}>

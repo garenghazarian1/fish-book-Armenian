@@ -1,3 +1,6 @@
+/* ===============================
+   🐟 Main Layout & Container
+=============================== */
 .swipeContainer {
   position: relative;
   height: 100vh;
@@ -7,10 +10,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  touch-action: pan-y;
   z-index: 1;
-  overscroll-behavior: contain;
   touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .canvasOverlay {
@@ -20,6 +22,9 @@
   pointer-events: none;
 }
 
+/* ===============================
+   🐠 Slide Content & Fish
+=============================== */
 .slide {
   position: relative;
   height: 100%;
@@ -62,10 +67,12 @@
   }
 }
 
-/* Bubble always placed over the fish regardless of screen size */
+/* ===============================
+   💬 Speech Bubble
+=============================== */
 .speechBubble {
   position: absolute;
-  bottom: 80%; /* adjusts relative to wrapper height */
+  bottom: 80%;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.2);
@@ -92,6 +99,9 @@
   border-color: rgba(255, 255, 255, 0.2) transparent transparent transparent;
 }
 
+/* ===============================
+   ⬅️ Navigation Back Button
+=============================== */
 .backButton {
   position: absolute;
   top: 20px;
@@ -105,8 +115,9 @@
   z-index: 5;
 }
 
-/* hints */
-
+/* ===============================
+   ❓ Tooltip Help Button
+=============================== */
 .helpWrapper {
   position: absolute;
   top: 1rem;
@@ -141,8 +152,9 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* play pause buttons  */
-
+/* ===============================
+   ▶️ Autoplay Controls
+=============================== */
 .autoplayControls {
   position: absolute;
   bottom: 2.5rem;
@@ -175,7 +187,11 @@
   box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
 }
 
-/* For tablets (max 1024px) */
+/* ===============================
+   📱 Media Queries
+=============================== */
+
+/* Tablet */
 @media (max-width: 1024px) {
   .autoplayControls {
     bottom: 3rem;
@@ -183,7 +199,7 @@
   }
 }
 
-/* For mobile (max 768px) */
+/* Mobile */
 @media (max-width: 768px) {
   .autoplayControls {
     bottom: 6rem;

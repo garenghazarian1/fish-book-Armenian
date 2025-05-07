@@ -1,8 +1,6 @@
-// File: components/FishModel.tsx
-
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useGLTF, OrbitControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -18,73 +16,47 @@ export default function FishModel({
 }: FishModelProps) {
   const modelRef = useRef<THREE.Object3D>(null);
   const { scene } = useGLTF("/threeDGLB/sampleMeshy.glb");
-  const [isInteracting, setIsInteracting] = useState(false);
+  const [interacting, setInteracting] = useState(false);
 
-  const moveDuration = 2.5;
-  const swimAmplitude = 0.15;
-  const swimFrequency = 2.5;
+  const startPos = new THREE.Vector3(-2.5, -0.2, 0.5);
+  const endPos = new THREE.Vector3(0.1, 1, -1);
+  const endQuat = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(Math.PI / 8, Math.PI / 1.4, -0.4)
+  );
 
-  const finalTransform = {
-    position: new THREE.Vector3(0.1, 1, -1),
-    rotation: new THREE.Euler(Math.PI / 8, Math.PI / 1.4, -0.4),
-    quaternion: new THREE.Quaternion(),
-  };
-  finalTransform.quaternion.setFromEuler(finalTransform.rotation);
-
-  // Material setup on mount
   useEffect(() => {
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        child.material = child.material.clone();
-        const mat = child.material as THREE.MeshStandardMaterial;
+        const mat = (child.material =
+          child.material.clone()) as THREE.MeshStandardMaterial;
         mat.metalness = 0.3;
         mat.roughness = 0.5;
         mat.emissive.setHex(0x0a1a2a).multiplyScalar(0.15);
-        mat.needsUpdate = true;
-        child.castShadow = true;
-        child.receiveShadow = true;
+        child.castShadow = child.receiveShadow = true;
       }
     });
   }, [scene]);
 
-  // Animate fish position + subtle floating motion
   useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
     const fish = modelRef.current;
     if (!fish) return;
 
-    const progress = Math.min(t / moveDuration, 1);
-    const swimOffset = Math.sin(t * swimFrequency) * swimAmplitude;
+    const t = clock.getElapsedTime();
+    const progress = Math.min(t / 2.5, 1);
+    const offset = Math.sin(t * 2.5) * 0.15;
 
-    const targetPosition = finalTransform.position.clone();
-    targetPosition.y += swimOffset * 0.5;
-    targetPosition.z += swimOffset * 0.3;
+    const target = endPos.clone();
+    target.y += offset * 0.5;
+    target.z += offset * 0.3;
 
-    fish.position.lerpVectors(
-      new THREE.Vector3(-2.5, -0.2, 0.5),
-      targetPosition,
-      progress
-    );
-
-    const initialQuaternion = new THREE.Quaternion().setFromEuler(
-      new THREE.Euler(0, 0, 0)
-    );
-    fish.quaternion.slerpQuaternions(
-      initialQuaternion,
-      finalTransform.quaternion,
-      progress
-    );
+    fish.position.lerpVectors(startPos, target, progress);
+    fish.quaternion.slerpQuaternions(new THREE.Quaternion(), endQuat, progress);
 
     if (progress < 1) {
       fish.rotation.x += Math.sin(t * 1.5) * 0.005;
       fish.position.y += Math.sin(t * 2) * 0.01;
     }
   });
-
-  const handleControlsChange = () => {
-    setIsInteracting(true);
-    setTimeout(() => setIsInteracting(false), 2000);
-  };
 
   return (
     <>
@@ -93,8 +65,7 @@ export default function FishModel({
         position={[3, 2, 4]}
         intensity={1.5}
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize={{ width: 1024, height: 1024 }}
       />
       <primitive
         ref={modelRef}
@@ -103,17 +74,18 @@ export default function FishModel({
         position={position}
       />
       <OrbitControls
+        autoRotate={!interacting}
+        autoRotateSpeed={0.75}
         enableDamping
         dampingFactor={0.05}
-        autoRotate={!isInteracting}
-        autoRotateSpeed={0.75}
+        enableZoom={false}
+        enablePan={false}
         minDistance={2}
         maxDistance={8}
         minPolarAngle={Math.PI / 4}
         maxPolarAngle={Math.PI / 1.75}
-        enableZoom={false}
-        enablePan={false}
-        onChange={handleControlsChange}
+        onStart={() => setInteracting(true)}
+        onEnd={() => setInteracting(false)}
       />
     </>
   );
