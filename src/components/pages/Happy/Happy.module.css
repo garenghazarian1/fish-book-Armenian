@@ -145,7 +145,7 @@
 
 .autoplayControls {
   position: absolute;
-  bottom: 2rem;
+  bottom: 6rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
