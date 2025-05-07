@@ -58,8 +58,9 @@ body {
 
 body,
 html {
-  overflow-x: hidden;
+  overflow: hidden;
   box-sizing: border-box;
+  height: 100%;
 }
 
 /* .scrollContainer {
