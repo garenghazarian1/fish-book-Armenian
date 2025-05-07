@@ -34,7 +34,7 @@
 .fishImageWrapper {
   position: relative;
   width: 80vw;
-  height: 50vh;
+  height: 80vh;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -62,18 +62,20 @@
   }
 }
 
+/* Bubble always placed over the fish regardless of screen size */
 .speechBubble {
   position: absolute;
-  top: -10;
-  right: 20%;
+  bottom: 80%; /* adjusts relative to wrapper height */
+  left: 50%;
+  transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.2);
   color: white;
   padding: 12px 16px;
   border-radius: 16px;
   backdrop-filter: blur(4px);
-  font-size: 1.2rem;
-  max-width: 60%;
-  text-align: left;
+  font-size: 1rem;
+  max-width: 80%;
+  text-align: center;
   z-index: 4;
   pointer-events: auto;
   white-space: pre-wrap;
@@ -83,7 +85,8 @@
   content: "";
   position: absolute;
   bottom: -10px;
-  right: 16px;
+  left: 50%;
+  transform: translateX(-50%);
   border-width: 10px 10px 0 10px;
   border-style: solid;
   border-color: rgba(255, 255, 255, 0.2) transparent transparent transparent;

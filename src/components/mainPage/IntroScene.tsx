@@ -53,7 +53,6 @@ export default function IntroScene() {
 
   return (
     <section className={styles.introWrapper}>
-      {/* Background bubble animation */}
       <div className={styles.bubbleCanvasContainer}>
         <Canvas
           camera={{ position: [0, 0, 2.5], fov: 60 }}
@@ -68,7 +67,7 @@ export default function IntroScene() {
           <directionalLight position={[3, 3, 5]} intensity={1.2} />
           <Suspense fallback={null}>
             <Environment preset="sunset" background={false} />
-            <BubbleParticles count={20} />
+            <BubbleParticles count={10} />
           </Suspense>
         </Canvas>
       </div>
@@ -170,7 +169,7 @@ export default function IntroScene() {
           delay: 1.2,
         }}
       >
-        Ստեղծվել է Կարէն Ղազարեանի եւ Նաիրա Պետրոսյանի կողմից
+        Ստեղծվել է Կարէն Ղազարեանի եւ Նաիրա Պետրոսյանի կողմից @2025
       </motion.footer>
     </section>
   );
