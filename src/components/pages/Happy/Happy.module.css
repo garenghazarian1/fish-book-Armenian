@@ -145,9 +145,8 @@
 
 .autoplayControls {
   position: absolute;
-  bottom: 6rem;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 2.5rem;
+  right: 3rem;
   display: flex;
   gap: 1rem;
   z-index: 5;
@@ -174,4 +173,22 @@
   background: rgba(255, 255, 255, 0.4);
   color: #0ff;
   box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+}
+
+/* For tablets (max 1024px) */
+@media (max-width: 1024px) {
+  .autoplayControls {
+    bottom: 3rem;
+    right: 2rem;
+  }
+}
+
+/* For mobile (max 768px) */
+@media (max-width: 768px) {
+  .autoplayControls {
+    bottom: 6rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
 }
