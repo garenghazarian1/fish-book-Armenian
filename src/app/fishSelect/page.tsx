@@ -6,9 +6,9 @@ import styles from "./page.module.css";
 
 const fishList = [
   { name: "happy", src: "/fishBlue/happy.png" },
-  { name: "red", src: "/fishBlue/angry.png" },
-  { name: "ishxan", src: "/fishBlue/brave.png" },
-  { name: "green", src: "/fishBlue/confused.png" },
+  // { name: "red", src: "/fishBlue/angry.png" },
+  // { name: "ishxan", src: "/fishBlue/brave.png" },
+  // { name: "green", src: "/fishBlue/confused.png" },
 ];
 
 export default function FishSelectPage() {

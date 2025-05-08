@@ -8,74 +8,75 @@ import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
 import { useRouter } from "next/navigation";
+import moods from "./HammyMood.js";
 
-const moods = [
-  {
-    image: "/fishBlue/happy.png",
-    text: "Ես ուրախ եմ",
-    audio: "/sounds/yesOraxEm.m4a",
-  },
-  {
-    image: "/fishBlue/angry.png",
-    text: "Ես զայրացած եմ",
-    audio: "/sounds/yesZairatsazEm.mp3",
-  },
-  {
-    image: "/fishBlue/astonished.png",
-    text: "Ես զարմացած եմ",
-    audio: "/sounds/yesZarmatsazEm.mp3",
-  },
-  {
-    image: "/fishBlue/bored.png",
-    text: "ես ձանձրացել եմ",
-    audio: "/sounds/yesTsantsraselEm.mp3",
-  },
-  {
-    image: "/fishBlue/brave.png",
-    text: "ես քաջ եմ",
-    audio: "/sounds/yesKachEm.mp3",
-  },
-  {
-    image: "/fishBlue/carefree.png",
-    text: "ես անհոգ եմ",
-    audio: "/sounds/yesAnhokEm.mp3",
-  },
-  {
-    image: "/fishBlue/confused.png",
-    text: "ես շփոթված եմ",
-    audio: "/sounds/yesShpotvazEm.mp3",
-  },
-  {
-    image: "/fishBlue/embarrassed.png",
-    text: "ես ամաչում եմ",
-    audio: "/sounds/yesAmachumEm.mp3",
-  },
-  {
-    image: "/fishBlue/envious.png",
-    text: "ես նախանձում եմ",
-    audio: "/sounds/yesNaxantsumEm.mp3",
-  },
-  {
-    image: "/fishBlue/evil.png",
-    text: "ես չար եմ",
-    audio: "/sounds/yesCharEm.mp3",
-  },
-  {
-    image: "/fishBlue/frightened.png",
-    text: "ես վախեցած եմ",
-    audio: "/sounds/yesVaxetsazEm.mp3",
-  },
-  {
-    image: "/fishBlue/inLove.png",
-    text: "ես սիրահարված եմ",
-    audio: "/sounds/yesSiraharvazEm.mp3",
-  },
-  {
-    image: "/fishBlue/proud.png",
-    text: "ես հպարտ եմ",
-    audio: "/sounds/yesHbardEm.mp3",
-  },
-];
+// const moods = [
+//   {
+//     image: "/fishBlue/happy.png",
+//     text: "Ես ուրախ եմ",
+//     audio: "/sounds/yesOraxEm.m4a",
+//   },
+//   {
+//     image: "/fishBlue/angry.png",
+//     text: "Ես զայրացած եմ",
+//     audio: "/sounds/yesZairatsazEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/astonished.png",
+//     text: "Ես զարմացած եմ",
+//     audio: "/sounds/yesZarmatsazEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/bored.png",
+//     text: "ես ձանձրացել եմ",
+//     audio: "/sounds/yesTsantsraselEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/brave.png",
+//     text: "ես քաջ եմ",
+//     audio: "/sounds/yesKachEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/carefree.png",
+//     text: "ես անհոգ եմ",
+//     audio: "/sounds/yesAnhokEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/confused.png",
+//     text: "ես շփոթված եմ",
+//     audio: "/sounds/yesShpotvazEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/embarrassed.png",
+//     text: "ես ամաչում եմ",
+//     audio: "/sounds/yesAmachumEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/envious.png",
+//     text: "ես նախանձում եմ",
+//     audio: "/sounds/yesNaxantsumEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/evil.png",
+//     text: "ես չար եմ",
+//     audio: "/sounds/yesCharEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/frightened.png",
+//     text: "ես վախեցած եմ",
+//     audio: "/sounds/yesVaxetsazEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/inLove.png",
+//     text: "ես սիրահարված եմ",
+//     audio: "/sounds/yesSiraharvazEm.mp3",
+//   },
+//   {
+//     image: "/fishBlue/proud.png",
+//     text: "ես հպարտ եմ",
+//     audio: "/sounds/yesHbardEm.mp3",
+//   },
+// ];
 
 export default function Happy() {
   const [index, setIndex] = useState(0);
