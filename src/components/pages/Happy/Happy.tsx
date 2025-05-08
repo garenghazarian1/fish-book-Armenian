@@ -286,8 +286,12 @@ export default function Happy() {
               alt="Fish"
               fill
               priority
+              sizes="(max-width: 768px) 80vw, (max-width: 1200px) 60vw, 40vw"
               className={styles.fishImage}
+              placeholder="blur"
+              blurDataURL="/fishBlue/blur-placeholder.jpg" // You can generate a tiny 10x10 blurred version
             />
+
             {showText && (
               <motion.div
                 className={styles.speechBubble}
