@@ -220,7 +220,7 @@ export default function RedFish() {
               sizes="(max-width: 768px) 80vw, (max-width: 1200px) 60vw, 40vw"
               className={styles.fishImage}
               placeholder="blur"
-              blurDataURL="/fishBlue/blur-placeholder.jpg"
+              blurDataURL="/fishRed/blurPlaceholderRed.png"
             />
 
             {showText && (
