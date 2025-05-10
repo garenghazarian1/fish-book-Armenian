@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import styles from "./Happy.module.css";
+import styles from "./FishMood.module.css";
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
 import { useRouter } from "next/navigation";
-import moods from "./HammyMood.js";
+import moods from "./FishMoodData.js";
 
 export default function Happy() {
   const [index, setIndex] = useState(0);
@@ -22,6 +22,7 @@ export default function Happy() {
   const [showTooltip, setShowTooltip] = useState(false);
 
   // autoplay
+
   // autoplay
   const [autoplayState, setAutoplayState] = useState<"play" | "pause" | "stop">(
     "stop"
@@ -221,7 +222,7 @@ export default function Happy() {
               sizes="(max-width: 768px) 80vw, (max-width: 1200px) 60vw, 40vw"
               className={styles.fishImage}
               placeholder="blur"
-              blurDataURL="/fishBlue/blur-placeholder.jpg" // You can generate a tiny 10x10 blurred version
+              blurDataURL="/fishBlue/blur-placeholder.jpg"
             />
 
             {showText && (

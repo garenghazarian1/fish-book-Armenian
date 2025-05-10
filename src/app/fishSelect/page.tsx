@@ -9,6 +9,7 @@ import styles from "./page.module.css";
 
 const fishList = [
   { name: "happy", src: "/fishBlue/happy.png" },
+  { name: "redfish", src: "/fishRed/happy.png" },
   // Add more fish here
 ];
 
