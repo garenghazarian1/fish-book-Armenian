@@ -7,7 +7,9 @@ import { Environment } from "@react-three/drei";
 import { useRouter } from "next/navigation";
 
 import BubbleParticles from "../BubbleParticles/BubbleParticles";
-import BubbleBurst from "../BubbleBurst/BubbleBurst"; // ✅ Only one shared component
+import BubbleBurst from "../bubble/BubbleBurst/BubbleBurst";
+import BubbleBurstButton from "../bubble/BubbleBurstButton/BubbleBurstButton";
+
 import styles from "./IntroScene.module.css";
 
 export default function IntroScene() {
@@ -142,7 +144,7 @@ export default function IntroScene() {
             Սկսել
             {hasMounted && (
               <div className={styles.bubbleBurstWrapper}>
-                <BubbleBurst triggerKey={burstKeyButton} />
+                <BubbleBurstButton triggerKey={burstKeyButton} />
               </div>
             )}
           </motion.button>

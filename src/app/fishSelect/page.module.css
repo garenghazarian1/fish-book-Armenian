@@ -1,20 +1,25 @@
 .fishPage {
   min-height: 100vh;
-  padding: 1rem;
+  padding: 2rem 1rem;
   background: url("/fishBlue/backgroundB.png") center/cover no-repeat;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: white;
+  justify-content: flex-start;
+  color: #e0f7ff;
+  font-family: var(--font-cartoon, sans-serif);
+  text-align: center;
 }
 
 .heading {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  text-align: center;
-  font-family: var(--font-cartoon, sans-serif);
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(to right, #38bdf8, #60dbfc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: floatBreathe 4s ease-in-out infinite;
 }
 
 .fishGrid {
@@ -24,41 +29,72 @@
   width: 100%;
   max-width: 800px;
   justify-items: center;
+  margin-top: 1rem;
 }
 
 .fishCard {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(3px);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
   padding: 1rem;
-  transition: transform 0.3s ease, background 0.3s ease;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 255, 255, 0.15);
+  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(4px);
 }
 
 .fishCard:hover {
-  transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.07);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
 }
 
 .fishImage {
   width: 100px;
   height: auto;
   object-fit: contain;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.fishCard:hover .fishImage {
+  transform: scale(1.05);
 }
 
 .backButton {
-  margin-bottom: 1rem;
-  padding: 0.6rem 1.6rem;
+  margin-bottom: 2rem;
+  padding: 0.7rem 1.8rem;
   font-size: 1.1rem;
-  border: 1px solid white;
-  border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  border: 1px solid #ffffffaa;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
   font-family: var(--font-cartoon, sans-serif);
+  backdrop-filter: blur(2px);
 }
 
 .backButton:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.18);
+  transform: scale(1.05);
+}
+
+.bubbleBurstWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Animations */
+@keyframes floatBreathe {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
