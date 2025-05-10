@@ -1,7 +1,6 @@
 /* ================================
 🌊 Base Layout
 ================================ */
-
 .introWrapper {
   height: 100vh;
   width: 100vw;
@@ -30,9 +29,9 @@
   );
   background-size: 200% 200%;
   animation: seaFlow 10s ease-in-out infinite;
-  z-index: 0;
   opacity: 0.8;
   pointer-events: none;
+  z-index: 0;
 }
 
 .introWrapper::after {
@@ -41,11 +40,11 @@
   inset: 0;
   background: url("/caustics.png") repeat;
   background-size: cover;
-  opacity: 0.4;
-  mix-blend-mode: overlay;
   animation: causticDrift 18s ease-in-out infinite;
-  z-index: 1;
+  mix-blend-mode: overlay;
+  opacity: 0.4;
   pointer-events: none;
+  z-index: 1;
 }
 
 @keyframes seaFlow {
@@ -72,14 +71,16 @@
   }
 }
 
+/* ================================
+📢 Title Container
+================================ */
 .titleContainer {
-  height: 100%;
   width: 100vw;
-  height: 300px;
+  height: 30%;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  justify-content: center;
   text-align: center;
   position: relative;
   z-index: 2;
@@ -87,19 +88,18 @@
 }
 
 /* ================================
-  ✨ Animated Title & Bubbles
-  ================================ */
+✨ Animated Title & Bubbles
+================================ */
 .title {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
   font-family: var(--font-cartoon);
   font-size: clamp(2rem, 6vw, 5rem);
   font-weight: 400;
-  cursor: pointer;
   text-align: center;
+  cursor: pointer;
   pointer-events: auto;
   transform-origin: center;
   transition: transform 0.35s ease-out;
@@ -144,18 +144,19 @@
 }
 
 /* ================================
-  🎨 Word Animations & Gradients
-  ================================ */
+🎨 Word Animations & Gradients
+================================ */
 .wordRed,
 .wordBlue,
 .wordOrange {
   display: inline-block;
   font-weight: 700;
-  line-height: 1.2;
-  background-clip: text;
+  line-height: 1.5;
+  text-align: center;
   color: transparent;
-  background-size: 500% 500%;
+  background-clip: text;
   background-repeat: no-repeat;
+  background-size: 500% 500%;
   animation: floatBreathe 3.5s ease-in-out infinite,
     gradientShift 3s ease-in-out infinite;
 }
@@ -169,6 +170,7 @@
   );
   animation-delay: 0s, 0s;
 }
+
 .wordBlue {
   background-image: linear-gradient(
     90deg,
@@ -178,6 +180,7 @@
   );
   animation-delay: 0.2s, 0.3s;
 }
+
 .wordOrange {
   background-image: linear-gradient(
     90deg,
@@ -219,8 +222,8 @@
 }
 
 /* ================================
-  💬 Subtitle
-  ================================ */
+💬 Subtitle
+================================ */
 .subtitle {
   font-family: var(--font-sans);
   font-weight: 400;
@@ -240,66 +243,143 @@
 }
 
 /* ================================
-  🐟 Fish Area (with 3D support)
-  ================================ */
+🐟 Fish Area (3D Support)
+================================ */
+.canvasContainer {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  inset: 0;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.bubbleCanvasContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
 
 /* ================================
-  👣 Footer
-  ================================ */
+🚀 Start Button
+================================ */
+.startButtonContainer {
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.startButton {
+  width: 100vw;
+  height: 20vh;
+  padding: 0.75rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  z-index: 100;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  letter-spacing: 0.5px;
+}
+
+.startButton:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.startButton:active {
+  transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ================================
+👣 Footer
+================================ */
 .footer {
+  height: 30%;
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: clamp(0.9rem, 2vw, 1.1rem);
   color: var(--orange-shiny);
   text-align: center;
   padding: 1rem;
-  margin-bottom: 2rem;
   opacity: 0.9;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-
   z-index: 1;
 }
 
 /* ================================
-  📱 Responsive (optional fine-tune)
-  ================================ */
+📱 Responsive Typography
+================================ */
+
 @media (max-width: 1100px) {
-  .subtitle {
-    font-size: 1rem;
+  .title {
+    font-size: 2.5rem;
   }
+
+  .subtitle,
   .footer {
     font-size: 1rem;
   }
 }
 
 @media (max-width: 900px) {
-  .subtitle {
-    font-size: 0.8rem;
+  .title {
+    font-size: 2rem;
+    justify-content: baseline;
   }
+
+  .subtitle,
   .footer {
     font-size: 0.8rem;
   }
 }
 
 @media (max-width: 800px) {
-  .subtitle {
-    font-size: 0.7rem;
+  .title {
+    /* font-size: 1.6rem; */
+    flex-direction: column;
   }
+
+  .subtitle,
   .footer {
     font-size: 0.7rem;
   }
 }
 
 @media (max-width: 600px) {
-  .subtitle {
-    font-size: 0.6rem;
+  .title {
+    /* font-size: 1.3rem; */
+    flex-direction: column;
   }
+
+  .subtitle,
   .footer {
     font-size: 0.6rem;
   }
 }
 
 @media (max-width: 300px) {
+  .title {
+    /* font-size: 1rem; */
+    text-align: center;
+    line-height: 1.2;
+    padding: 0 0.5rem;
+  }
+
   .subtitle {
     font-size: 0.5rem;
     line-height: 1.4;
@@ -312,48 +392,4 @@
     padding: 0.8rem 0.5rem;
     text-align: center;
   }
-}
-
-/* 3d fish styling  */
-
-.canvasContainer {
-  position: absolute;
-  top: 10px;
-  left: 0;
-  width: 200%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: auto;
-  inset: 0;
-  z-index: 1;
-}
-
-/* background bubble effect */
-.bubbleCanvasContainer {
-  position: absolute;
-  inset: 0;
-  z-index: 0; /* behind content */
-  pointer-events: none;
-}
-
-/* startButton */
-.startButton {
-  position: absolute;
-  top: 3rem;
-  margin-top: 2rem;
-  padding: 0.6rem 2rem;
-  font-size: 1.3rem;
-  border: none;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.15);
-  color: white;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  z-index: 100;
-}
-
-.startButton:hover {
-  background-color: rgba(255, 255, 255, 0.25);
 }

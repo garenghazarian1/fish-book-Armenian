@@ -7,12 +7,12 @@ import { Environment } from "@react-three/drei";
 import { useRouter } from "next/navigation";
 
 import BubbleParticles from "../BubbleParticles/BubbleParticles";
-import BubbleBurst from "../BubbleBurst/BubbleBurst";
-import FishModel from "@/components/FishModel/FishModel";
+import BubbleBurst from "../BubbleBurst/BubbleBurst"; // ✅ Only one shared component
 import styles from "./IntroScene.module.css";
 
 export default function IntroScene() {
-  const [burstKey, setBurstKey] = useState(0);
+  const [burstKeyTitle, setBurstKeyTitle] = useState(0);
+  const [burstKeyButton, setBurstKeyButton] = useState(0);
   const [hasMounted, setHasMounted] = useState(false);
   const [showSubtitle, setShowSubtitle] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
@@ -22,7 +22,6 @@ export default function IntroScene() {
 
   useEffect(() => {
     setHasMounted(true);
-
     if (typeof window !== "undefined") {
       setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
       bubbleSoundRef.current = new Audio("/sounds/bubble.mp3");
@@ -30,12 +29,10 @@ export default function IntroScene() {
     }
   }, []);
 
-  const handleInteraction = () => {
-    setBurstKey((k) => k + 1);
+  const handleTitleInteraction = () => {
+    setBurstKeyTitle((k) => k + 1);
     setShowSubtitle((prev) => !prev);
-
     if (navigator.vibrate) navigator.vibrate(40);
-
     bubbleSoundRef.current?.play().catch(() => {});
   };
 
@@ -48,7 +45,12 @@ export default function IntroScene() {
   };
 
   const handleStartClick = () => {
-    router.push("/fishSelect");
+    setBurstKeyButton((k) => k + 1);
+    bubbleSoundRef.current?.play().catch(() => {});
+    if (navigator.vibrate) navigator.vibrate(50);
+    setTimeout(() => {
+      router.push("/fishSelect");
+    }, 1000);
   };
 
   return (
@@ -72,7 +74,7 @@ export default function IntroScene() {
         </Canvas>
       </div>
 
-      {/* Title and subtitle area */}
+      {/* Title and subtitle */}
       <motion.div
         className={styles.titleContainer}
         initial={{ opacity: 0, y: -50 }}
@@ -81,14 +83,18 @@ export default function IntroScene() {
       >
         <h1
           className={styles.title}
-          onPointerDown={handleInteraction}
+          onPointerDown={handleTitleInteraction}
           onPointerEnter={handleHover}
           onPointerLeave={handleLeave}
         >
-          <span className={styles.wordRed}>Սկսենք</span>
-          <span className={styles.wordBlue}>հույզերի</span>
+          <span className={styles.wordRed}>Սկսենք&nbsp;</span>
+          <span className={styles.wordBlue}>հույզերի&nbsp;</span>
           <span className={styles.wordOrange}>ծովաշխարհ</span>
-          {hasMounted && <BubbleBurst triggerKey={burstKey} />}
+          {hasMounted && (
+            <div className={styles.bubbleBurstWrapper}>
+              <BubbleBurst triggerKey={burstKeyTitle} />
+            </div>
+          )}
         </h1>
 
         <motion.p
@@ -117,60 +123,52 @@ export default function IntroScene() {
         </motion.p>
       </motion.div>
 
-      {/* CTA button */}
-      <motion.button
-        onClick={handleStartClick}
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut", delay: 1.5 }}
-        className={styles.startButton}
-      >
-        Սկսել
-      </motion.button>
-
-      {/* Fish model canvas */}
+      {/* CTA Button */}
       <motion.div
-        className={styles.canvasContainer}
-        initial={{ opacity: 0, y: 60, scale: 0.8 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{
-          duration: 1.6,
-          ease: [0.25, 0.46, 0.45, 0.94],
-          delay: 1.2,
-        }}
+        className={styles.startButtonContainer}
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2 }}
       >
-        <Canvas
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "200%",
-            height: "100%",
-            background: "transparent",
-          }}
-          camera={{ position: [0, 0, 2.5], fov: 60 }}
-        >
-          <ambientLight intensity={1.2} />
-          <directionalLight position={[0, 0, 1]} intensity={2} />
-          <Suspense fallback={null}>
-            <FishModel />
-          </Suspense>
-        </Canvas>
+        <div className={styles.bubbleButtonWrapper}>
+          <motion.button
+            onClick={handleStartClick}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: "easeOut", delay: 1.5 }}
+            className={styles.startButton}
+          >
+            Սկսել
+            {hasMounted && (
+              <div className={styles.bubbleBurstWrapper}>
+                <BubbleBurst triggerKey={burstKeyButton} />
+              </div>
+            )}
+          </motion.button>
+        </div>
       </motion.div>
 
       {/* Footer */}
-      <motion.footer
-        className={styles.footer}
-        initial={{ opacity: 0, y: 40 }}
+      <motion.div
+        className={styles.startButtonContainer}
+        initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 1.4,
-          ease: [0.25, 0.46, 0.45, 0.94],
-          delay: 1.2,
-        }}
+        transition={{ duration: 1.2 }}
       >
-        Ստեղծվել է Կարէն Ղազարեանի եւ Նաիրա Պետրոսյանի կողմից @2025
-      </motion.footer>
+        <motion.footer
+          className={styles.footer}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 1.4,
+            ease: [0.25, 0.46, 0.45, 0.94],
+            delay: 1.2,
+          }}
+        >
+          Ստեղծվել է Կարէն Ղազարեանի եւ Նաիրա Պետրոսյանի կողմից @2025
+        </motion.footer>
+      </motion.div>
     </section>
   );
 }
