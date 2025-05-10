@@ -1,0 +1,7 @@
+{
+  "name": "FishBook",
+  "features": ["pwa", "debuggable"],
+  "devtools": {
+    "remoteDebugging": false
+  }
+}

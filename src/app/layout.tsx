@@ -17,6 +17,12 @@ const fredoka = Fredoka({
 export const metadata: Metadata = {
   title: "ձկնորսական գիրք (FishBook)",
   description: "Մանկական ծրագրաշար ձկների ու զգացմունքների ճանաչման համար",
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: "/icons/favicon.ico",
+    shortcut: "/icons/icon-192x192.png",
+    apple: "/icons/icon-512x512.png",
+  },
 };
 
 export default function RootLayout({
@@ -26,6 +32,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hy">
+      <head>
+        {/* fallback for older Android */}
+        <link rel="apple-touch-icon" href="/icons/icon-512x512.png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <meta name="theme-color" content="#38bdf8" />
+      </head>
       <body
         className={`${notoArmenian.variable} ${fredoka.variable} antialiased`}
       >
