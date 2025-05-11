@@ -11,8 +11,8 @@
   align-items: center;
   justify-content: center;
   z-index: 1;
-  touch-action: pan-y;
-  overscroll-behavior-y: none;
+  overscroll-behavior: none; /* ✅ */
+  touch-action: none; /* Prevent gesture conflicts */
   /* overscroll-behavior: contain; */
 }
 .swipeContainer::before {
