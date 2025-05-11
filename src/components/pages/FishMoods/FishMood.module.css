@@ -1,19 +1,18 @@
-/* ===============================
-   🐟 Main Layout & Container
-=============================== */
 .swipeContainer {
   position: relative;
-  height: 100vh;
+  min-height: 100dvh; /* ✅ dynamic mobile safe height */
   width: 100vw;
   overflow: hidden;
   background: url("/fishBlue/backgroundB.png") top/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
   touch-action: pan-y;
   overscroll-behavior: contain;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 1;
 }
+
 .swipeContainer::before {
   content: "";
   position: absolute;
@@ -26,31 +25,30 @@
     rgba(0, 255, 255, 0.05),
     transparent
   );
-  z-index: 0;
   animation: backgroundDrift 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
 }
+
 @keyframes backgroundDrift {
   0% {
-    transform: translate(0%, 0%);
+    transform: translate(0, 0);
   }
   50% {
     transform: translate(-5%, -3%);
   }
   100% {
-    transform: translate(0%, 0%);
+    transform: translate(0, 0);
   }
 }
 
 .canvasOverlay {
   position: absolute;
   inset: 0;
-  z-index: 0;
   pointer-events: none;
+  z-index: 0;
 }
 
-/* ===============================
-   🐠 Slide Content & Fish
-=============================== */
 .slide {
   position: relative;
   height: 100%;
@@ -70,8 +68,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 3;
   transition: transform 0.4s ease;
+  z-index: 3;
 }
 
 .fishImage {
@@ -84,6 +82,7 @@
     drop-shadow(0 0 30px rgba(0, 200, 255, 0.4));
   transition: filter 0.3s ease, transform 0.3s ease;
 }
+
 .fishImageWrapper:hover .fishImage {
   transform: scale(1.03) rotate(1deg);
   filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9))
@@ -100,9 +99,6 @@
   }
 }
 
-/* ===============================
-   💬 Speech Bubble
-=============================== */
 .speechBubble {
   position: absolute;
   top: 0;
@@ -116,12 +112,13 @@
   font-size: 1rem;
   max-width: 80%;
   text-align: center;
-  z-index: 4;
   pointer-events: auto;
   white-space: pre-wrap;
   animation: shimmer 3s infinite linear;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+  z-index: 4;
 }
+
 .speechBubble::after {
   content: "";
   position: absolute;
@@ -132,6 +129,7 @@
   border-style: solid;
   border-color: rgba(255, 255, 255, 0.2) transparent transparent transparent;
 }
+
 @keyframes shimmer {
   0% {
     background-position: -200px 0;
@@ -141,9 +139,6 @@
   }
 }
 
-/* ===============================
-   ⬅️ Navigation Back Button
-=============================== */
 .backButton {
   position: absolute;
   top: 20px;
@@ -154,16 +149,16 @@
   color: white;
   padding: 6px 12px;
   cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background-color 0.3s ease;
   z-index: 5;
-  transition: background 0.3s ease;
+  outline: none;
 }
+
 .backButton:hover {
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* ===============================
-   ❓ Tooltip Help Button
-=============================== */
 .helpWrapper {
   position: absolute;
   top: 1rem;
@@ -182,8 +177,10 @@
   cursor: pointer;
   backdrop-filter: blur(4px);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease;
+  outline: none;
 }
+
 .helpButton:hover {
   background: rgba(255, 255, 255, 0.4);
 }
@@ -202,9 +199,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* ===============================
-   ▶️ Autoplay Controls
-=============================== */
 .autoplayControls {
   position: absolute;
   bottom: 2.5rem;
@@ -222,14 +216,16 @@
   border-radius: 50%;
   padding: 0.6rem 0.8rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
   color: white;
   backdrop-filter: blur(4px);
   outline: none;
 }
+
 .controlButton:hover {
   background: rgba(255, 255, 255, 0.25);
 }
+
 .controlButton::after {
   content: "";
   position: absolute;
@@ -239,10 +235,12 @@
   opacity: 0;
   transition: opacity 0.3s ease;
 }
+
 .controlButton:hover::after {
   opacity: 1;
   animation: pulse 1s infinite;
 }
+
 @keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4);
@@ -267,6 +265,7 @@
     right: 2rem;
   }
 }
+
 @media (max-width: 768px) {
   .autoplayControls {
     bottom: 6rem;

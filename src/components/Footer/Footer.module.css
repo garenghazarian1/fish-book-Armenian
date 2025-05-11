@@ -1,5 +1,5 @@
 .footer {
-  height: 100vh;
+  min-height: 100dvh; /* ✅ dynamic viewport height */
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -11,10 +11,14 @@
 
   color: var(--foreground);
   background-color: var(--background);
-  background: url("/caustics.png") repeat;
+  padding-bottom: env(
+    safe-area-inset-bottom
+  ); /* ✅ safe bottom for iOS/Android */
 }
 
-/* Background layered effects */
+/* ===============================
+   🌊 Background layered effects
+=============================== */
 .footer::before {
   content: "";
   position: absolute;
@@ -47,6 +51,9 @@
   pointer-events: none;
 }
 
+/* ===============================
+   📄 Text & Links
+=============================== */
 .text {
   position: relative;
   z-index: 2;
@@ -71,14 +78,16 @@
   color: #38bdf8;
   font-weight: 500;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease; /* ✅ shorthand added */
 }
 
 .link:hover {
   color: #ffffff;
 }
 
-/* Responsive adjustments */
+/* ===============================
+   📱 Responsive adjustments
+=============================== */
 @media (min-width: 640px) {
   .links {
     flex-direction: row;
@@ -91,6 +100,9 @@
   }
 }
 
+/* ===============================
+   🌫️ Background animations
+=============================== */
 @keyframes seaFlow {
   0% {
     background-position: 0% 0%;

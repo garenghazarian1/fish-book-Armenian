@@ -48,19 +48,55 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: var(--font-sans), sans-serif;
   margin: 0;
-  padding: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body,
-html {
+/* ===================================
+   📱 Mobile & Viewport Handling
+   =================================== */
+html,
+body {
+  box-sizing: border-box;
+  height: 100%; /* fallback */
   overflow-x: hidden;
   overflow-y: auto;
   background: url("/caustics.png") repeat;
-  box-sizing: border-box;
-  height: 100%;
+  scroll-behavior: smooth;
+}
+
+/* ✅ Fix anchor scroll offset for fixed headers */
+html {
+  scroll-padding-top: 80px;
+}
+
+/* ✅ Utility class for fullscreen dynamic height */
+.fullHeight {
+  min-height: 100dvh; /* dynamic viewport height — avoids keyboard & browser UI issues */
+}
+
+/* ✅ Media Query for Tiny Screens (under 400px) */
+@media (max-width: 400px) {
+  .heading {
+    font-size: 1.2rem;
+  }
+
+  .footer {
+    padding: 1rem;
+  }
+}
+
+/* ================================
+♿ Accessibility: Reduce Motion
+================================ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

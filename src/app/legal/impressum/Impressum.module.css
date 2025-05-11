@@ -1,54 +1,94 @@
 /* Impressum.module.css */
 
 .container {
-  padding: 1.5rem;
-  max-width: 700px;
+  padding: 2rem 1.2rem;
+  width: 100vw;
   margin: 0 auto;
-  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: rgba(0, 0, 0, 0.466);
   color: var(--foreground);
-  font-family: var(--font-sans);
-  height: 100vh;
-  overflow-y: auto;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .heading {
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 700;
   text-align: center;
   color: var(--blue-shiny);
 }
 
 .section {
-  margin-top: 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
 }
 
 .subheading {
   font-size: 1.2rem;
   font-weight: 600;
+  margin-bottom: 0.5rem;
   color: var(--blue-light);
 }
 
 .paragraph {
   font-size: 1rem;
   line-height: 1.6;
+  color: var(--foreground);
+  word-wrap: break-word;
 }
 
-.paragraph a {
+.link {
   color: var(--blue-shiny);
   text-decoration: underline;
+  transition: color 0.3s ease;
 }
 
-@media (max-width: 768px) {
+.link:hover {
+  color: white;
+}
+
+.backWrapper {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.backButton {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--foreground);
+  border: 1px solid var(--foreground);
+  border-radius: 8px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+@media (min-width: 640px) {
   .container {
-    padding: 1rem;
+    padding: 3rem 2rem;
   }
+
   .heading {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
   }
+
   .subheading {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
   }
+
   .paragraph {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
   }
 }

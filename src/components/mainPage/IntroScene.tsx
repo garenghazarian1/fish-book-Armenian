@@ -150,27 +150,6 @@ export default function IntroScene() {
           </motion.button>
         </div>
       </motion.div>
-
-      {/* Footer 
-      <motion.div
-        className={styles.startButtonContainer}
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2 }}
-      >
-        <motion.footer
-          className={styles.footer}
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 1.4,
-            ease: [0.25, 0.46, 0.45, 0.94],
-            delay: 1.2,
-          }}
-        >
-          Ստեղծվել է Կարէն Ղազարեանի եւ Նաիրա Պետրոսյանի կողմից @2025
-        </motion.footer>
-      </motion.div>*/}
     </section>
   );
 }

@@ -2,19 +2,17 @@
 🌊 Base Layout
 ================================ */
 .introWrapper {
-  height: 100vh;
+  min-height: 100dvh;
   width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--background);
-  background: url("/caustics.png") repeat;
-
   color: var(--foreground);
   overflow: hidden;
   position: relative;
   z-index: 0;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .introWrapper::before {
@@ -87,6 +85,7 @@
   position: relative;
   z-index: 2;
   pointer-events: none;
+  margin-bottom: 1rem;
 }
 
 /* ================================
@@ -157,6 +156,8 @@
   text-align: center;
   color: transparent;
   background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   background-repeat: no-repeat;
   background-size: 500% 500%;
   animation: floatBreathe 3.5s ease-in-out infinite,
@@ -236,6 +237,7 @@
   text-shadow: 0 0 6px var(--bubble-shadow), 1px 1px 2px rgba(0, 0, 0, 0.2);
   pointer-events: none;
   white-space: pre-wrap;
+  padding-bottom: 1rem;
 }
 
 .letter {
@@ -277,11 +279,12 @@
   justify-content: center;
   align-items: center;
 }
+
 .startButton {
   width: 100vw;
   height: 20vh;
   padding: 0.75rem 2.5rem;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.8vw, 1.5rem);
   font-weight: 600;
   color: #ffffff;
   background: rgba(255, 255, 255, 0.12);
@@ -293,6 +296,7 @@
   z-index: 100;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   letter-spacing: 0.5px;
+  touch-action: manipulation;
 }
 
 .startButton:hover {
@@ -308,25 +312,8 @@
 }
 
 /* ================================
-👣 Footer
-================================ */
-/* .footer {
-  height: 30%;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-  color: var(--orange-shiny);
-  text-align: center;
-  padding: 1rem;
-  opacity: 0.9;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-} */
-
-/* ================================
 📱 Responsive Typography
 ================================ */
-
 @media (max-width: 1100px) {
   .title {
     font-size: 2.5rem;
@@ -350,7 +337,6 @@
 
 @media (max-width: 800px) {
   .title {
-    /* font-size: 1.6rem; */
     flex-direction: column;
   }
 
