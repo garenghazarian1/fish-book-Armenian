@@ -22,21 +22,37 @@ export default function Happy() {
   const [showTooltip, setShowTooltip] = useState(false);
 
   // ✅ Lock scroll
-  useEffect(() => {
-    // ✅ Lock scroll
-    const originalOverflow = document.body.style.overflow;
-    const originalPosition = document.body.style.position;
-    const originalHeight = document.body.style.height;
 
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.height = "100%";
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    const originalHtml = {
+      overflow: html.style.overflow,
+      overscrollBehavior: html.style.overscrollBehavior,
+    };
+
+    const originalBody = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      height: body.style.height,
+    };
+
+    // ✅ FULL LOCK
+    html.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.height = "100%";
 
     return () => {
-      // ✅ Restore scroll for other pages
-      document.body.style.overflow = originalOverflow;
-      document.body.style.position = originalPosition;
-      document.body.style.height = originalHeight;
+      // 🔄 Restore original scroll behavior
+      html.style.overflow = originalHtml.overflow;
+      html.style.overscrollBehavior = originalHtml.overscrollBehavior;
+
+      body.style.overflow = originalBody.overflow;
+      body.style.position = originalBody.position;
+      body.style.height = originalBody.height;
     };
   }, []);
 

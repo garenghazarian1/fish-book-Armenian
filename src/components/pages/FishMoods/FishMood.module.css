@@ -8,8 +8,8 @@
   align-items: center;
   justify-content: center;
   touch-action: pan-y;
-  /* overscroll-behavior: contain; */
-  overscroll-behavior-y: none;
+  overscroll-behavior: none; /* ✅ */
+  touch-action: none; /* Prevent gesture conflicts */
 
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 1;
