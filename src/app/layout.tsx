@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+// app/layout.tsx
+import type { Metadata, Viewport } from "next";
 import { Noto_Sans_Armenian, Fredoka } from "next/font/google";
 import "./globals.css";
 
@@ -8,36 +9,50 @@ const notoArmenian = Noto_Sans_Armenian({
   variable: "--font-noto-armenian",
 });
 
-// Playful Latin font (optional, for emojis/headings)
+// Latin/emoji font
 const fredoka = Fredoka({
   subsets: ["latin"],
   variable: "--font-fredoka",
 });
 
+// Site metadata for SEO and sharing
 export const metadata: Metadata = {
   title: "ձկնորսական գիրք (FishBook)",
   description: "Մանկական ծրագրաշար ձկների ու զգացմունքների ճանաչման համար",
-  manifest: "/manifest.webmanifest",
+  openGraph: {
+    title: "ձկնորսական գիրք (FishBook)",
+    description: "Ձկների միջոցով սովորիր ճանաչել հույզերը։",
+    images: [
+      {
+        url: "/icons/preview.png",
+        width: 1200,
+        height: 630,
+        alt: "FishBook App",
+      },
+    ],
+    type: "website",
+    locale: "hy_AM",
+  },
   icons: {
     icon: "/icons/favicon.ico",
     shortcut: "/icons/icon-192x192.png",
     apple: "/icons/icon-512x512.png",
   },
+  manifest: "/manifest.webmanifest",
+};
+
+// Viewport and theme color (must be outside `metadata`)
+export const viewport: Viewport = {
+  themeColor: "#38bdf8",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="hy">
-      <head>
-        {/* fallback for older Android */}
-        <link rel="apple-touch-icon" href="/icons/icon-512x512.png" />
-        <link rel="manifest" href="/manifest.webmanifest" />
-        <meta name="theme-color" content="#38bdf8" />
-      </head>
+    <html lang="hy" className="scroll-smooth">
       <body
         className={`${notoArmenian.variable} ${fredoka.variable} antialiased`}
       >

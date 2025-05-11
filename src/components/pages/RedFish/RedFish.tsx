@@ -219,8 +219,8 @@ export default function RedFish() {
               priority
               sizes="(max-width: 768px) 80vw, (max-width: 1200px) 60vw, 40vw"
               className={styles.fishImage}
-              placeholder="blur"
-              blurDataURL="/fishRed/blurPlaceholderRed.png"
+              // placeholder="blur"
+              // blurDataURL="/fishRed/blurPlaceholderRed.png"
             />
 
             {showText && (

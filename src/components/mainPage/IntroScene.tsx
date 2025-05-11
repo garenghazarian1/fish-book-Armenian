@@ -151,7 +151,7 @@ export default function IntroScene() {
         </div>
       </motion.div>
 
-      {/* Footer */}
+      {/* Footer 
       <motion.div
         className={styles.startButtonContainer}
         initial={{ opacity: 0, y: -50 }}
@@ -170,7 +170,7 @@ export default function IntroScene() {
         >
           Ստեղծվել է Կարէն Ղազարեանի եւ Նաիրա Պետրոսյանի կողմից @2025
         </motion.footer>
-      </motion.div>
+      </motion.div>*/}
     </section>
   );
 }
