@@ -17,6 +17,7 @@ const fredoka = Fredoka({
 
 // Site metadata for SEO and sharing
 export const metadata: Metadata = {
+  metadataBase: new URL("https://fish-book-armenian.vercel.app"), // ✅ correct for current hosting
   title: "ձկնորսական գիրք (FishBook)",
   description: "Մանկական ծրագրաշար ձկների ու զգացմունքների ճանաչման համար",
   openGraph: {
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     description: "Ձկների միջոցով սովորիր ճանաչել հույզերը։",
     images: [
       {
-        url: "/icons/preview.png",
+        url: "/icons/preview.png", // becomes absolute via metadataBase
         width: 1200,
         height: 630,
         alt: "FishBook App",
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
     ],
     type: "website",
     locale: "hy_AM",
+    url: "https://fish-book-armenian.vercel.app", // optional, good practice
   },
   icons: {
     icon: "/icons/favicon.ico",
