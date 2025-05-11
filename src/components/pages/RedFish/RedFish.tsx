@@ -21,6 +21,25 @@ export default function RedFish() {
   const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
 
+  // ✅ Lock scroll
+  useEffect(() => {
+    // ✅ Lock scroll
+    const originalOverflow = document.body.style.overflow;
+    const originalPosition = document.body.style.position;
+    const originalHeight = document.body.style.height;
+
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.height = "100%";
+
+    return () => {
+      // ✅ Restore scroll for other pages
+      document.body.style.overflow = originalOverflow;
+      document.body.style.position = originalPosition;
+      document.body.style.height = originalHeight;
+    };
+  }, []);
+
   // autoplay
   const [autoplayState, setAutoplayState] = useState<"play" | "pause" | "stop">(
     "stop"
