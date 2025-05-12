@@ -92,11 +92,44 @@ export default function Happy() {
   }, []);
 
   const startAutoplay = () => {
-    if (!audioRef.current || isPlaying || !isUnlocked) return;
+    const audio = audioRef.current;
+    if (!audio || isPlaying) return;
 
-    setIsPlaying(true);
-    setAutoplayState("play");
-    autoplayStep(index);
+    // Create a short silent audio gesture to unlock
+    const unlockGesture = () => {
+      const resume = () => {
+        if (typeof audio.play === "function") {
+          audio.volume = 0;
+          audio
+            .play()
+            .then(() => {
+              audio.pause();
+              audio.currentTime = 0;
+              audio.volume = 1;
+              setIsUnlocked(true);
+              setIsPlaying(true);
+              setAutoplayState("play");
+              autoplayStep(index);
+            })
+            .catch(() => {
+              // Still blocked – needs another interaction
+            });
+        }
+      };
+
+      // Wait a short time after the click/touch
+      setTimeout(resume, 100);
+    };
+
+    // Ensure it's only run from a gesture
+    if (!isUnlocked) {
+      document.addEventListener("click", unlockGesture, { once: true });
+      document.addEventListener("touchend", unlockGesture, { once: true });
+    } else {
+      setIsPlaying(true);
+      setAutoplayState("play");
+      autoplayStep(index);
+    }
   };
 
   const pauseAutoplay = () => {
@@ -269,7 +302,12 @@ export default function Happy() {
               </motion.div>
             )}
           </div>
-          <audio ref={audioRef} src={moods[index].audio} preload="auto" />
+          <audio
+            ref={audioRef}
+            src={moods[index].audio}
+            preload="auto"
+            playsInline
+          />
         </motion.div>
       </AnimatePresence>
 
