@@ -18,20 +18,27 @@ export default function Happy() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [exitEnabled, setExitEnabled] = useState(false);
-  const [isUnlocked, setIsUnlocked] = useState(false);
   const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const [autoplayState, setAutoplayState] = useState<"play" | "pause" | "stop">(
-    "stop"
-  );
-  const [isPlaying, setIsPlaying] = useState(false);
-  const autoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // ✅ Lock scroll
 
-  // Lock scroll
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
+
+    const originalHtml = {
+      overflow: html.style.overflow,
+      overscrollBehavior: html.style.overscrollBehavior,
+    };
+
+    const originalBody = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      height: body.style.height,
+    };
+
+    // ✅ FULL LOCK
     html.style.overflow = "hidden";
     html.style.overscrollBehavior = "none";
     body.style.overflow = "hidden";
@@ -39,103 +46,39 @@ export default function Happy() {
     body.style.height = "100%";
 
     return () => {
-      html.style.overflow = "";
-      html.style.overscrollBehavior = "";
-      body.style.overflow = "";
-      body.style.position = "";
-      body.style.height = "";
+      // 🔄 Restore original scroll behavior
+      html.style.overflow = originalHtml.overflow;
+      html.style.overscrollBehavior = originalHtml.overscrollBehavior;
+
+      body.style.overflow = originalBody.overflow;
+      body.style.position = originalBody.position;
+      body.style.height = originalBody.height;
     };
   }, []);
 
-  const autoplayStep = (currentIndex: number) => {
-    setIndex(currentIndex);
-    setShowText(false);
+  // autoplay
 
-    autoplayTimeoutRef.current = setTimeout(() => {
-      setShowText(true);
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {});
-      }
-
-      autoplayTimeoutRef.current = setTimeout(() => {
-        const nextIndex = (currentIndex + 1) % moods.length;
-        autoplayStep(nextIndex);
-      }, 4000);
-    }, 1000);
-  };
-  useEffect(() => {
-    const unlock = () => {
-      const audio = audioRef.current;
-      if (audio) {
-        audio
-          .play()
-          .then(() => {
-            audio.pause();
-            audio.currentTime = 0;
-            setIsUnlocked(true);
-          })
-          .catch(() => {
-            // still locked – maybe user didn't interact directly
-          });
-      }
-    };
-
-    // Only attach once
-    window.addEventListener("touchend", unlock, { once: true });
-    window.addEventListener("click", unlock, { once: true });
-
-    return () => {
-      window.removeEventListener("touchend", unlock);
-      window.removeEventListener("click", unlock);
-    };
-  }, []);
+  // autoplay
+  const [autoplayState, setAutoplayState] = useState<"play" | "pause" | "stop">(
+    "stop"
+  );
+  const [isPlaying, setIsPlaying] = useState(false);
+  const autoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const startAutoplay = () => {
-    const audio = audioRef.current;
-    if (!audio || isPlaying) return;
-
-    // Create a short silent audio gesture to unlock
-    const unlockGesture = () => {
-      const resume = () => {
-        if (typeof audio.play === "function") {
-          audio.volume = 0;
-          audio
-            .play()
-            .then(() => {
-              audio.pause();
-              audio.currentTime = 0;
-              audio.volume = 1;
-              setIsUnlocked(true);
-              setIsPlaying(true);
-              setAutoplayState("play");
-              autoplayStep(index);
-            })
-            .catch(() => {
-              // Still blocked – needs another interaction
-            });
-        }
-      };
-
-      // Wait a short time after the click/touch
-      setTimeout(resume, 100);
-    };
-
-    // Ensure it's only run from a gesture
-    if (!isUnlocked) {
-      document.addEventListener("click", unlockGesture, { once: true });
-      document.addEventListener("touchend", unlockGesture, { once: true });
-    } else {
-      setIsPlaying(true);
-      setAutoplayState("play");
-      autoplayStep(index);
-    }
+    if (isPlaying) return;
+    setIsPlaying(true);
+    setAutoplayState("play");
+    autoplayStep(index);
   };
 
   const pauseAutoplay = () => {
     setIsPlaying(false);
     setAutoplayState("pause");
-    if (autoplayTimeoutRef.current) clearTimeout(autoplayTimeoutRef.current);
+    if (autoplayTimeoutRef.current) {
+      clearTimeout(autoplayTimeoutRef.current);
+      autoplayTimeoutRef.current = null;
+    }
   };
 
   const stopAutoplay = () => {
@@ -145,15 +88,28 @@ export default function Happy() {
     setAutoplayState("stop");
   };
 
-  const handleFishClick = () => {
-    setShowText((prev) => {
-      const next = !prev;
-      if (next && audioRef.current) {
+  const autoplayStep = (currentIndex: number) => {
+    setIndex(currentIndex); // Step 1: Show image
+    setShowText(false); // Hide text initially
+
+    autoplayTimeoutRef.current = setTimeout(() => {
+      setShowText(true); // Step 2: Show text + play audio
+      if (audioRef.current) {
         audioRef.current.currentTime = 0;
         audioRef.current.play().catch(() => {});
       }
-      return next;
-    });
+
+      autoplayTimeoutRef.current = setTimeout(() => {
+        const nextIndex = (currentIndex + 1) % moods.length;
+        autoplayStep(nextIndex); // Step 3: Move to next
+      }, 4000); // wait 4s after showing text/audio
+    }, 1000); // wait 1s after image
+  };
+
+  // end
+
+  const toggleTooltip = () => {
+    setShowTooltip((prev) => !prev);
   };
 
   const handleBackClick = () => {
@@ -183,23 +139,36 @@ export default function Happy() {
     }),
   };
 
+  useEffect(() => {
+    if (index === 0) setExitEnabled(true);
+  }, [index]);
+
+  const handleFishClick = () => {
+    setShowText((prev) => {
+      const next = !prev;
+      if (next && audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
+      }
+      return next;
+    });
+  };
+
   const handleScroll = (dir: "next" | "prev") => {
     if (timeoutRef.current) return;
-    setDirection(dir);
+
+    setDirection(dir); // ✅ set direction for animation
     setShowText(false);
     setIndex((prev) =>
       dir === "next"
         ? (prev + 1) % moods.length
         : (prev - 1 + moods.length) % moods.length
     );
+
     timeoutRef.current = setTimeout(() => {
       timeoutRef.current = null;
     }, 800);
   };
-
-  useEffect(() => {
-    if (index === 0) setExitEnabled(true);
-  }, [index]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -234,10 +203,7 @@ export default function Happy() {
   return (
     <div className={styles.swipeContainer} ref={containerRef}>
       <div className={styles.helpWrapper}>
-        <button
-          onClick={() => setShowTooltip((prev) => !prev)}
-          className={styles.helpButton}
-        >
+        <button onClick={toggleTooltip} className={styles.helpButton}>
           ❓
         </button>
         {showTooltip && (
@@ -290,7 +256,10 @@ export default function Happy() {
               priority
               sizes="(max-width: 768px) 80vw, (max-width: 1200px) 60vw, 40vw"
               className={styles.fishImage}
+              // placeholder="blur"
+              // blurDataURL="/fishBlue/blurPlaceholderBlue.png"
             />
+
             {showText && (
               <motion.div
                 className={styles.speechBubble}
@@ -302,12 +271,7 @@ export default function Happy() {
               </motion.div>
             )}
           </div>
-          <audio
-            ref={audioRef}
-            src={moods[index].audio}
-            preload="auto"
-            playsInline
-          />
+          <audio ref={audioRef} src={moods[index].audio} preload="auto" />
         </motion.div>
       </AnimatePresence>
 
@@ -316,13 +280,13 @@ export default function Happy() {
           ⬅️ Վերադառնալ
         </button>
       )}
-
       <div className={styles.autoplayControls}>
         <button
           className={`${styles.controlButton} ${
             autoplayState === "play" ? styles.active : ""
           }`}
           onClick={startAutoplay}
+          title="Play"
         >
           ▶️
         </button>
@@ -331,6 +295,7 @@ export default function Happy() {
             autoplayState === "pause" ? styles.active : ""
           }`}
           onClick={pauseAutoplay}
+          title="Pause"
         >
           ⏸️
         </button>
@@ -339,6 +304,7 @@ export default function Happy() {
             autoplayState === "stop" ? styles.active : ""
           }`}
           onClick={stopAutoplay}
+          title="Stop"
         >
           ⏹️
         </button>
