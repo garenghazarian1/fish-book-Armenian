@@ -18,9 +18,9 @@ export default function Happy() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [exitEnabled, setExitEnabled] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
-  const [isUnlocked, setIsUnlocked] = useState(false);
 
   const [autoplayState, setAutoplayState] = useState<"play" | "pause" | "stop">(
     "stop"
@@ -28,10 +28,10 @@ export default function Happy() {
   const [isPlaying, setIsPlaying] = useState(false);
   const autoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Lock scroll
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
-
     html.style.overflow = "hidden";
     html.style.overscrollBehavior = "none";
     body.style.overflow = "hidden";
@@ -47,63 +47,12 @@ export default function Happy() {
     };
   }, []);
 
-  // ✅ Unlock audio context on first tap
-  useEffect(() => {
-    const unlockAudio = () => {
-      const audio = audioRef.current;
-      if (!audio) return;
-
-      audio
-        .play()
-        .then(() => {
-          audio.pause();
-          audio.currentTime = 0;
-          setIsUnlocked(true);
-        })
-        .catch(() => {
-          // Optional: log or handle user gesture not detected
-        });
-    };
-
-    window.addEventListener("click", unlockAudio, { once: true });
-    window.addEventListener("touchstart", unlockAudio, { once: true });
-
-    return () => {
-      window.removeEventListener("click", unlockAudio);
-      window.removeEventListener("touchstart", unlockAudio);
-    };
-  }, []);
-
-  const startAutoplay = () => {
-    if (!isUnlocked || isPlaying) return;
-
-    setIsPlaying(true);
-    setAutoplayState("play");
-    autoplayStep(index);
-  };
-
-  const pauseAutoplay = () => {
-    setIsPlaying(false);
-    setAutoplayState("pause");
-    if (autoplayTimeoutRef.current) {
-      clearTimeout(autoplayTimeoutRef.current);
-    }
-  };
-
-  const stopAutoplay = () => {
-    pauseAutoplay();
-    setIndex(0);
-    setShowText(false);
-    setAutoplayState("stop");
-  };
-
   const autoplayStep = (currentIndex: number) => {
     setIndex(currentIndex);
     setShowText(false);
 
     autoplayTimeoutRef.current = setTimeout(() => {
       setShowText(true);
-
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
         audioRef.current.play().catch(() => {});
@@ -114,6 +63,39 @@ export default function Happy() {
         autoplayStep(nextIndex);
       }, 4000);
     }, 1000);
+  };
+
+  const startAutoplay = () => {
+    const audio = audioRef.current;
+    if (!audio || isPlaying) return;
+
+    // ✅ Unlock audio on user gesture (Safari-safe)
+    audio
+      .play()
+      .then(() => {
+        audio.pause();
+        audio.currentTime = 0;
+        setIsUnlocked(true);
+        setIsPlaying(true);
+        setAutoplayState("play");
+        autoplayStep(index);
+      })
+      .catch(() => {
+        // Audio blocked – user must click again
+      });
+  };
+
+  const pauseAutoplay = () => {
+    setIsPlaying(false);
+    setAutoplayState("pause");
+    if (autoplayTimeoutRef.current) clearTimeout(autoplayTimeoutRef.current);
+  };
+
+  const stopAutoplay = () => {
+    pauseAutoplay();
+    setIndex(0);
+    setShowText(false);
+    setAutoplayState("stop");
   };
 
   const handleFishClick = () => {
@@ -163,7 +145,6 @@ export default function Happy() {
         ? (prev + 1) % moods.length
         : (prev - 1 + moods.length) % moods.length
     );
-
     timeoutRef.current = setTimeout(() => {
       timeoutRef.current = null;
     }, 800);
@@ -203,12 +184,13 @@ export default function Happy() {
     };
   }, []);
 
-  const toggleTooltip = () => setShowTooltip((prev) => !prev);
-
   return (
     <div className={styles.swipeContainer} ref={containerRef}>
       <div className={styles.helpWrapper}>
-        <button onClick={toggleTooltip} className={styles.helpButton}>
+        <button
+          onClick={() => setShowTooltip((prev) => !prev)}
+          className={styles.helpButton}
+        >
           ❓
         </button>
         {showTooltip && (
