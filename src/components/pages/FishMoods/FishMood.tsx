@@ -14,31 +14,24 @@ export default function Happy() {
   const [index, setIndex] = useState(0);
   const [showText, setShowText] = useState(false);
   const [direction, setDirection] = useState<"next" | "prev">("next");
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [exitEnabled, setExitEnabled] = useState(false);
-  const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [autoplayState, setAutoplayState] = useState<"play" | "pause" | "stop">(
+    "stop"
+  );
+  const [isPlaying, setIsPlaying] = useState(false);
+  const unlockedAudiosRef = useRef<HTMLAudioElement[]>([]);
+  const router = useRouter();
 
   // ✅ Lock scroll
-
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
 
-    const originalHtml = {
-      overflow: html.style.overflow,
-      overscrollBehavior: html.style.overscrollBehavior,
-    };
-
-    const originalBody = {
-      overflow: body.style.overflow,
-      position: body.style.position,
-      height: body.style.height,
-    };
-
-    // ✅ FULL LOCK
     html.style.overflow = "hidden";
     html.style.overscrollBehavior = "none";
     body.style.overflow = "hidden";
@@ -46,47 +39,62 @@ export default function Happy() {
     body.style.height = "100%";
 
     return () => {
-      // 🔄 Restore original scroll behavior
-      html.style.overflow = originalHtml.overflow;
-      html.style.overscrollBehavior = originalHtml.overscrollBehavior;
-
-      body.style.overflow = originalBody.overflow;
-      body.style.position = originalBody.position;
-      body.style.height = originalBody.height;
+      html.style.overflow = "";
+      html.style.overscrollBehavior = "";
+      body.style.overflow = "";
+      body.style.position = "";
+      body.style.height = "";
     };
   }, []);
 
-  // autoplay
+  // ✅ Unlock all audios on first gesture
+  useEffect(() => {
+    const unlockAllAudios = async () => {
+      const promises = moods.map((mood) => {
+        const audio = new Audio(mood.audio);
+        unlockedAudiosRef.current.push(audio);
+        return audio
+          .play()
+          .then(() => {
+            audio.pause();
+            audio.currentTime = 0;
+          })
+          .catch(() => {});
+      });
 
-  // autoplay
-  const [autoplayState, setAutoplayState] = useState<"play" | "pause" | "stop">(
-    "stop"
-  );
-  const [isPlaying, setIsPlaying] = useState(false);
-  const autoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+      await Promise.all(promises);
+      setIsUnlocked(true);
+    };
+
+    const onUserGesture = () => {
+      unlockAllAudios();
+    };
+
+    document.addEventListener("click", onUserGesture, { once: true });
+    document.addEventListener("touchend", onUserGesture, { once: true });
+
+    return () => {
+      document.removeEventListener("click", onUserGesture);
+      document.removeEventListener("touchend", onUserGesture);
+    };
+  }, []);
+
+  // ✅ Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      unlockedAudiosRef.current.forEach((audio) => {
+        audio.pause();
+        audio.src = "";
+      });
+      unlockedAudiosRef.current = [];
+    };
+  }, []);
 
   const startAutoplay = () => {
-    if (isPlaying || !audioRef.current) return;
-
-    const audio = audioRef.current;
-
-    // ✅ Unlock Safari autoplay restriction
-    audio.muted = true;
-    audio
-      .play()
-      .then(() => {
-        audio.pause();
-        audio.currentTime = 0;
-        audio.muted = false;
-
-        // Now it's safe to autoplay
-        setIsPlaying(true);
-        setAutoplayState("play");
-        autoplayStep(index);
-      })
-      .catch((err) => {
-        console.warn("Audio autoplay unlock failed:", err);
-      });
+    if (!isUnlocked || isPlaying) return;
+    setIsPlaying(true);
+    setAutoplayState("play");
+    autoplayStep(index);
   };
 
   const pauseAutoplay = () => {
@@ -94,7 +102,6 @@ export default function Happy() {
     setAutoplayState("pause");
     if (autoplayTimeoutRef.current) {
       clearTimeout(autoplayTimeoutRef.current);
-      autoplayTimeoutRef.current = null;
     }
   };
 
@@ -106,75 +113,46 @@ export default function Happy() {
   };
 
   const autoplayStep = (currentIndex: number) => {
-    setIndex(currentIndex); // Step 1: Show image
-    setShowText(false); // Hide text initially
+    setIndex(currentIndex);
+    setShowText(false);
 
     autoplayTimeoutRef.current = setTimeout(() => {
-      setShowText(true); // Step 2: Show text + play audio
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {});
+      setShowText(true);
+
+      const currentAudio = unlockedAudiosRef.current[currentIndex];
+      if (currentAudio) {
+        currentAudio.currentTime = 0;
+        currentAudio.play().catch(() => {});
       }
 
       autoplayTimeoutRef.current = setTimeout(() => {
         const nextIndex = (currentIndex + 1) % moods.length;
-        autoplayStep(nextIndex); // Step 3: Move to next
-      }, 4000); // wait 4s after showing text/audio
-    }, 1000); // wait 1s after image
+        autoplayStep(nextIndex);
+      }, 4000);
+    }, 1000);
   };
 
-  // end
-
-  const toggleTooltip = () => {
-    setShowTooltip((prev) => !prev);
+  const handleFishClick = () => {
+    setShowText((prev) => {
+      const next = !prev;
+      if (next) {
+        const currentAudio = unlockedAudiosRef.current[index];
+        if (currentAudio) {
+          currentAudio.currentTime = 0;
+          currentAudio.play().catch(() => {});
+        }
+      }
+      return next;
+    });
   };
 
   const handleBackClick = () => {
     router.push("/fishSelect");
   };
 
-  const fishVariants = {
-    initial: (direction: "next" | "prev") => ({
-      opacity: 0,
-      rotate: direction === "next" ? -90 : 90,
-      y: direction === "next" ? 100 : -100,
-      scale: 0.8,
-    }),
-    animate: {
-      opacity: 1,
-      rotate: 0,
-      y: 0,
-      scale: 1,
-      transition: { duration: 0.6, ease: "easeInOut" },
-    },
-    exit: (direction: "next" | "prev") => ({
-      opacity: 0,
-      rotate: direction === "next" ? 90 : -90,
-      y: direction === "next" ? -100 : 100,
-      scale: 0.8,
-      transition: { duration: 0.6, ease: "easeInOut" },
-    }),
-  };
-
-  useEffect(() => {
-    if (index === 0) setExitEnabled(true);
-  }, [index]);
-
-  const handleFishClick = () => {
-    setShowText((prev) => {
-      const next = !prev;
-      if (next && audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {});
-      }
-      return next;
-    });
-  };
-
   const handleScroll = (dir: "next" | "prev") => {
     if (timeoutRef.current) return;
-
-    setDirection(dir); // ✅ set direction for animation
+    setDirection(dir);
     setShowText(false);
     setIndex((prev) =>
       dir === "next"
@@ -186,6 +164,10 @@ export default function Happy() {
       timeoutRef.current = null;
     }, 800);
   };
+
+  useEffect(() => {
+    if (index === 0) setExitEnabled(true);
+  }, [index]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -216,6 +198,31 @@ export default function Happy() {
       container.removeEventListener("touchend", onTouchEnd);
     };
   }, []);
+
+  const toggleTooltip = () => setShowTooltip((prev) => !prev);
+
+  const fishVariants = {
+    initial: (direction: "next" | "prev") => ({
+      opacity: 0,
+      rotate: direction === "next" ? -90 : 90,
+      y: direction === "next" ? 100 : -100,
+      scale: 0.8,
+    }),
+    animate: {
+      opacity: 1,
+      rotate: 0,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.6, ease: "easeInOut" },
+    },
+    exit: (direction: "next" | "prev") => ({
+      opacity: 0,
+      rotate: direction === "next" ? 90 : -90,
+      y: direction === "next" ? -100 : 100,
+      scale: 0.8,
+      transition: { duration: 0.6, ease: "easeInOut" },
+    }),
+  };
 
   return (
     <div className={styles.swipeContainer} ref={containerRef}>
@@ -273,10 +280,7 @@ export default function Happy() {
               priority
               sizes="(max-width: 768px) 80vw, (max-width: 1200px) 60vw, 40vw"
               className={styles.fishImage}
-              // placeholder="blur"
-              // blurDataURL="/fishBlue/blurPlaceholderBlue.png"
             />
-
             {showText && (
               <motion.div
                 className={styles.speechBubble}
@@ -288,7 +292,6 @@ export default function Happy() {
               </motion.div>
             )}
           </div>
-          <audio ref={audioRef} src={moods[index].audio} preload="auto" />
         </motion.div>
       </AnimatePresence>
 
@@ -297,13 +300,13 @@ export default function Happy() {
           ⬅️ Վերադառնալ
         </button>
       )}
+
       <div className={styles.autoplayControls}>
         <button
           className={`${styles.controlButton} ${
             autoplayState === "play" ? styles.active : ""
           }`}
           onClick={startAutoplay}
-          title="Play"
         >
           ▶️
         </button>
@@ -312,7 +315,6 @@ export default function Happy() {
             autoplayState === "pause" ? styles.active : ""
           }`}
           onClick={pauseAutoplay}
-          title="Pause"
         >
           ⏸️
         </button>
@@ -321,7 +323,6 @@ export default function Happy() {
             autoplayState === "stop" ? styles.active : ""
           }`}
           onClick={stopAutoplay}
-          title="Stop"
         >
           ⏹️
         </button>
