@@ -126,3 +126,11 @@
     transform: translate(0, 0);
   }
 }
+/* ================================
+📱 iPhone SE-Specific Adjustments
+================================ */
+@media (max-width: 375px) {
+  .footer {
+    height: 100vh;
+  }
+}
