@@ -116,7 +116,9 @@
 }
 
 .backButton {
-  margin: 1rem;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid white;
   border-radius: 12px;
@@ -124,10 +126,8 @@
   padding: 0.5rem 1.2rem;
   font-size: 1rem;
   cursor: pointer;
-  z-index: 5;
+  z-index: 30;
   transition: background 0.3s ease;
-  align-self: flex-end;
-  margin-right: 1.5rem;
 }
 
 .backButton:hover {
@@ -137,7 +137,7 @@
 .helpWrapper {
   position: fixed;
   top: 1rem;
-  left: 1rem;
+  right: 1rem;
   z-index: 20;
 }
 
