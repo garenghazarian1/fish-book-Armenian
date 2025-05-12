@@ -405,10 +405,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 10;
   }
 
   .startButton {
-    background-color: #38bdf8;
+    background-color: #38bff83d;
     color: #ffffff;
     text-shadow: none;
     font-weight: 700;
