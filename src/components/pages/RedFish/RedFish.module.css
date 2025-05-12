@@ -230,6 +230,13 @@
 }
 
 @media (max-width: 375px) {
+  .swipeContainer {
+    position: relative;
+    width: 100vw;
+    height: 100dvh; /* already here */
+    min-height: 100dvh; /* ✅ Add this to force fill on short viewports */
+  }
+
   .speechBubble {
     font-size: 0.85rem;
     padding: 0.6rem 0.8rem;
