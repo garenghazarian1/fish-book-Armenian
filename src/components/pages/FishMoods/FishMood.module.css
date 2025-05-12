@@ -280,7 +280,7 @@
 /* ===============================
 📱 iPhone SE Dedicated Styling
 =============================== */
-@media (max-width: 375px) and (max-height: 667px) {
+@media (max-width: 375px) {
   .swipeContainer {
     height: 100dvh !important;
     width: 100vw !important;
@@ -320,6 +320,7 @@
   .autoplayControls {
     gap: 0.6rem !important;
     margin-bottom: 1rem !important;
+    bottom: 10rem;
   }
 
   .controlButton {
