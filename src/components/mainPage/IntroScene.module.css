@@ -369,3 +369,33 @@
     text-align: center;
   }
 }
+
+/* ================================
+📱 iPhone SE-Specific Adjustments
+================================ */
+@media (max-width: 375px) {
+  .introWrapper {
+    padding-bottom: env(safe-area-inset-bottom);
+    min-height: 100vh;
+    justify-content: space-evenly;
+  }
+
+  .titleContainer {
+    height: auto;
+    margin-bottom: 0.5rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    flex-direction: column;
+    line-height: 1.2;
+    text-align: center;
+    padding: 0 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.7rem;
+    padding: 0 1rem;
+    line-height: 1.4;
+  }
+}
