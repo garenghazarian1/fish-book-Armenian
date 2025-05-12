@@ -66,10 +66,27 @@ export default function Happy() {
   const autoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const startAutoplay = () => {
-    if (isPlaying) return;
-    setIsPlaying(true);
-    setAutoplayState("play");
-    autoplayStep(index);
+    if (isPlaying || !audioRef.current) return;
+
+    const audio = audioRef.current;
+
+    // ✅ Unlock Safari autoplay restriction
+    audio.muted = true;
+    audio
+      .play()
+      .then(() => {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.muted = false;
+
+        // Now it's safe to autoplay
+        setIsPlaying(true);
+        setAutoplayState("play");
+        autoplayStep(index);
+      })
+      .catch((err) => {
+        console.warn("Audio autoplay unlock failed:", err);
+      });
   };
 
   const pauseAutoplay = () => {
