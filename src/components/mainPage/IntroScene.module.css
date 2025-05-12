@@ -407,12 +407,19 @@
   }
 
   .startButton {
-    font-size: 1rem;
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    background-color: rgba(255, 255, 255, 0.25); /* less transparent */
-    backdrop-filter: blur(6px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+    background-color: #38bdf8; /* or use #ffffff with stronger contrast */
+    color: #000000; /* Solid black or a high contrast color */
+    text-shadow: none; /* Optional: remove if contrast is strong */
+    font-weight: 700;
+  }
+
+  .startButton:hover {
+    background-color: #60dbfc;
+    color: #000;
+  }
+
+  .startButton:active {
+    background-color: #3399ff;
+    color: #000;
   }
 }
