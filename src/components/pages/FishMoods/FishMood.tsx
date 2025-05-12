@@ -64,25 +64,39 @@ export default function Happy() {
       }, 4000);
     }, 1000);
   };
+  useEffect(() => {
+    const unlock = () => {
+      const audio = audioRef.current;
+      if (audio) {
+        audio
+          .play()
+          .then(() => {
+            audio.pause();
+            audio.currentTime = 0;
+            setIsUnlocked(true);
+          })
+          .catch(() => {
+            // still locked – maybe user didn't interact directly
+          });
+      }
+    };
+
+    // Only attach once
+    window.addEventListener("touchend", unlock, { once: true });
+    window.addEventListener("click", unlock, { once: true });
+
+    return () => {
+      window.removeEventListener("touchend", unlock);
+      window.removeEventListener("click", unlock);
+    };
+  }, []);
 
   const startAutoplay = () => {
-    const audio = audioRef.current;
-    if (!audio || isPlaying) return;
+    if (!audioRef.current || isPlaying || !isUnlocked) return;
 
-    // ✅ Unlock audio on user gesture (Safari-safe)
-    audio
-      .play()
-      .then(() => {
-        audio.pause();
-        audio.currentTime = 0;
-        setIsUnlocked(true);
-        setIsPlaying(true);
-        setAutoplayState("play");
-        autoplayStep(index);
-      })
-      .catch(() => {
-        // Audio blocked – user must click again
-      });
+    setIsPlaying(true);
+    setAutoplayState("play");
+    autoplayStep(index);
   };
 
   const pauseAutoplay = () => {
