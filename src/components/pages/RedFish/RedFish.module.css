@@ -233,8 +233,7 @@
   .swipeContainer {
     position: relative;
     width: 100vw;
-    height: 100dvh; /* already here */
-    min-height: 100dvh; /* ✅ Add this to force fill on short viewports */
+    height: 100vh; /* already here */
   }
 
   .speechBubble {
