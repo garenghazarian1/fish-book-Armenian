@@ -401,25 +401,26 @@
 
   .startButtonContainer {
     margin-top: 1rem;
+    margin-bottom: 3rem;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   .startButton {
-    background-color: #38bdf8; /* or use #ffffff with stronger contrast */
-    color: #000000; /* Solid black or a high contrast color */
-    text-shadow: none; /* Optional: remove if contrast is strong */
+    background-color: #38bdf8;
+    color: #ffffff;
+    text-shadow: none;
     font-weight: 700;
   }
 
   .startButton:hover {
     background-color: #60dbfc;
-    color: #000;
+    color: #ffffff;
   }
 
   .startButton:active {
     background-color: #3399ff;
-    color: #000;
+    color: #ffffff;
   }
 }
