@@ -270,7 +270,7 @@
 }
 @media (max-width: 768px) {
   .autoplayControls {
-    bottom: 6rem;
+    bottom: 12rem;
     left: 50%;
     right: auto;
     transform: translateX(-50%);
@@ -320,6 +320,7 @@
   .autoplayControls {
     gap: 0.6rem !important;
     margin-bottom: 1rem !important;
+    bottom: 7rem;
   }
 
   .controlButton {
