@@ -24,7 +24,7 @@ import {
 
 import moods from "./FishMoodData"; // adjust path if needed
 import styles from "./FishCarousel.module.css";
-import { div } from "framer-motion/client";
+// import { div } from "framer-motion/client";
 
 /* ------------------------------------------------------------------ */
 /* Types & Context                                                    */
@@ -246,7 +246,6 @@ const FishCarouselInner = () => {
             className={styles.image}
           />
         </div>
-        {/* Caption */}
 
         {/* Auto-play toggle */}
         <div className={styles.autoplayBtnContainer}>
