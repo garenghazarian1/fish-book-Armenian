@@ -178,33 +178,48 @@ const FishCarouselInner = () => {
   const touchStartY = useRef<number | null>(null);
   const lastWheel = useRef(0);
 
-  /* swipe */
+  /* swipe ---------------------------------------------------------- */
   const onTouchStart = (e: TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
   };
+
   const onTouchEnd = (e: TouchEvent) => {
     if (touchStartY.current === null) return;
     const diff = e.changedTouches[0].clientY - touchStartY.current;
+
     if (Math.abs(diff) > 30) {
       registerGesture();
-      diff > 0 ? prev() : next();
+      if (diff > 0) {
+        prev();
+      } else {
+        next();
+      }
     }
     touchStartY.current = null;
   };
 
-  /* wheel */
+  /* wheel ---------------------------------------------------------- */
   const onWheel = (e: WheelEvent) => {
     const now = Date.now();
     if (now - lastWheel.current < 500) return;
     lastWheel.current = now;
     registerGesture();
-    e.deltaY > 0 ? next() : prev();
+
+    if (e.deltaY > 0) {
+      next();
+    } else {
+      prev();
+    }
   };
 
-  /* click (top/bottom) */
+  /* click (top / bottom) ------------------------------------------ */
   const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
     registerGesture();
-    e.clientY < window.innerHeight / 2 ? prev() : next();
+    if (e.clientY < window.innerHeight / 2) {
+      prev();
+    } else {
+      next();
+    }
   };
 
   const slide = moods[index];
