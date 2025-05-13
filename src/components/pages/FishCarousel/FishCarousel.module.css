@@ -241,11 +241,21 @@
   }
 }
 @media (max-width: 375px) and (max-height: 667px) {
+  .backButtonContainer {
+    height: 120px;
+  }
   .captionContainer {
     width: 90%;
+    height: 120px;
   }
   .caption {
     width: 40%;
     font-size: 1rem;
+  }
+  .imageContainer {
+    height: 200px;
+  }
+  .autoplayBtnContainer {
+    height: 200px;
   }
 }
