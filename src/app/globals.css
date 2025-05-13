@@ -76,12 +76,12 @@ html {
 }
 
 /* ✅ Utility class for fullscreen dynamic height */
-.fullHeight {
-  min-height: 100dvh; /* dynamic viewport height — avoids keyboard & browser UI issues */
-}
+/* .fullHeight {
+  min-height: 100dvh;
+} */
 
 /* ✅ Media Query for Tiny Screens (under 400px) */
-@media (max-width: 400px) {
+/* @media (max-width: 400px) {
   .heading {
     font-size: 1.2rem;
   }
@@ -89,7 +89,7 @@ html {
   .footer {
     padding: 1rem;
   }
-}
+} */
 
 /* ================================
 ♿ Accessibility: Reduce Motion

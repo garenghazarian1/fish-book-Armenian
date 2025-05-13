@@ -1,12 +1,14 @@
 // FishCarousel.tsx  – Next.js / React-TSX carousel
 // • waits 1 s then plays a single audio track (never overlaps)
 // • swipe / wheel / click navigation
-// • optional Auto-play that stops cleanly on the current slide
+// • optional 4 s Auto-play that stops cleanly on the current slide
+// • Back button to /fishSelect
 // • browser audio-policy safe (needs first user gesture)
 
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -19,13 +21,14 @@ import {
   MouseEvent,
   WheelEvent,
 } from "react";
-// 👉 adjust this path if your data file lives elsewhere
-import moods from "./FishMoodData";
-import styles from "./FishCarousel.module.css";
 
-/* ------------------------------------------------------------------------ */
-/* Types & Context                                                          */
-/* ------------------------------------------------------------------------ */
+import moods from "./FishMoodData"; // adjust path if needed
+import styles from "./FishCarousel.module.css";
+import { div } from "framer-motion/client";
+
+/* ------------------------------------------------------------------ */
+/* Types & Context                                                    */
+/* ------------------------------------------------------------------ */
 interface Mood {
   id: string;
   image: string;
@@ -46,20 +49,17 @@ const MoodCarouselContext = createContext<MoodCarouselCtx | null>(null);
 
 export const useMoodCarousel = (): MoodCarouselCtx => {
   const ctx = useContext(MoodCarouselContext);
-  if (!ctx)
-    throw new Error(
-      "useMoodCarousel must be used inside <MoodCarouselProvider>"
-    );
+  if (!ctx) throw new Error("useMoodCarousel must be used inside provider");
   return ctx;
 };
 
-/* ------------------------------------------------------------------------ */
-/* Provider                                                                 */
-/* ------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+/* Provider (audio + autoplay logic)                                  */
+/* ------------------------------------------------------------------ */
 interface ProviderProps {
   children: ReactNode;
   autoStart?: boolean;
-  autoDelay?: number; // ms
+  autoDelay?: number;
 }
 
 export const MoodCarouselProvider = ({
@@ -75,7 +75,7 @@ export const MoodCarouselProvider = ({
   const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const firstGestureRef = useRef(false);
 
-  /* one Audio element for the whole life-time */
+  /* one <audio> element for life-time */
   useEffect(() => {
     audioRef.current = new Audio();
     return () => {
@@ -106,14 +106,14 @@ export const MoodCarouselProvider = ({
     }, 1000);
   }, []);
 
-  /* core navigation ------------------------------------------------------ */
+  /* navigation */
   const goTo = useCallback(
     (newIdx: number, fromUser = false) => {
       if (fromUser) firstGestureRef.current = true;
       setIndex(() => {
-        const idx = (newIdx + moods.length) % moods.length;
-        scheduleAudio(moods[idx]);
-        return idx;
+        const i = (newIdx + moods.length) % moods.length;
+        scheduleAudio(moods[i]);
+        return i;
       });
     },
     [scheduleAudio]
@@ -121,7 +121,7 @@ export const MoodCarouselProvider = ({
 
   const next = useCallback(() => goTo(index + 1, false), [goTo, index]);
 
-  /* auto-play: chain timeouts so no stray tick after stop ---------------- */
+  /* autoplay */
   const scheduleNext = useCallback(() => {
     clearTimer(autoTimerRef);
     if (!autoplay) return;
@@ -136,17 +136,16 @@ export const MoodCarouselProvider = ({
     return () => clearTimer(autoTimerRef);
   }, [scheduleNext]);
 
-  /* play first slide’s audio (will fail silently until gesture) ---------- */
+  /* first slide audio (silent until gesture) */
   useEffect(() => {
     scheduleAudio(moods[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* public API ----------------------------------------------------------- */
+  /* API */
   const registerGesture = () => {
     firstGestureRef.current = true;
   };
-
   const toggleAutoplay = () => {
     firstGestureRef.current = true;
     setAutoplay((a) => !a);
@@ -168,14 +167,14 @@ export const MoodCarouselProvider = ({
   );
 };
 
-/* ------------------------------------------------------------------------ */
-/* UI component                                                             */
-/* ------------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ */
+/* UI component                                                       */
+/* ------------------------------------------------------------------ */
 const FishCarouselInner = () => {
   const { index, next, prev, autoplay, toggleAutoplay, registerGesture } =
     useMoodCarousel();
 
+  const router = useRouter();
   const touchStartY = useRef<number | null>(null);
   const lastWheel = useRef(0);
 
@@ -188,11 +187,7 @@ const FishCarouselInner = () => {
     const diff = e.changedTouches[0].clientY - touchStartY.current;
     if (Math.abs(diff) > 30) {
       registerGesture();
-      if (diff > 0) {
-        prev();
-      } else {
-        next();
-      }
+      diff > 0 ? prev() : next();
     }
     touchStartY.current = null;
   };
@@ -203,60 +198,77 @@ const FishCarouselInner = () => {
     if (now - lastWheel.current < 500) return;
     lastWheel.current = now;
     registerGesture();
-    if (e.deltaY > 0) {
-      next();
-    } else {
-      prev();
-    }
+    e.deltaY > 0 ? next() : prev();
   };
 
   /* click (top/bottom) */
-  const onClick = (e: MouseEvent<HTMLDivElement>) => {
+  const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
     registerGesture();
-    if (e.clientY < window.innerHeight / 2) {
-      prev();
-    } else {
-      next();
-    }
+    e.clientY < window.innerHeight / 2 ? prev() : next();
   };
 
+  const slide = moods[index];
+
   return (
-    <div
-      className={styles.carousel}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-      onWheel={onWheel}
-      onClick={onClick}
-    >
-      <Image
-        src={moods[index].image}
-        alt={moods[index].id}
-        fill
-        priority
-        sizes="100vw"
-        className={styles.image}
-      />
-
-      <div className={styles.caption}>{moods[index].text}</div>
-
-      {/* Auto-play toggle – stopPropagation keeps it from being a navigation click */}
-      <button
-        className={styles.autoplayBtn}
-        onClick={(e) => {
-          e.stopPropagation();
-          toggleAutoplay();
-        }}
+    <div className={styles.container}>
+      <div
+        className={styles.carousel}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        onWheel={onWheel}
+        onClick={onClickSlide}
       >
-        {autoplay ? "⏸ Stop" : "▶️ Auto"}
-      </button>
+        {/* Back button */}
+        <div className={styles.backButtonContainer}>
+          <button
+            className={styles.backButton}
+            onClick={(e) => {
+              e.stopPropagation(); // avoid also triggering prev/next
+              router.push("/fishSelect");
+            }}
+          >
+            ⬅️ Վերադառնալ
+          </button>
+        </div>
+        <div className={styles.captionContainer}>
+          <div className={styles.caption}>{slide.text}</div>
+        </div>
+
+        <div className={styles.imageContainer}>
+          {/* Fish image */}
+          <Image
+            key={index}
+            src={slide.image}
+            alt={slide.id}
+            fill
+            priority
+            sizes="100%"
+            className={styles.image}
+          />
+        </div>
+        {/* Caption */}
+
+        {/* Auto-play toggle */}
+        <div className={styles.autoplayBtnContainer}>
+          <button
+            className={styles.autoplayBtn}
+            onClick={(e) => {
+              e.stopPropagation();
+              registerGesture();
+              toggleAutoplay();
+            }}
+          >
+            {autoplay ? "⏸ Stop" : "▶️ Auto"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
 
-/* ------------------------------------------------------------------------ */
-/* Exported wrapper                                                         */
-/* ------------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ */
+/* Wrapped export                                                     */
+/* ------------------------------------------------------------------ */
 const FishCarousel = () => (
   <MoodCarouselProvider>
     <FishCarouselInner />
