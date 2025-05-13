@@ -1,337 +1,264 @@
+/* =============================================================
+   FishMood.module.css — optimized, fluid, accessible styles
+   ============================================================= */
+
+/*
+  ✨  Guiding principles
+  ───────────────────────────────────────────────────────────────
+  • Desktop‑first, then squeeze gracefully with fluid clamp() sizing.
+  • Use CSS variables from :root for theme consistency.
+  • Keep animations subtle & disable them if the user prefers reduced motion.
+  • Minimise heavy drop‑shadows on mobile to boost rendering performance.
+  • Remove unused autoplay control styles (feature was cut).
+*/
+
 /* ===============================
    🐟 Main Layout & Container
-=============================== */
+   =============================== */
 .swipeContainer {
   position: relative;
-  height: 100vh;
+  height: 100dvh; /* Accounts for mobile dynamic bars */
   width: 100vw;
   overflow: hidden;
-  background: url("/fishBlue/backgroundB.png") top/cover no-repeat;
+  background: url("/fishBlue/backgroundB.png") top/cover no-repeat,
+    var(--blue-dark);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
-  overscroll-behavior: none; /* ✅ */
-  touch-action: none; /* Prevent gesture conflicts */
-  /* overscroll-behavior: contain; */
+  overscroll-behavior: none; /* Prevent parent scroll bounce */
+  touch-action: none; /* Avoid conflicts with swipe logic */
 }
+
+/* Ambient drifting glow */
 .swipeContainer::before {
   content: "";
   position: absolute;
-  top: -20%;
-  left: -10%;
-  width: 200%;
-  height: 200%;
+  top: -25%;
+  left: -15%;
+  width: 220%;
+  height: 220%;
   background: radial-gradient(
     ellipse at center,
-    rgba(0, 255, 255, 0.05),
-    transparent
+    rgba(0, 255, 255, 0.06) 0%,
+    transparent 70%
   );
-  z-index: 0;
-  animation: backgroundDrift 20s linear infinite;
+  pointer-events: none;
+  animation: bgDrift 24s linear infinite;
 }
-@keyframes backgroundDrift {
-  0% {
-    transform: translate(0%, 0%);
-  }
+@keyframes bgDrift {
   50% {
-    transform: translate(-5%, -3%);
+    transform: translate(-6%, -4%);
   }
-  100% {
-    transform: translate(0%, 0%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .swipeContainer::before {
+    animation: none;
   }
 }
 
+/* ===============================
+   Canvas overlay
+   =============================== */
 .canvasOverlay {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 0; /* Behind everything */
   pointer-events: none;
 }
 
 /* ===============================
-   🐠 Slide Content & Fish
-=============================== */
+   🐠 Slide & Fish
+   =============================== */
 .slide {
   position: relative;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  z-index: 2;
+  justify-content: center;
+  z-index: 1;
 }
 
 .fishImageWrapper {
   position: relative;
-  width: 100%;
-  height: 40vh;
-  cursor: pointer;
+  width: clamp(220px, 35vw, 480px);
+  aspect-ratio: 1 / 1; /* Keeps square regardless of image ratio */
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 3;
+  justify-content: center;
   transition: transform 0.4s ease;
+  will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+  .fishImageWrapper:hover {
+    transform: scale(1.04) rotate(1deg);
+  }
 }
 
 .fishImage {
+  max-width: 100%;
   max-height: 100%;
-  width: auto;
   object-fit: contain;
-  animation: floatFish 6s ease-in-out infinite;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
-    drop-shadow(0 0 20px rgba(0, 200, 255, 0.6))
-    drop-shadow(0 0 30px rgba(0, 200, 255, 0.4));
-  transition: filter 0.3s ease, transform 0.3s ease;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.75))
+    drop-shadow(0 0 20px rgba(0, 200, 255, 0.45));
+  animation: floatFish 7s ease-in-out infinite;
 }
-.fishImageWrapper:hover .fishImage {
-  transform: scale(1.03) rotate(1deg);
-  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9))
-    drop-shadow(0 0 25px #0ff) drop-shadow(0 0 40px #0ff);
-}
-
 @keyframes floatFish {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-12px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fishImage {
+    animation: none;
   }
 }
 
 /* ===============================
    💬 Speech Bubble
-=============================== */
+   =============================== */
 .speechBubble {
   position: absolute;
-  top: 0;
-  right: 30%;
+  bottom: 110%;
+  left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 16px;
-  backdrop-filter: blur(4px);
-  font-size: 1rem;
-  max-width: 80%;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.25);
+  color: var(--foreground);
+  font-family: var(--font-cartoon);
+  font-size: clamp(0.85rem, 1vw + 0.6rem, 1.15rem);
+  line-height: 1.35;
   text-align: center;
-  z-index: 4;
-  pointer-events: auto;
+  backdrop-filter: blur(6px);
+  width: max-content;
+  max-width: 280px;
   white-space: pre-wrap;
-  animation: shimmer 3s infinite linear;
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
 }
 .speechBubble::after {
   content: "";
   position: absolute;
-  bottom: -10px;
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border-width: 10px 10px 0 10px;
-  border-style: solid;
-  border-color: rgba(255, 255, 255, 0.2) transparent transparent transparent;
-}
-@keyframes shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: 200px 0;
-  }
+  border: 10px solid transparent;
+  border-top-color: rgba(255, 255, 255, 0.25);
 }
 
 /* ===============================
-   ⬅️ Navigation Back Button
-=============================== */
+   ❓ Tooltip & Back buttons
+   =============================== */
+.helpWrapper,
 .backButton {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid white;
-  border-radius: 12px;
-  color: white;
-  padding: 6px 12px;
-  cursor: pointer;
-  z-index: 5;
-  transition: background 0.3s ease;
+  position: fixed;
+  z-index: 10;
 }
-.backButton:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-/* ===============================
-   ❓ Tooltip Help Button
-=============================== */
 .helpWrapper {
-  position: absolute;
   top: 1rem;
   left: 1rem;
-  z-index: 20;
+}
+.backButton {
+  top: 1rem;
+  right: 1rem;
+}
+
+.helpButton,
+.backButton {
+  background: rgba(255, 255, 255, 0.18);
+  color: var(--foreground);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  font-size: 1rem;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .helpButton:hover,
+  .backButton:hover {
+    background: rgba(255, 255, 255, 0.32);
+  }
 }
 
 .helpButton {
-  background: rgba(255, 255, 255, 0.25);
-  color: white;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 50%;
   width: 2.4rem;
   height: 2.4rem;
-  cursor: pointer;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease;
-}
-.helpButton:hover {
-  background: rgba(255, 255, 255, 0.4);
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  padding: 0;
 }
 
 .tooltip {
   margin-top: 0.5rem;
-  background: rgba(0, 0, 0, 0.65);
-  color: white;
-  padding: 0.8rem 1rem;
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--foreground);
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
   font-size: 0.9rem;
-  max-width: 220px;
+  max-width: 240px;
   line-height: 1.4;
-  text-align: left;
   backdrop-filter: blur(6px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 /* ===============================
-   ▶️ Autoplay Controls
-=============================== */
-.autoplayControls {
-  position: absolute;
-  bottom: 2.5rem;
-  right: 3rem;
-  display: flex;
-  gap: 1rem;
-  z-index: 5;
-}
-
-.controlButton {
-  position: relative;
-  font-size: 1.5rem;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  border-radius: 50%;
-  padding: 0.6rem 0.8rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: white;
-  backdrop-filter: blur(4px);
-  outline: none;
-}
-.controlButton:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-.controlButton::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  inset: 0;
-  box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.controlButton:hover::after {
-  opacity: 1;
-  animation: pulse 1s infinite;
-}
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4);
-  }
-  100% {
-    box-shadow: 0 0 0 10px rgba(0, 255, 255, 0);
-  }
-}
-
-.active {
-  background: rgba(255, 255, 255, 0.4);
-  color: #0ff;
-  box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
-}
-
-/* ===============================
-   📱 Media Queries
-=============================== */
+   🌐 Responsive Tweaks
+   =============================== */
 @media (max-width: 1024px) {
-  .autoplayControls {
-    bottom: 3rem;
-    right: 2rem;
-  }
-}
-@media (max-width: 768px) {
-  .autoplayControls {
-    bottom: 12rem;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-  }
-}
-
-/* ===============================
-📱 iPhone SE Dedicated Styling
-=============================== */
-@media (max-width: 375px) {
-  .swipeContainer {
-    height: 100dvh !important;
-    width: 100vw !important;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
   .fishImageWrapper {
-    height: 38vh !important;
+    width: clamp(200px, 45vw, 400px);
   }
-
   .speechBubble {
-    font-size: 0.8rem !important;
-    padding: 0.5rem 0.75rem !important;
-    max-width: 90% !important;
-    top: 1rem !important;
+    max-width: 240px;
   }
+}
 
-  .backButton {
-    /* top: 0.6rem !important;
-    left: 0.6rem !important; */
-    font-size: 0.85rem !important;
-    padding: 0.4rem 0.8rem !important;
-    width: 200px;
+@media (max-width: 768px) {
+  .fishImageWrapper {
+    width: clamp(180px, 55vw, 340px);
   }
-
-  /* .helpWrapper {
-    top: 0.6rem !important;
-    right: 0.6rem !important;
-  } */
-
   .helpButton {
-    width: 2rem !important;
-    height: 2rem !important;
-    font-size: 0.5rem !important;
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.15rem;
   }
-
-  .autoplayControls {
-    gap: 0.6rem !important;
-    margin-bottom: 1rem !important;
-    bottom: 7rem;
+  .backButton {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
   }
+}
 
-  .controlButton {
-    font-size: 1.1rem !important;
-    padding: 0.45rem 0.6rem !important;
+/* iPhone SE & very small phones */
+@media (max-width: 375px) and (max-height: 667px) {
+  .fishImageWrapper {
+    width: 65vw;
   }
+  .speechBubble {
+    font-size: 0.8rem;
+    max-width: 180px;
+  }
+  .helpButton {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+  .backButton {
+    font-size: 0.8rem;
+    padding: 0.45rem 0.7rem;
+  }
+}
 
-  .tooltip {
-    font-size: 0.75rem !important;
-    padding: 0.6rem 0.75rem !important;
-    max-width: 180px !important;
-    margin-top: 0.4rem !important;
+/* Ultra‑wide monitors */
+@media (min-width: 1600px) {
+  .fishImageWrapper {
+    width: clamp(300px, 28vw, 550px);
+  }
+  .speechBubble {
+    font-size: 1.25rem;
+    max-width: 320px;
   }
 }

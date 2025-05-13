@@ -10,35 +10,42 @@ import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
 import { useRouter } from "next/navigation";
 import moods from "./FishMoodData.js";
 
+/**
+ * Kid‑centric UX — stepped reveal per slide:
+ *  1️⃣ Swipe up/down → fish image animates in immediately.
+ *  2️⃣ After **1 s** its speech bubble fades in.
+ *  3️⃣ After **another 1 s** the corresponding audio plays.
+ */
 export default function Happy() {
   const [index, setIndex] = useState(0);
-  const [showText, setShowText] = useState(false);
   const [direction, setDirection] = useState<"next" | "prev">("next");
+  const [showText, setShowText] = useState(true);
+
+  // refs
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollThrottleRef = useRef<NodeJS.Timeout | null>(null);
+  const textTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const audioTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const [exitEnabled, setExitEnabled] = useState(false);
-  const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
+  const router = useRouter();
 
-  // ✅ Lock scroll
-
+  /* ────────────────────────────  LOCK SCROLL  ─────────────────────────── */
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
-
     const originalHtml = {
       overflow: html.style.overflow,
       overscrollBehavior: html.style.overscrollBehavior,
     };
-
     const originalBody = {
       overflow: body.style.overflow,
       position: body.style.position,
       height: body.style.height,
     };
 
-    // ✅ FULL LOCK
     html.style.overflow = "hidden";
     html.style.overscrollBehavior = "none";
     body.style.overflow = "hidden";
@@ -46,76 +53,99 @@ export default function Happy() {
     body.style.height = "100%";
 
     return () => {
-      // 🔄 Restore original scroll behavior
       html.style.overflow = originalHtml.overflow;
       html.style.overscrollBehavior = originalHtml.overscrollBehavior;
-
       body.style.overflow = originalBody.overflow;
       body.style.position = originalBody.position;
       body.style.height = originalBody.height;
     };
   }, []);
 
-  // autoplay
+  /* ─────────────────────  STAGGERED TEXT + SOUND  ─────────────────────── */
+  useEffect(() => {
+    // Cleanup any pending reveals when index changes quickly
+    clearTimeout(textTimeoutRef.current as NodeJS.Timeout);
+    clearTimeout(audioTimeoutRef.current as NodeJS.Timeout);
 
-  // autoplay
-  const [autoplayState, setAutoplayState] = useState<"play" | "pause" | "stop">(
-    "stop"
-  );
-  const [isPlaying, setIsPlaying] = useState(false);
-  const autoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const startAutoplay = () => {
-    if (isPlaying) return;
-    setIsPlaying(true);
-    setAutoplayState("play");
-    autoplayStep(index);
-  };
-
-  const pauseAutoplay = () => {
-    setIsPlaying(false);
-    setAutoplayState("pause");
-    if (autoplayTimeoutRef.current) {
-      clearTimeout(autoplayTimeoutRef.current);
-      autoplayTimeoutRef.current = null;
-    }
-  };
-
-  const stopAutoplay = () => {
-    pauseAutoplay();
-    setIndex(0);
+    // Reset visual/audio state
     setShowText(false);
-    setAutoplayState("stop");
-  };
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
 
-  const autoplayStep = (currentIndex: number) => {
-    setIndex(currentIndex); // Step 1: Show image
-    setShowText(false); // Hide text initially
+    // 🔸 1 s → show speech bubble
+    textTimeoutRef.current = setTimeout(() => {
+      setShowText(true);
+    }, 1000);
 
-    autoplayTimeoutRef.current = setTimeout(() => {
-      setShowText(true); // Step 2: Show text + play audio
+    // 🔸 2 s → play audio
+    audioTimeoutRef.current = setTimeout(() => {
       if (audioRef.current) {
-        audioRef.current.currentTime = 0;
         audioRef.current.play().catch(() => {});
       }
+    }, 1000);
 
-      autoplayTimeoutRef.current = setTimeout(() => {
-        const nextIndex = (currentIndex + 1) % moods.length;
-        autoplayStep(nextIndex); // Step 3: Move to next
-      }, 4000); // wait 4s after showing text/audio
-    }, 1000); // wait 1s after image
+    // Enable back button after first slide loads
+    if (index === 0) setExitEnabled(true);
+
+    return () => {
+      clearTimeout(textTimeoutRef.current as NodeJS.Timeout);
+      clearTimeout(audioTimeoutRef.current as NodeJS.Timeout);
+    };
+  }, [index]);
+
+  /* ───────────────────────  SWIPE / WHEEL HANDLERS  ───────────────────── */
+  const handleScroll = (dir: "next" | "prev") => {
+    if (scrollThrottleRef.current) return; // simple throttle
+
+    setDirection(dir);
+    setIndex((prev) =>
+      dir === "next"
+        ? (prev + 1) % moods.length
+        : (prev - 1 + moods.length) % moods.length
+    );
+
+    scrollThrottleRef.current = setTimeout(() => {
+      scrollThrottleRef.current = null;
+    }, 800);
   };
 
-  // end
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-  const toggleTooltip = () => {
-    setShowTooltip((prev) => !prev);
-  };
+    // Wheel handler
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY > 20) handleScroll("next");
+      else if (e.deltaY < -20) handleScroll("prev");
+    };
 
-  const handleBackClick = () => {
-    router.push("/fishSelect");
-  };
+    // Touch handler
+    let startY = 0;
+    const onTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY;
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      const delta = e.changedTouches[0].clientY - startY;
+      if (delta < -30) handleScroll("next");
+      else if (delta > 30) handleScroll("prev");
+    };
 
+    const opts: AddEventListenerOptions = { passive: true };
+
+    container.addEventListener("wheel", onWheel, opts);
+    container.addEventListener("touchstart", onTouchStart, opts);
+    container.addEventListener("touchend", onTouchEnd, opts);
+
+    return () => {
+      container.removeEventListener("wheel", onWheel, opts);
+      container.removeEventListener("touchstart", onTouchStart, opts);
+      container.removeEventListener("touchend", onTouchEnd, opts);
+    };
+  }, []);
+
+  /* ─────────────────────────────  VARIANTS  ────────────────────────────── */
   const fishVariants = {
     initial: (direction: "next" | "prev") => ({
       opacity: 0,
@@ -137,73 +167,17 @@ export default function Happy() {
       scale: 0.8,
       transition: { duration: 0.6, ease: "easeInOut" },
     }),
-  };
+  } as const;
 
-  useEffect(() => {
-    if (index === 0) setExitEnabled(true);
-  }, [index]);
-
-  const handleFishClick = () => {
-    setShowText((prev) => {
-      const next = !prev;
-      if (next && audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {});
-      }
-      return next;
-    });
-  };
-
-  const handleScroll = (dir: "next" | "prev") => {
-    if (timeoutRef.current) return;
-
-    setDirection(dir); // ✅ set direction for animation
-    setShowText(false);
-    setIndex((prev) =>
-      dir === "next"
-        ? (prev + 1) % moods.length
-        : (prev - 1 + moods.length) % moods.length
-    );
-
-    timeoutRef.current = setTimeout(() => {
-      timeoutRef.current = null;
-    }, 800);
-  };
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const onWheel = (e: WheelEvent) => {
-      if (e.deltaY > 20) handleScroll("next");
-      else if (e.deltaY < -20) handleScroll("prev");
-    };
-
-    let touchStartY = 0;
-    const onTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-    };
-    const onTouchEnd = (e: TouchEvent) => {
-      const delta = e.changedTouches[0].clientY - touchStartY;
-      if (delta < -30) handleScroll("next");
-      else if (delta > 30) handleScroll("prev");
-    };
-
-    container.addEventListener("wheel", onWheel);
-    container.addEventListener("touchstart", onTouchStart);
-    container.addEventListener("touchend", onTouchEnd);
-
-    return () => {
-      container.removeEventListener("wheel", onWheel);
-      container.removeEventListener("touchstart", onTouchStart);
-      container.removeEventListener("touchend", onTouchEnd);
-    };
-  }, []);
-
+  /* ─────────────────────────────  RENDER  ──────────────────────────────── */
   return (
     <div className={styles.swipeContainer} ref={containerRef}>
+      {/* Help / tooltip */}
       <div className={styles.helpWrapper}>
-        <button onClick={toggleTooltip} className={styles.helpButton}>
+        <button
+          onClick={() => setShowTooltip((p) => !p)}
+          className={styles.helpButton}
+        >
           ❓
         </button>
         {showTooltip && (
@@ -214,13 +188,13 @@ export default function Happy() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            Կտտացրու ձկան վրա՝ տեսնելու հույզերի և լսելու ձայնը։
-            <br />
-            Քաշիր ներքև՝ համար ձուկը տեսնելու համար։
+            Քաշիր վերև կամ ներքև, որ հերթական ձուկը տեսնես → 1 վ հետո կտեսնես
+            խոսքը, էլի 1 վ հետո՝ ձայնը։
           </motion.div>
         )}
       </div>
 
+      {/* 3‑D bubbles & lighting overlay */}
       <div className={styles.canvasOverlay}>
         <Canvas
           camera={{ position: [0, 0, 2.5], fov: 60 }}
@@ -234,10 +208,11 @@ export default function Happy() {
           <ambientLight intensity={0.7} />
           <directionalLight position={[3, 3, 5]} intensity={1.2} />
           <Environment preset="sunset" background={false} />
-          <BubbleParticles count={20} />
+          <BubbleParticles count={10} />
         </Canvas>
       </div>
 
+      {/* Swipeable slides */}
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={index}
@@ -248,7 +223,7 @@ export default function Happy() {
           animate="animate"
           exit="exit"
         >
-          <div className={styles.fishImageWrapper} onClick={handleFishClick}>
+          <div className={styles.fishImageWrapper}>
             <Image
               src={moods[index].image}
               alt="Fish"
@@ -256,13 +231,12 @@ export default function Happy() {
               priority
               sizes="(max-width: 768px) 80vw, (max-width: 1200px) 60vw, 40vw"
               className={styles.fishImage}
-              // placeholder="blur"
-              // blurDataURL="/fishBlue/blurPlaceholderBlue.png"
             />
 
             {showText && (
               <motion.div
                 className={styles.speechBubble}
+                key={moods[index].text} // restart animation each slide
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
@@ -274,41 +248,14 @@ export default function Happy() {
           <audio ref={audioRef} src={moods[index].audio} preload="auto" />
         </motion.div>
       </AnimatePresence>
-
       {exitEnabled && (
-        <button className={styles.backButton} onClick={handleBackClick}>
+        <button
+          className={styles.backButton}
+          onClick={() => router.push("/fishSelect")}
+        >
           ⬅️ Վերադառնալ
         </button>
       )}
-      <div className={styles.autoplayControls}>
-        <button
-          className={`${styles.controlButton} ${
-            autoplayState === "play" ? styles.active : ""
-          }`}
-          onClick={startAutoplay}
-          title="Play"
-        >
-          ▶️
-        </button>
-        <button
-          className={`${styles.controlButton} ${
-            autoplayState === "pause" ? styles.active : ""
-          }`}
-          onClick={pauseAutoplay}
-          title="Pause"
-        >
-          ⏸️
-        </button>
-        <button
-          className={`${styles.controlButton} ${
-            autoplayState === "stop" ? styles.active : ""
-          }`}
-          onClick={stopAutoplay}
-          title="Stop"
-        >
-          ⏹️
-        </button>
-      </div>
     </div>
   );
 }
