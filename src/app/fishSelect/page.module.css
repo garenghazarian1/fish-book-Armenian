@@ -181,3 +181,37 @@
     padding: 0.6rem 1.4rem;
   }
 } */
+
+/* page.module.css */
+
+.unlockOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.unlockText {
+  background: #1e88e5;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.unlockText:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
+}
+
+.unlockText:active {
+  transform: translateY(1px);
+}

@@ -11,136 +11,100 @@ import { useRouter } from "next/navigation";
 import moods from "./FishMoodData.js";
 
 /**
- * Kid‑centric UX — stepped reveal per slide:
+ * Kid-centric UX — stepped reveal per slide:
  *  1️⃣ Swipe up/down → fish image animates in immediately.
- *  2️⃣ After **1 s** its speech bubble fades in.
- *  3️⃣ After **another 1 s** the corresponding audio plays.
+ *  2️⃣ After 1 s its speech bubble fades in.
+ *  3️⃣ After another 1 s the corresponding audio plays.
  */
 export default function Happy() {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
-  const [showText, setShowText] = useState(true);
-
-  // refs
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const scrollThrottleRef = useRef<NodeJS.Timeout | null>(null);
-  const textTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const audioTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const [exitEnabled, setExitEnabled] = useState(false);
+  const [showText, setShowText] = useState(false);
+  const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [exitEnabled, setExitEnabled] = useState(true);
   const router = useRouter();
 
-  // ――― top-level state & refs (place near your other useState / useRef lines)
-  const [showSwipeHint, setShowSwipeHint] = useState(false);
+  // refs
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const textTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const audioTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollThrottleRef = useRef<NodeJS.Timeout | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const hintTimers = useRef<{ t1?: NodeJS.Timeout; t2?: NodeJS.Timeout }>({});
-  /* ────────────────────────────  LOCK SCROLL  ─────────────────────────── */
+
+  // Preload audio element
   useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
-    const originalHtml = {
-      overflow: html.style.overflow,
-      overscrollBehavior: html.style.overscrollBehavior,
-    };
-    const originalBody = {
-      overflow: body.style.overflow,
-      position: body.style.position,
-      height: body.style.height,
-    };
-
-    html.style.overflow = "hidden";
-    html.style.overscrollBehavior = "none";
-    body.style.overflow = "hidden";
-    body.style.position = "fixed";
-    body.style.height = "100%";
-
+    audioRef.current = new Audio();
     return () => {
-      html.style.overflow = originalHtml.overflow;
-      html.style.overscrollBehavior = originalHtml.overscrollBehavior;
-      body.style.overflow = originalBody.overflow;
-      body.style.position = originalBody.position;
-      body.style.height = originalBody.height;
+      audioRef.current = null;
     };
   }, []);
 
-  /* ─────────────────────  STAGGERED TEXT + SOUND  ─────────────────────── */
+  /* ──────── STAGGERED TEXT + SOUND ──────── */
   useEffect(() => {
-    // Cleanup any pending reveals when index changes quickly
-    clearTimeout(textTimeoutRef.current as NodeJS.Timeout);
-    clearTimeout(audioTimeoutRef.current as NodeJS.Timeout);
-
-    // Reset visual/audio state
+    // Reset
     setShowText(false);
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
+      audioRef.current.src = moods[index].audio;
     }
+    clearTimeout(textTimeoutRef.current!);
+    clearTimeout(audioTimeoutRef.current!);
 
-    // 🔸 1 s → show speech bubble
+    // 1 s → show speech bubble
     textTimeoutRef.current = setTimeout(() => {
       setShowText(true);
     }, 1000);
 
-    // 🔸 2 s → play audio
+    // 2 s → play audio
     audioTimeoutRef.current = setTimeout(() => {
-      if (audioRef.current) {
-        audioRef.current.play().catch(() => {});
-      }
-    }, 1000);
+      audioRef.current?.play().catch(() => {});
+    }, 2000);
 
-    // Enable back button after first slide loads
-    if (index === 0) setExitEnabled(true);
+    // Back button enabled as soon as slide 0 appears
+    setExitEnabled(true);
 
     return () => {
-      clearTimeout(textTimeoutRef.current as NodeJS.Timeout);
-      clearTimeout(audioTimeoutRef.current as NodeJS.Timeout);
+      clearTimeout(textTimeoutRef.current!);
+      clearTimeout(audioTimeoutRef.current!);
     };
   }, [index]);
 
-  // 👋 Always-show swipe hint (runs on every refresh)
+  /* ──────── ALWAYS-SHOW SWIPE HINT ──────── */
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    // show after 3 s
     hintTimers.current.t1 = setTimeout(() => setShowSwipeHint(true), 3000);
-
-    // hide 2 s later ( = 5 s after page load )
     hintTimers.current.t2 = setTimeout(() => setShowSwipeHint(false), 5000);
-
     return () => {
       clearTimeout(hintTimers.current.t1);
       clearTimeout(hintTimers.current.t2);
     };
   }, []);
 
-  /* ───────────────────────  SWIPE / WHEEL HANDLERS  ───────────────────── */
+  /* ──────── SWIPE / WHEEL HANDLERS ──────── */
   const handleScroll = (dir: "next" | "prev") => {
-    if (scrollThrottleRef.current) return; // simple throttle
-
+    if (scrollThrottleRef.current) return;
     setDirection(dir);
     setIndex((prev) =>
       dir === "next"
         ? (prev + 1) % moods.length
         : (prev - 1 + moods.length) % moods.length
     );
-
     scrollThrottleRef.current = setTimeout(() => {
       scrollThrottleRef.current = null;
     }, 800);
   };
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const node = containerRef.current;
+    if (!node) return;
 
-    // Wheel handler
     const onWheel = (e: WheelEvent) => {
       if (e.deltaY > 20) handleScroll("next");
       else if (e.deltaY < -20) handleScroll("prev");
     };
 
-    // Touch handler
     let startY = 0;
     const onTouchStart = (e: TouchEvent) => {
       startY = e.touches[0].clientY;
@@ -152,46 +116,48 @@ export default function Happy() {
     };
 
     const opts: AddEventListenerOptions = { passive: true };
-
-    container.addEventListener("wheel", onWheel, opts);
-    container.addEventListener("touchstart", onTouchStart, opts);
-    container.addEventListener("touchend", onTouchEnd, opts);
+    node.addEventListener("wheel", onWheel, opts);
+    node.addEventListener("touchstart", onTouchStart, opts);
+    node.addEventListener("touchend", onTouchEnd, opts);
 
     return () => {
-      container.removeEventListener("wheel", onWheel, opts);
-      container.removeEventListener("touchstart", onTouchStart, opts);
-      container.removeEventListener("touchend", onTouchEnd, opts);
+      node.removeEventListener("wheel", onWheel, opts);
+      node.removeEventListener("touchstart", onTouchStart, opts);
+      node.removeEventListener("touchend", onTouchEnd, opts);
     };
   }, []);
 
-  /* ─────────────────────────────  VARIANTS  ────────────────────────────── */
-  const fishVariants = {
-    initial: (direction: "next" | "prev") => ({
-      opacity: 0,
-      rotate: direction === "next" ? -90 : 90,
-      y: direction === "next" ? 100 : -100,
-      scale: 0.8,
-    }),
-    animate: {
-      opacity: 1,
-      rotate: 0,
-      y: 0,
-      scale: 1,
-      transition: { duration: 0.6, ease: "easeInOut" },
-    },
-    exit: (direction: "next" | "prev") => ({
-      opacity: 0,
-      rotate: direction === "next" ? 90 : -90,
-      y: direction === "next" ? -100 : 100,
-      scale: 0.8,
-      transition: { duration: 0.6, ease: "easeInOut" },
-    }),
-  } as const;
+  /* ─────────── LOCK SCROLL ─────────── */
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const orig = {
+      htmlOverflow: html.style.overflow,
+      htmlOverscroll: html.style.overscrollBehavior,
+      bodyOverflow: body.style.overflow,
+      bodyPosition: body.style.position,
+      bodyHeight: body.style.height,
+    };
 
-  /* ─────────────────────────────  RENDER  ──────────────────────────────── */
+    html.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.height = "100%";
+
+    return () => {
+      html.style.overflow = orig.htmlOverflow;
+      html.style.overscrollBehavior = orig.htmlOverscroll;
+      body.style.overflow = orig.bodyOverflow;
+      body.style.position = orig.bodyPosition;
+      body.style.height = orig.bodyHeight;
+    };
+  }, []);
+
+  /* ─────── RENDER ─────── */
   return (
     <div className={styles.swipeContainer} ref={containerRef}>
-      {/*  === inside your JSX, replace the previous <AnimatePresence> block === */}
+      {/* Swipe hint */}
       <AnimatePresence>
         {showSwipeHint && (
           <motion.div
@@ -219,30 +185,27 @@ export default function Happy() {
         >
           ❓
         </button>
-        {showTooltip && (
-          <motion.div
-            className={styles.tooltip}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            Քաշիր վերև կամ ներքև, որ հերթական ձուկը տեսնես → 1 վ հետո կտեսնես
-            խոսքը, էլի 1 վ հետո՝ ձայնը։
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {showTooltip && (
+            <motion.div
+              className={styles.tooltip}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              Քաշիր վերև կամ ներքև՝ հաջորդ ձուկը → 1 վ հետո խոսքը → էլի 1 վ հետո
+              ձայնը։
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* 3‑D bubbles & lighting overlay */}
+      {/* 3-D bubbles backdrop */}
       <div className={styles.canvasOverlay}>
         <Canvas
           camera={{ position: [0, 0, 2.5], fov: 60 }}
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 0,
-            pointerEvents: "none",
-          }}
+          style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
         >
           <ambientLight intensity={0.7} />
           <directionalLight position={[3, 3, 5]} intensity={1.2} />
@@ -257,7 +220,28 @@ export default function Happy() {
           key={index}
           custom={direction}
           className={styles.slide}
-          variants={fishVariants}
+          variants={{
+            initial: (d) => ({
+              opacity: 0,
+              rotate: d === "next" ? -90 : 90,
+              y: d === "next" ? 100 : -100,
+              scale: 0.8,
+            }),
+            animate: {
+              opacity: 1,
+              rotate: 0,
+              y: 0,
+              scale: 1,
+              transition: { duration: 0.6, ease: "easeInOut" },
+            },
+            exit: (d) => ({
+              opacity: 0,
+              rotate: d === "next" ? 90 : -90,
+              y: d === "next" ? -100 : 100,
+              scale: 0.8,
+              transition: { duration: 0.6, ease: "easeInOut" },
+            }),
+          }}
           initial="initial"
           animate="animate"
           exit="exit"
@@ -268,14 +252,13 @@ export default function Happy() {
               alt="Fish"
               fill
               priority
-              sizes="(max-width: 768px) 80vw, (max-width: 1200px) 60vw, 40vw"
+              sizes="(max-width:768px) 80vw, (max-width:1200px) 60vw, 40vw"
               className={styles.fishImage}
             />
-
             {showText && (
               <motion.div
                 className={styles.speechBubble}
-                key={moods[index].text} // restart animation each slide
+                key={moods[index].text}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
@@ -284,9 +267,9 @@ export default function Happy() {
               </motion.div>
             )}
           </div>
-          <audio ref={audioRef} src={moods[index].audio} preload="auto" />
         </motion.div>
       </AnimatePresence>
+
       {exitEnabled && (
         <button
           className={styles.backButton}
