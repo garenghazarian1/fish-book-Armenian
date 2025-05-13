@@ -3,13 +3,11 @@
    ============================================================= */
 
 /*
-  ✨  Guiding principles
-  ───────────────────────────────────────────────────────────────
-  • Desktop‑first, then squeeze gracefully with fluid clamp() sizing.
-  • Use CSS variables from :root for theme consistency.
-  • Keep animations subtle & disable them if the user prefers reduced motion.
-  • Minimise heavy drop‑shadows on mobile to boost rendering performance.
-  • Remove unused autoplay control styles (feature was cut).
+  ✨ Guiding principles
+  • Desktop‑first, fluid clamp() sizing.
+  • Theme variables from :root.
+  • Respect prefers‑reduced‑motion.
+  • Lightweight drop‑shadows on mobile.
 */
 
 /* ===============================
@@ -17,7 +15,7 @@
    =============================== */
 .swipeContainer {
   position: relative;
-  height: 100dvh; /* Accounts for mobile dynamic bars */
+  height: 100dvh;
   width: 100vw;
   overflow: hidden;
   background: url("/fishBlue/backgroundB.png") top/cover no-repeat,
@@ -25,11 +23,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overscroll-behavior: none; /* Prevent parent scroll bounce */
-  touch-action: none; /* Avoid conflicts with swipe logic */
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
-/* Ambient drifting glow */
 .swipeContainer::before {
   content: "";
   position: absolute;
@@ -62,7 +59,7 @@
 .canvasOverlay {
   position: absolute;
   inset: 0;
-  z-index: 0; /* Behind everything */
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -83,7 +80,7 @@
 .fishImageWrapper {
   position: relative;
   width: clamp(220px, 35vw, 480px);
-  aspect-ratio: 1 / 1; /* Keeps square regardless of image ratio */
+  aspect-ratio: 1/1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,7 +117,7 @@
    =============================== */
 .speechBubble {
   position: absolute;
-  bottom: 110%;
+  bottom: 80%;
   left: 50%;
   transform: translateX(-50%);
   padding: 0.75rem 1rem;
@@ -182,7 +179,6 @@
     background: rgba(255, 255, 255, 0.32);
   }
 }
-
 .helpButton {
   width: 2.4rem;
   height: 2.4rem;
@@ -216,7 +212,6 @@
     max-width: 240px;
   }
 }
-
 @media (max-width: 768px) {
   .fishImageWrapper {
     width: clamp(180px, 55vw, 340px);
@@ -231,8 +226,6 @@
     font-size: 0.9rem;
   }
 }
-
-/* iPhone SE & very small phones */
 @media (max-width: 375px) and (max-height: 667px) {
   .fishImageWrapper {
     width: 65vw;
@@ -251,8 +244,6 @@
     padding: 0.45rem 0.7rem;
   }
 }
-
-/* Ultra‑wide monitors */
 @media (min-width: 1600px) {
   .fishImageWrapper {
     width: clamp(300px, 28vw, 550px);
@@ -260,5 +251,54 @@
   .speechBubble {
     font-size: 1.25rem;
     max-width: 320px;
+  }
+}
+
+/* ===============================
+   👆👇 Swipe hint overlay — two halves
+   =============================== */
+.swipeHint {
+  position: fixed;
+  inset: 0; /* full screen */
+  display: flex;
+  z-index: 30;
+  pointer-events: none; /* don’t block touches */
+}
+
+.half {
+  flex: 0 0 50vw; /* each side = 50% width */
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fingerUp,
+.fingerDown {
+  font-size: 3.8rem;
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.4));
+  animation: bounceFinger 1.3s infinite ease-out;
+}
+.fingerUp {
+  animation-direction: reverse;
+} /* bounce upward */
+.fingerDown {
+  animation-direction: normal;
+} /* bounce downward */
+
+@keyframes bounceFinger {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fingerUp,
+  .fingerDown {
+    animation: none;
   }
 }

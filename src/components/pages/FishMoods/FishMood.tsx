@@ -32,6 +32,9 @@ export default function Happy() {
   const [showTooltip, setShowTooltip] = useState(false);
   const router = useRouter();
 
+  // ――― top-level state & refs (place near your other useState / useRef lines)
+  const [showSwipeHint, setShowSwipeHint] = useState(false);
+  const hintTimers = useRef<{ t1?: NodeJS.Timeout; t2?: NodeJS.Timeout }>({});
   /* ────────────────────────────  LOCK SCROLL  ─────────────────────────── */
   useEffect(() => {
     const html = document.documentElement;
@@ -94,6 +97,22 @@ export default function Happy() {
       clearTimeout(audioTimeoutRef.current as NodeJS.Timeout);
     };
   }, [index]);
+
+  // 👋 Always-show swipe hint (runs on every refresh)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    // show after 3 s
+    hintTimers.current.t1 = setTimeout(() => setShowSwipeHint(true), 3000);
+
+    // hide 2 s later ( = 5 s after page load )
+    hintTimers.current.t2 = setTimeout(() => setShowSwipeHint(false), 5000);
+
+    return () => {
+      clearTimeout(hintTimers.current.t1);
+      clearTimeout(hintTimers.current.t2);
+    };
+  }, []);
 
   /* ───────────────────────  SWIPE / WHEEL HANDLERS  ───────────────────── */
   const handleScroll = (dir: "next" | "prev") => {
@@ -172,6 +191,26 @@ export default function Happy() {
   /* ─────────────────────────────  RENDER  ──────────────────────────────── */
   return (
     <div className={styles.swipeContainer} ref={containerRef}>
+      {/*  === inside your JSX, replace the previous <AnimatePresence> block === */}
+      <AnimatePresence>
+        {showSwipeHint && (
+          <motion.div
+            key="swipeHint"
+            className={styles.swipeHint}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className={styles.half}>
+              <span className={styles.fingerUp}>👆</span>
+            </div>
+            <div className={styles.half}>
+              <span className={styles.fingerDown}>👇</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Help / tooltip */}
       <div className={styles.helpWrapper}>
         <button
@@ -208,7 +247,7 @@ export default function Happy() {
           <ambientLight intensity={0.7} />
           <directionalLight position={[3, 3, 5]} intensity={1.2} />
           <Environment preset="sunset" background={false} />
-          <BubbleParticles count={10} />
+          <BubbleParticles count={5} />
         </Canvas>
       </div>
 
