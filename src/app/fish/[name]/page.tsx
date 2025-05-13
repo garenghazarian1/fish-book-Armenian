@@ -4,10 +4,13 @@ import { useParams } from "next/navigation";
 import type { FC } from "react";
 import Happy from "@/components/pages/FishMoods/FishMood";
 import RedFish from "@/components/pages/RedFish/RedFish";
+import FishCarousel from "@/components/pages/FishCarousel/FishCarousel";
 
 const moodComponents: Record<string, FC> = {
   happy: Happy,
   redfish: RedFish,
+  fishcarousel: FishCarousel,
+
   // Add more moods here as needed
 };
 
