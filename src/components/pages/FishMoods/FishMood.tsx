@@ -24,6 +24,7 @@ export default function Happy() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [exitEnabled, setExitEnabled] = useState(true);
   const router = useRouter();
+  const firstUnlockRef = useRef(false);
 
   // refs
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -60,8 +61,10 @@ export default function Happy() {
 
     // 2 s → play audio
     audioTimeoutRef.current = setTimeout(() => {
-      audioRef.current?.play().catch(() => {});
-    }, 2000);
+      audioRef.current?.play().catch((err) => {
+        console.warn("Delayed play still blocked?", err);
+      });
+    }, 1000);
 
     // Back button enabled as soon as slide 0 appears
     setExitEnabled(true);
@@ -84,6 +87,17 @@ export default function Happy() {
 
   /* ──────── SWIPE / WHEEL HANDLERS ──────── */
   const handleScroll = (dir: "next" | "prev") => {
+    if (!firstUnlockRef.current && audioRef.current) {
+      // Kick-start the media element so the browser considers it “user‐initiated”
+      audioRef.current
+        .play()
+        .catch(() => {})
+        .then(() => {
+          audioRef.current!.pause();
+          audioRef.current!.currentTime = 0;
+          firstUnlockRef.current = true;
+        });
+    }
     if (scrollThrottleRef.current) return;
     setDirection(dir);
     setIndex((prev) =>
@@ -204,6 +218,8 @@ export default function Happy() {
       {/* 3-D bubbles backdrop */}
       <div className={styles.canvasOverlay}>
         <Canvas
+          frameloop="demand"
+          gl={{ antialias: true }}
           camera={{ position: [0, 0, 2.5], fov: 60 }}
           style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
         >
