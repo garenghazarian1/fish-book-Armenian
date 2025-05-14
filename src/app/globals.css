@@ -40,6 +40,8 @@
   --bubble-inner-glow: rgba(255, 255, 255, 0.3);
   --bubble-outer-glow: rgba(255, 255, 255, 0.1);
   --bubble-shadow: rgba(255, 255, 255, 0.3);
+
+  --neon-blue: #23e6ff;
 }
 
 /* ===================================

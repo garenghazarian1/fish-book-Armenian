@@ -106,16 +106,9 @@
     border-box;
   backdrop-filter: blur(14px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.25);
-
-  border-radius: 75% 25% 75% 25% / 25% 75% 25% 75%;
-  border-radius: 60% 40% 60% 40% / 40% 60% 40% 60%;
-  border-radius: 80% 20% 80% 20% / 30% 70% 30% 70%;
-  border-radius: 70% 30% 60% 40% / 30% 70% 40% 60%;
-  border-radius: 75% 25% 75% 25% / 25% 75% 25% 75%;
-  border-radius: 65% 35% 65% 35% / 35% 65% 35% 65%;
   border-radius: 65% 35% 65% 35% / 35% 65% 35% 65%;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-  animation: bubbleMorph 12s ease-in-out infinite;
+  animation: bubbleMorph 4s ease-in-out infinite;
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
 }
 
@@ -162,9 +155,19 @@
   height: 100%;
   object-fit: contain;
   object-position: center;
-  transition: opacity 0.4s ease-in-out;
-  /* animation: ballDrop 1s both; */
+  /* Smooth transitions */
+  transition: opacity 0.4s ease-in-out, filter 0.4s ease-in-out,
+    box-shadow 0.4s ease-in-out, transform 0.4s ease-in-out;
+
+  /* Entry animation */
   animation: revolveScale 1s forwards;
+
+  /* Base color‑level tweaks */
+  filter: saturate(1.25) contrast(1.1) brightness(1.05)
+    drop-shadow(0 0 6px var(--neon-blue)) drop-shadow(0 0 12px var(--neon-blue));
+  transform: rotateX(54deg) rotateY(56deg) rotateZ(93deg)
+    translate3d(28px, 53px, 80px) scale3d(1.82, 1.37, 1.7) skew(22deg, 18deg);
+  /* Visible outer glow around the image bounds */
 }
 
 @keyframes revolveScale {
