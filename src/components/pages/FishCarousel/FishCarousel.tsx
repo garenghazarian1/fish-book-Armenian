@@ -24,7 +24,9 @@ import {
 
 import moods from "./FishMoodData"; // adjust path if needed
 import styles from "./FishCarousel.module.css";
-// import { div } from "framer-motion/client";
+import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
+import { Canvas } from "@react-three/fiber";
+import { Environment } from "@react-three/drei";
 
 /* ------------------------------------------------------------------ */
 /* Types & Context                                                    */
@@ -160,6 +162,33 @@ export const MoodCarouselProvider = ({
     registerGesture,
   };
 
+  /* ─────────── LOCK SCROLL ─────────── */
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const orig = {
+      htmlOverflow: html.style.overflow,
+      htmlOverscroll: html.style.overscrollBehavior,
+      bodyOverflow: body.style.overflow,
+      bodyPosition: body.style.position,
+      bodyHeight: body.style.height,
+    };
+
+    html.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.height = "100%";
+
+    return () => {
+      html.style.overflow = orig.htmlOverflow;
+      html.style.overscrollBehavior = orig.htmlOverscroll;
+      body.style.overflow = orig.bodyOverflow;
+      body.style.position = orig.bodyPosition;
+      body.style.height = orig.bodyHeight;
+    };
+  }, []);
+
   return (
     <MoodCarouselContext.Provider value={value}>
       {children}
@@ -274,6 +303,17 @@ const FishCarouselInner = () => {
           >
             {autoplay ? "⏸ Stop" : "▶️ Auto"}
           </button>
+          <Canvas
+            className={styles.canvasOverlay} /* fills full viewport */
+            frameloop="always" /* animate each frame  */
+            gl={{ antialias: true }}
+            camera={{ position: [0, 0, 2.5], fov: 60 }}
+          >
+            <ambientLight intensity={0.7} />
+            <directionalLight position={[3, 3, 5]} intensity={1.2} />
+            <Environment preset="sunset" background={false} />
+            <BubbleParticles count={5} />
+          </Canvas>
         </div>
       </div>
     </div>
