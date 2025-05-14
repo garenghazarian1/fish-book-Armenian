@@ -241,6 +241,12 @@
   }
 }
 @media (max-width: 375px) and (max-height: 667px) {
+  .container {
+    height: 100vh;
+  }
+  .carousel {
+    height: 100%;
+  }
   .backButtonContainer {
     height: 10%;
   }
