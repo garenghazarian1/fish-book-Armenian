@@ -242,20 +242,26 @@
 }
 @media (max-width: 375px) and (max-height: 667px) {
   .backButtonContainer {
-    height: 120px;
+    height: 10%;
+  }
+  .backButton {
+    font-size: 0.7rem;
   }
   .captionContainer {
     width: 90%;
-    height: 120px;
+    height: 20%;
   }
   .caption {
     width: 40%;
-    font-size: 1rem;
+    font-size: 0.7rem;
   }
   .imageContainer {
-    height: 200px;
+    height: 30%;
   }
   .autoplayBtnContainer {
-    height: 200px;
+    height: 10%;
+  }
+  .autoplayBtn {
+    font-size: 0.7rem;
   }
 }
