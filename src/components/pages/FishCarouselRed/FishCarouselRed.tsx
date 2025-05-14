@@ -23,8 +23,6 @@ import {
 } from "react";
 
 import redMoods from "./RedFishMood"; // ← NEW
-const moods = redMoods; // ← NEW ALIAS
-
 import styles from "./FishCarouselRed.module.css";
 import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
 import { Canvas } from "@react-three/fiber";
@@ -35,7 +33,7 @@ import { Environment } from "@react-three/drei";
 /* ------------------------------------------------------------------ */
 interface Mood {
   id: string;
-  image: any; // StaticImageData if you import images
+  image: string;
   text: string;
   audio: string;
 }
@@ -115,8 +113,8 @@ export const MoodCarouselProvider = ({
     (newIdx: number, fromUser = false) => {
       if (fromUser) firstGestureRef.current = true;
       setIndex(() => {
-        const i = (newIdx + moods.length) % moods.length;
-        scheduleAudio(moods[i]);
+        const i = (newIdx + redMoods.length) % redMoods.length;
+        scheduleAudio(redMoods[i]);
         return i;
       });
     },
@@ -142,7 +140,7 @@ export const MoodCarouselProvider = ({
 
   /* first slide audio (silent until gesture) */
   useEffect(() => {
-    scheduleAudio(moods[0]);
+    scheduleAudio(redMoods[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -253,7 +251,7 @@ const RedFishCarouselInner = () => {
     }
   };
 
-  const slide = moods[index];
+  const slide = redMoods[index];
 
   return (
     <div className={styles.container}>
