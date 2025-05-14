@@ -242,7 +242,7 @@
 }
 @media (max-width: 375px) and (max-height: 667px) {
   .container {
-    height: 100vh;
+    height: 100%;
   }
   .carousel {
     height: 100%;
