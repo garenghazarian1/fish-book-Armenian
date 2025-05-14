@@ -20,7 +20,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none; /* clicks go through to carousel */
-  z-index: 0 !important; /* lower than buttons, caption, fish */
+  z-index: -10 !important; /* lower than buttons, caption, fish */
 }
 
 .carousel {
@@ -163,10 +163,32 @@
   object-fit: contain;
   object-position: center;
   transition: opacity 0.4s ease-in-out;
-
   /* animation: ballDrop 1s both; */
   animation: revolveScale 1s forwards;
 }
+
+@keyframes revolveScale {
+  60% {
+    transform: translate(20px, 20px) rotate(30deg) scale(0.3);
+  }
+
+  100% {
+    transform: translate(0) rotate(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* @keyframes easing {
+  0% {
+    transform: translateX(-120px);
+  }
+  75% {
+    transform: translateX(-50px);
+  }
+  100% {
+    transform: translateX(250px);
+  }
+} */
 
 /* @keyframes leftRight {
   40% {
@@ -257,29 +279,6 @@
     opacity: 1;
   }
 } */
-
-@keyframes revolveScale {
-  60% {
-    transform: translate(20px, 20px) rotate(30deg) scale(0.3);
-  }
-
-  100% {
-    transform: translate(0) rotate(0) scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes easing {
-  0% {
-    transform: translateX(-120px);
-  }
-  75% {
-    transform: translateX(-50px);
-  }
-  100% {
-    transform: translateX(250px);
-  }
-}
 
 /* ----- Auto-play & Back buttons ---------------------------------- */
 .autoplayBtnContainer {
