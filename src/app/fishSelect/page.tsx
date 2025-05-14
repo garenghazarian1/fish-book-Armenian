@@ -11,6 +11,7 @@ const fishList = [
   { name: "happy", src: "/fishBlue/happy.png" },
   { name: "redfish", src: "/fishRed/happy.png" },
   { name: "fishcarousel", src: "/fishRed/angry.png" },
+  { name: "redfishcarousel", src: "/fishBlue/angry.png" },
 
   // Add more fish here
 ];

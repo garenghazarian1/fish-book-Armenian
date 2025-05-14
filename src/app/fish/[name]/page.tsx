@@ -5,11 +5,13 @@ import type { FC } from "react";
 import Happy from "@/components/pages/FishMoods/FishMood";
 import RedFish from "@/components/pages/RedFish/RedFish";
 import FishCarousel from "@/components/pages/FishCarousel/FishCarousel";
+import RedFishCarousel from "@/components/pages/FishCarouselRed/FishCarouselRed";
 
 const moodComponents: Record<string, FC> = {
   happy: Happy,
   redfish: RedFish,
   fishcarousel: FishCarousel,
+  redfishcarousel: RedFishCarousel,
 
   // Add more moods here as needed
 };
