@@ -80,7 +80,7 @@ export const MoodCarouselProvider = ({
   const goTo = useCallback(
     (i: number, fromUser = false) => {
       if (fromUser) hadGesture.current = true;
-      setIndex((_) => {
+      setIndex(() => {
         const n = (i + moods.length) % moods.length;
         scheduleAudio(moods[n]);
         return n;

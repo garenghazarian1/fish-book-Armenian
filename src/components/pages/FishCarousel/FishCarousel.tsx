@@ -10,44 +10,71 @@ import {
 } from "@/components/context/useMoodCarousel";
 import moods from "./FishMoodData";
 import styles from "./FishCarousel.module.css";
+
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
 
-/* ------------------------------------------------ Inner UI only -- */
+/* ------------------------------------------------------------------ */
+/* Inner UI                                                           */
+/* ------------------------------------------------------------------ */
 const FishCarouselInner = () => {
   const { index, next, prev, autoplay, toggleAutoplay, registerGesture } =
     useMoodCarousel();
   const router = useRouter();
+
   const touchStartY = useRef<number | null>(null);
   const lastWheel = useRef(0);
   const slide = moods[index];
 
-  /* swipes */
-  const onTouchStart = (e: TouchEvent) =>
-    void (touchStartY.current = e.touches[0].clientY);
+  /* ---------------------------- swipe handlers -------------------- */
+  const onTouchStart = (e: TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
   const onTouchEnd = (e: TouchEvent) => {
     if (touchStartY.current === null) return;
     const diff = e.changedTouches[0].clientY - touchStartY.current;
-    if (Math.abs(diff) > 30) (diff > 0 ? prev : next)(), registerGesture();
+    if (Math.abs(diff) > 30) {
+      if (diff > 0) {
+        prev();
+      } else {
+        next();
+      }
+      registerGesture();
+    }
     touchStartY.current = null;
   };
 
-  /* wheel */
+  /* ---------------------------- wheel handler --------------------- */
   const onWheel = (e: WheelEvent) => {
     const now = Date.now();
-    if (now - lastWheel.current < 500) return;
+    if (now - lastWheel.current < 500) return; // debounce
+
     lastWheel.current = now;
     registerGesture();
-    (e.deltaY > 0 ? next : prev)();
+
+    if (e.deltaY > 0) {
+      next();
+    } else {
+      prev();
+    }
   };
 
-  /* click top / bottom */
-  const onClick = (e: MouseEvent<HTMLDivElement>) => {
+  /* -------------------------- click top / bottom ------------------ */
+  const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
     registerGesture();
-    (e.clientY < window.innerHeight / 2 ? prev : next)();
+
+    if (e.clientY < window.innerHeight / 2) {
+      prev();
+    } else {
+      next();
+    }
   };
 
+  /* ------------------------------------------------------------------ */
+  /* JSX                                                               */
+  /* ------------------------------------------------------------------ */
   return (
     <div className={styles.container}>
       <div
@@ -55,9 +82,9 @@ const FishCarouselInner = () => {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         onWheel={onWheel}
-        onClick={onClick}
+        onClick={onClickSlide}
       >
-        {/* Back */}
+        {/* Back button */}
         <button
           className={styles.backButton}
           onClick={(e) => {
@@ -68,27 +95,27 @@ const FishCarouselInner = () => {
           ⬅️ Վերադառնալ
         </button>
 
-        {/* Caption */}
+        {/* Slide caption */}
         <div className={styles.captionContainer}>
           <div key={`caption-${index}`} className={styles.caption}>
             {slide.text}
           </div>
         </div>
 
-        {/* Image */}
+        {/* Fish image */}
         <div className={styles.imageContainer}>
           <Image
             key={index}
             src={slide.image}
             alt={slide.id}
             fill
-            priority
             sizes="100%"
+            priority
             className={styles.image}
           />
         </div>
 
-        {/* Autoplay */}
+        {/* Autoplay toggle */}
         <button
           className={styles.autoplayBtn}
           onClick={(e) => {
@@ -100,7 +127,7 @@ const FishCarouselInner = () => {
           {autoplay ? "⏸ Stop" : "▶️ Auto"}
         </button>
 
-        {/* 3-D bubbles overlay */}
+        {/* 3‑D decorative bubbles */}
         <Canvas
           className={styles.canvasOverlay}
           frameloop="always"
@@ -117,8 +144,9 @@ const FishCarouselInner = () => {
   );
 };
 
-/* ------------------------------------------------ Public export --- */
-/** Only thing a page imports: `<FishCarousel />` */
+/* ------------------------------------------------------------------ */
+/* Public export                                                      */
+/* ------------------------------------------------------------------ */
 const FishCarousel = () => (
   <MoodCarouselProvider moods={moods}>
     <FishCarouselInner />
