@@ -60,7 +60,10 @@ const FishCarouselInner = () => {
         {/* Back */}
         <button
           className={styles.backButton}
-          onClick={(e) => (e.stopPropagation(), router.push("/fishSelect"))}
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push("/fishSelect");
+          }}
         >
           ⬅️ Վերադառնալ
         </button>
@@ -88,9 +91,11 @@ const FishCarouselInner = () => {
         {/* Autoplay */}
         <button
           className={styles.autoplayBtn}
-          onClick={(e) => (
-            e.stopPropagation(), registerGesture(), toggleAutoplay()
-          )}
+          onClick={(e) => {
+            e.stopPropagation();
+            registerGesture();
+            toggleAutoplay();
+          }}
         >
           {autoplay ? "⏸ Stop" : "▶️ Auto"}
         </button>

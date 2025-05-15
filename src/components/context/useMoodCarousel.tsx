@@ -1,4 +1,5 @@
-/* Hook + context + provider – logic only, no JSX */
+/* Hook + context + provider
+   ⚠  No JSX here – pure behaviour so you can reuse it everywhere. */
 "use client";
 
 import {
@@ -21,7 +22,7 @@ interface MoodCarouselCtx {
   registerGesture: () => void;
 }
 
-/* ──────────────────────────────────────────── CONTEXT ─────────── */
+/** ──────────────────────────────────────────────────────────────── */
 const Ctx = createContext<MoodCarouselCtx | null>(null);
 export const useMoodCarousel = (): MoodCarouselCtx => {
   const ctx = useContext(Ctx);
@@ -36,7 +37,7 @@ interface ProviderProps {
   autoDelay?: number;
 }
 
-/* ──────────────────────────────────────────── PROVIDER ─────────── */
+/** Main logic - the only stateful piece you’ll ever touch again */
 export const MoodCarouselProvider = ({
   moods,
   children,
@@ -46,19 +47,15 @@ export const MoodCarouselProvider = ({
   const [index, setIndex] = useState(0);
   const [autoplay, setAuto] = useState(autoStart);
 
-  /* refs ---------------------------------------------------------- */
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playTmr = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoTmr = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hadGesture = useRef(false);
 
-  /* ---------------------------------------------------- Audio ---- */
+  /* ------------------------------------------------ Audio ------- */
   useEffect(() => {
     audioRef.current = new Audio();
-    return () => {
-      audioRef.current?.pause();
-      audioRef.current = null;
-    };
+    return () => void (audioRef.current?.pause(), (audioRef.current = null));
   }, []);
 
   const clear = (ref: typeof playTmr | typeof autoTmr) => {
@@ -68,25 +65,22 @@ export const MoodCarouselProvider = ({
 
   const scheduleAudio = useCallback((m: Mood) => {
     clear(playTmr);
-
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       audioRef.current.src = m.audio;
       audioRef.current.load();
     }
-
     playTmr.current = setTimeout(() => {
       if (hadGesture.current) audioRef.current?.play().catch(() => {});
     }, 1000);
   }, []);
 
-  /* ------------------------------------------------ Navigation --- */
+  /* ------------------------------------------------ Nav / state -- */
   const goTo = useCallback(
     (i: number, fromUser = false) => {
       if (fromUser) hadGesture.current = true;
-
-      setIndex(() => {
+      setIndex((_) => {
         const n = (i + moods.length) % moods.length;
         scheduleAudio(moods[n]);
         return n;
@@ -95,36 +89,25 @@ export const MoodCarouselProvider = ({
     [moods, scheduleAudio]
   );
 
-  const next = useCallback(() => goTo(index + 1, true), [goTo, index]);
-  const prev = useCallback(() => goTo(index - 1, true), [goTo, index]);
+  const next = () => goTo(index + 1, true);
+  const prev = () => goTo(index - 1, true);
 
   /* ------------------------------------------------ Autoplay ----- */
   const loop = useCallback(() => {
     clear(autoTmr);
     if (!autoplay) return;
-
     autoTmr.current = setTimeout(() => {
-      /* use functional update so we don’t depend on `next` */
-      setIndex((curr) => {
-        const n = (curr + 1) % moods.length;
-        scheduleAudio(moods[n]);
-        return n;
-      });
+      next();
       loop();
     }, autoDelay);
-  }, [autoplay, autoDelay, moods, scheduleAudio]);
+  }, [autoplay, autoDelay, next]);
 
-  useEffect(() => {
-    loop();
-    return () => clear(autoTmr);
-  }, [loop]);
+  useEffect(() => (loop(), () => clear(autoTmr)), [loop]);
 
-  /* first slide audio --------------------------------------------- */
-  useEffect(() => {
-    if (moods.length) scheduleAudio(moods[0]);
-  }, [moods, scheduleAudio]);
+  /* first slide */
+  useEffect(() => scheduleAudio(moods[0]), [moods, scheduleAudio]);
 
-  /* ------------------------------------------------ API object ---- */
+  /* ------------------------------------------------ API ---------- */
   const value: MoodCarouselCtx = {
     index,
     next,
@@ -134,12 +117,10 @@ export const MoodCarouselProvider = ({
       hadGesture.current = true;
       setAuto((a) => !a);
     },
-    registerGesture: () => {
-      hadGesture.current = true;
-    },
+    registerGesture: () => void (hadGesture.current = true),
   };
 
-  /* ----------- lock page scroll while carousel is mounted -------- */
+  /* stop page scroll while carousel open */
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -155,7 +136,6 @@ export const MoodCarouselProvider = ({
     body.style.overflow = "hidden";
     body.style.position = "fixed";
     body.style.height = "100%";
-
     return () => {
       html.style.overflow = prev.hO;
       html.style.overscrollBehavior = prev.hOS;
