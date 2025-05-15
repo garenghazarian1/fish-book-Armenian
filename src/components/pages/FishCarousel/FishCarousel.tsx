@@ -13,7 +13,6 @@ import styles from "./FishCarousel.module.css";
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
-import { BubblyButton } from "@/components/bubble/BubbleBurstFishSwipe/BubbleBurstFishSwipe";
 
 /* ------------------------------------------------ Inner UI only -- */
 const FishCarouselInner = () => {
