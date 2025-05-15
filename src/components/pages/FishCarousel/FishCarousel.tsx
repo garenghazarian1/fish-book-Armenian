@@ -85,16 +85,17 @@ const FishCarouselInner = () => {
         onClick={onClickSlide}
       >
         {/* Back button */}
-        <button
-          className={styles.backButton}
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push("/fishSelect");
-          }}
-        >
-          ⬅️ Վերադառնալ
-        </button>
-
+        <div className={styles.backButtonContainer}>
+          <button
+            className={styles.backButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push("/fishSelect");
+            }}
+          >
+            ⬅️ Վերադառնալ
+          </button>
+        </div>
         {/* Slide caption */}
         <div className={styles.captionContainer}>
           <div key={`caption-${index}`} className={styles.caption}>
