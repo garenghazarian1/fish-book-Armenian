@@ -68,7 +68,6 @@ body {
   height: 100%; /* fallback */
   overflow-x: hidden;
   overflow-y: auto;
-  background: url("/caustics.png") repeat;
   background: url("/fishBlue/backgroundB.png") top/cover no-repeat;
   scroll-behavior: smooth;
 }

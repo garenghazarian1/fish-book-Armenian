@@ -90,23 +90,26 @@ export const MoodCarouselProvider = ({
     [moods, scheduleAudio]
   );
 
-  const next = () => goTo(index + 1, true);
-  const prev = () => goTo(index - 1, true);
+  const next = useCallback(() => goTo(index + 1, true), [goTo, index]);
+  const prev = useCallback(() => goTo(index - 1, true), [goTo, index]);
 
-  /* ------------------------------------------------ Autoplay ----- */
   const loop = useCallback(() => {
     clear(autoTmr);
     if (!autoplay) return;
     autoTmr.current = setTimeout(() => {
       next();
-      loop();
+      loop(); // calls itself again
     }, autoDelay);
   }, [autoplay, autoDelay, next]);
 
-  useEffect(() => (loop(), () => clear(autoTmr)), [loop]);
+  useEffect(() => {
+    loop();
+    return () => clear(autoTmr);
+  }, [loop]);
 
-  /* first slide */
-  useEffect(() => scheduleAudio(moods[0]), [moods, scheduleAudio]);
+  useEffect(() => {
+    scheduleAudio(moods[0]);
+  }, [moods, scheduleAudio]);
 
   /* ------------------------------------------------ API ---------- */
   const value: MoodCarouselCtx = {

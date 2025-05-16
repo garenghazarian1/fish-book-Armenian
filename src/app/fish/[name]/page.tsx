@@ -29,7 +29,7 @@ export default function FishMoodPage() {
           fontSize: "1.25rem",
         }}
       >
-        Ձուկը՝ <strong>"{nameParam}"</strong> դեռ պատրաստ չէ։
+        Ձուկը՝ <strong>&quot;{nameParam}&quot;</strong> դեռ պատրաստ չէ։
       </div>
     );
   }
@@ -37,7 +37,11 @@ export default function FishMoodPage() {
   const LazyLoaded = dynamic(
     async () => {
       const moods = (await loader()).default;
-      return () => <FishCarouselDynamic moods={moods} />;
+
+      const FishWrapper = () => <FishCarouselDynamic moods={moods} />;
+      FishWrapper.displayName = "FishWrapper"; // ✅ Avoids eslint warning
+
+      return FishWrapper;
     },
     { ssr: false }
   );

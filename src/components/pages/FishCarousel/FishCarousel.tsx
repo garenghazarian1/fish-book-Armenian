@@ -34,15 +34,19 @@ const FishCarouselInner = () => {
 
   const onTouchEnd = (e: TouchEvent) => {
     if (touchStartY.current === null) return;
+
     const diff = e.changedTouches[0].clientY - touchStartY.current;
+
     if (Math.abs(diff) > 30) {
       if (diff > 0) {
         prev();
       } else {
         next();
       }
+
       registerGesture();
     }
+
     touchStartY.current = null;
   };
 
