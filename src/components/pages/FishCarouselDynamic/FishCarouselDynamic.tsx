@@ -42,7 +42,15 @@ const FishCarouselInner = () => {
   const onTouchEnd = (e: TouchEvent) => {
     if (touchStartY.current === null) return;
     const diff = e.changedTouches[0].clientY - touchStartY.current;
-    if (Math.abs(diff) > 30) diff > 0 ? prev() : next();
+
+    if (Math.abs(diff) > 30) {
+      if (diff > 0) {
+        prev();
+      } else {
+        next();
+      }
+    }
+
     registerGesture();
     touchStartY.current = null;
   };
@@ -50,14 +58,25 @@ const FishCarouselInner = () => {
   const onWheel = (e: WheelEvent) => {
     const now = Date.now();
     if (now - lastWheel.current < 500) return;
+
     lastWheel.current = now;
     registerGesture();
-    e.deltaY > 0 ? next() : prev();
+
+    if (e.deltaY > 0) {
+      next();
+    } else {
+      prev();
+    }
   };
 
   const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
     registerGesture();
-    e.clientY < window.innerHeight / 2 ? prev() : next();
+
+    if (e.clientY < window.innerHeight / 2) {
+      prev();
+    } else {
+      next();
+    }
   };
 
   return (
@@ -133,5 +152,3 @@ const FishCarouselDynamic = ({ moods }: Props) => (
 );
 
 export default FishCarouselDynamic;
-
-console.log("🐟 FishCarouselDynamic module loaded");
