@@ -15,8 +15,6 @@ import styles from "./FishCarouselDynamic.module.css";
 
 import type { Mood } from "@/components/context/types";
 
-console.log("🐟 FishCarouselDynamic module loaded");
-
 interface Props {
   moods: Mood[];
 }
@@ -60,13 +58,6 @@ const FishCarouselInner = () => {
     registerGesture();
     e.clientY < window.innerHeight / 2 ? prev() : next();
   };
-
-  useEffect(() => {
-    console.log("✅ FishCarouselInner mounted");
-    return () => {
-      console.log("❌ FishCarouselInner unmounted");
-    };
-  }, []);
 
   return (
     <div className={styles.container}>
