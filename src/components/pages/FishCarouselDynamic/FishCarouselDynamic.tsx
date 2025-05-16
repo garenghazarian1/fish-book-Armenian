@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { TouchEvent, WheelEvent, MouseEvent, useRef, useEffect } from "react";
+import { TouchEvent, WheelEvent, MouseEvent, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 
@@ -35,8 +35,9 @@ const FishCarouselInner = () => {
   const lastWheel = useRef(0);
   const slide = moods[index];
 
-  const onTouchStart = (e: TouchEvent) =>
-    (touchStartY.current = e.touches[0].clientY);
+  const onTouchStart = (e: TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
 
   const onTouchEnd = (e: TouchEvent) => {
     if (touchStartY.current === null) return;
