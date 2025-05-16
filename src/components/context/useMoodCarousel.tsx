@@ -20,6 +20,7 @@ interface MoodCarouselCtx {
   autoplay: boolean;
   toggleAutoplay: () => void;
   registerGesture: () => void;
+  moods: Mood[];
 }
 
 /** ──────────────────────────────────────────────────────────────── */
@@ -118,6 +119,7 @@ export const MoodCarouselProvider = ({
       setAuto((a) => !a);
     },
     registerGesture: () => void (hadGesture.current = true),
+    moods,
   };
 
   /* stop page scroll while carousel open */

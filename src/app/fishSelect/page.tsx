@@ -8,31 +8,47 @@ import BubbleBurst from "@/components/bubble/BubbleBurstButton/BubbleBurstButton
 import styles from "./page.module.css";
 
 const fishList = [
-  // { name: "happy", src: "/fishBlue/happy.png" },
-  // { name: "redfish", src: "/fishRed/happy.png" },
-  { name: "fishcarousel", src: "/fishBlue/happy.png" },
-  { name: "redfishcarousel", src: "/fishRed/happy.png" },
-
+  {
+    name: "Blue Fish",
+    route: "fishcarouseldynamic",
+    src: "/fishBlue/happy.png",
+  },
+  {
+    name: "Red Fish",
+    route: "redfishcarousel",
+    src: "/fishRed/happy.png",
+  },
   // Add more fish here
 ];
 
-function FishCard({ fish }: { fish: { name: string; src: string } }) {
+function FishCard({
+  fish,
+}: {
+  fish: { name: string; route: string; src: string };
+}) {
   const router = useRouter();
   const [burstKey, setBurstKey] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [clickDisabled, setClickDisabled] = useState(false);
 
   useEffect(() => {
     audioRef.current = new Audio("/sounds/bubble.mp3");
-    if (audioRef.current) {
-      audioRef.current.volume = 0.7;
-    }
-  }, []);
+    audioRef.current.volume = 0.7;
 
-  const handleClick = () => {
+    // Prefetch route for faster transition
+    router.prefetch(`/fish/${fish.route}`);
+  }, [router, fish.route]);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (clickDisabled) return;
+    setClickDisabled(true);
+
     setBurstKey((k) => k + 1);
     audioRef.current?.play().catch(() => {});
+
     setTimeout(() => {
-      router.push(`/fish/${fish.name}`);
+      router.push(`/fish/${fish.route}`);
     }, 700);
   };
 
@@ -88,8 +104,8 @@ export default function FishSelectPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
       >
-        {fishList.map((fish, i) => (
-          <FishCard key={i} fish={fish} />
+        {fishList.map((fish) => (
+          <FishCard key={fish.route} fish={fish} />
         ))}
       </motion.div>
     </div>

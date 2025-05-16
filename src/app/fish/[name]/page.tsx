@@ -1,42 +1,46 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
-import type { FC } from "react";
-// import Happy from "@/components/pages/FishMoods/FishMood";
-// import RedFish from "@/components/pages/RedFish/RedFish";
-import FishCarousel from "@/components/pages/FishCarousel/FishCarousel";
-import RedFishCarousel from "@/components/pages/FishCarouselRed/FishCarouselRed";
+import type { Mood } from "@/components/context/types";
+import FishCarouselDynamic from "@/components/pages/FishCarouselDynamic/FishCarouselDynamic";
 
-const moodComponents: Record<string, FC> = {
-  // happy: Happy,
-  // redfish: RedFish,
-  fishcarousel: FishCarousel,
-  redfishcarousel: RedFishCarousel,
-
-  // Add more moods here as needed
+// Map the [name] to the correct moods.ts file
+const moodLoaders: Record<string, () => Promise<{ default: Mood[] }>> = {
+  fishcarouseldynamic: () => import("@/components/pages/data/moods/blue"),
+  redfishcarousel: () => import("@/components/pages/data/moods/red"),
+  // Add more here...
 };
 
 export default function FishMoodPage() {
   const params = useParams();
   const nameParam = Array.isArray(params.name) ? params.name[0] : params.name;
-  const moodKey = nameParam?.toLowerCase(); // normalize casing
+  const moodKey = nameParam?.toLowerCase();
 
-  const SelectedMoodComponent = moodKey ? moodComponents[moodKey] : null;
+  const loader = moodKey ? moodLoaders[moodKey] : null;
 
-  if (SelectedMoodComponent) {
-    return <SelectedMoodComponent />;
+  if (!loader) {
+    return (
+      <div
+        style={{
+          padding: "2rem",
+          textAlign: "center",
+          color: "white",
+          fontSize: "1.25rem",
+        }}
+      >
+        Ձուկը՝ <strong>"{nameParam}"</strong> դեռ պատրաստ չէ։
+      </div>
+    );
   }
 
-  return (
-    <div
-      style={{
-        padding: "2rem",
-        textAlign: "center",
-        color: "white",
-        fontSize: "1.25rem",
-      }}
-    >
-      Ձուկը՝ <strong>&quot;{nameParam}&quot;</strong> դեռ պատրաստ չէ։
-    </div>
+  const LazyLoaded = dynamic(
+    async () => {
+      const moods = (await loader()).default;
+      return () => <FishCarouselDynamic moods={moods} />;
+    },
+    { ssr: false }
   );
+
+  return <LazyLoaded />;
 }

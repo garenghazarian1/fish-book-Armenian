@@ -38,7 +38,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: url("/caustics.png") repeat;
+  background: url("/fishBlue/backgroundB.png") top/cover no-repeat;
   background-size: cover;
   animation: causticDrift 18s ease-in-out infinite;
   mix-blend-mode: overlay;
