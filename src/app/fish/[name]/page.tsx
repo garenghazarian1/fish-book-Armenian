@@ -2,9 +2,15 @@
 
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
-import type { Mood } from "@/components/context/types";
+// import type { Mood } from "@/components/context/types";
 import FishCarouselDynamic from "@/components/pages/FishCarouselDynamic/FishCarouselDynamic";
 
+export interface Mood {
+  id: string;
+  image: string;
+  text: string;
+  audio: string;
+}
 // Map the [name] to the correct moods.ts file
 const moodLoaders: Record<string, () => Promise<{ default: Mood[] }>> = {
   fishcarouseldynamic: () => import("@/components/pages/data/moods/blue"),
