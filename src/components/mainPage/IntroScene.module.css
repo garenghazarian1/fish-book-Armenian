@@ -13,38 +13,7 @@
   position: relative;
   z-index: 0;
   padding-bottom: env(safe-area-inset-bottom);
-}
-
-.introWrapper::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    #021e3f 0%,
-    #033f63 25%,
-    #03658c 50%,
-    #0392cf 75%,
-    #38bdf8 100%
-  );
-  background-size: 200% 200%;
-  animation: seaFlow 10s ease-in-out infinite;
-  opacity: 0.8;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.introWrapper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
   background: url("/fishBlue/backgroundB.png") top/cover no-repeat;
-  background-size: cover;
-  animation: causticDrift 18s ease-in-out infinite;
-  mix-blend-mode: overlay;
-  opacity: 0.4;
-  pointer-events: none;
-  z-index: 1;
 }
 
 @keyframes seaFlow {
