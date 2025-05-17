@@ -1,16 +1,5 @@
 "use client";
 
-/**
- * FishCarouselDynamic
- * -------------------
- * Displays an interactive mood-based carousel for fish emotions.
- * - Receives a list of moods as a prop (images, audio, text)
- * - Supports swipe, mouse, wheel, and button navigation
- * - Plays associated audio for each mood
- * - Optional autoplay (cycles moods every 4s)
- * - Locks background scroll while open
- */
-
 import {
   useEffect,
   useRef,
@@ -18,6 +7,7 @@ import {
   TouchEvent,
   WheelEvent,
   MouseEvent,
+  useCallback,
 } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -53,18 +43,6 @@ const FishCarouselDynamic = ({ moods }: Props) => {
 
   const slide = moods?.[index];
 
-  const goTo = (i: number, fromUser = false) => {
-    if (fromUser) hadGesture.current = true;
-    setIndex(() => {
-      const n = (i + moods.length) % moods.length;
-      scheduleAudio(moods[n]);
-      return n;
-    });
-  };
-
-  const next = () => goTo(index + 1, true);
-  const prev = () => goTo(index - 1, true);
-
   const clear = (ref: typeof playTmr | typeof autoTmr) => {
     if (ref.current) {
       clearTimeout(ref.current);
@@ -72,7 +50,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     }
   };
 
-  const scheduleAudio = (m: Mood) => {
+  const scheduleAudio = useCallback((m: Mood) => {
     clear(playTmr);
     if (audioRef.current) {
       audioRef.current.pause();
@@ -85,21 +63,36 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         audioRef.current?.play().catch(() => {});
       }
     }, 1000);
-  };
+  }, []);
 
-  const loop = () => {
+  const goTo = useCallback(
+    (i: number, fromUser = false) => {
+      if (fromUser) hadGesture.current = true;
+      setIndex(() => {
+        const n = (i + moods.length) % moods.length;
+        scheduleAudio(moods[n]);
+        return n;
+      });
+    },
+    [moods, scheduleAudio]
+  );
+
+  const next = () => goTo(index + 1, true);
+  const prev = () => goTo(index - 1, true);
+
+  const loop = useCallback(() => {
     clear(autoTmr);
     if (!autoplay) return;
     autoTmr.current = setTimeout(() => {
       next();
       loop();
     }, 4000);
-  };
+  }, [autoplay, next]);
 
   useEffect(() => {
     loop();
     return () => clear(autoTmr);
-  }, [autoplay, index, moods]);
+  }, [autoplay, index, moods, loop]);
 
   useEffect(() => {
     audioRef.current = new Audio();
@@ -111,7 +104,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
       clear(playTmr);
       clear(autoTmr);
     };
-  }, [moods]);
+  }, [moods, scheduleAudio]);
 
   const onTouchStart = (e: TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
