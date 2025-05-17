@@ -9,6 +9,8 @@ import FishCarouselDynamic from "@/components/pages/FishCarouselDynamic/FishCaro
 const moodLoaders: Record<string, () => Promise<{ default: Mood[] }>> = {
   fishcarouseldynamic: () => import("@/components/pages/data/moods/blue"),
   redfishcarousel: () => import("@/components/pages/data/moods/red"),
+  dikogerman: () => import("@/components/pages/data/moods/dikoGerman"),
+
   // Add more here...
 };
 

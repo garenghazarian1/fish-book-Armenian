@@ -18,6 +18,11 @@ const fishList = [
     route: "redfishcarousel",
     src: "/fishRed/happy.png",
   },
+  {
+    name: "Dikran Fish",
+    route: "dikogerman",
+    src: "/fishDikoGerman/glücklich.png",
+  },
   // Add more fish here
 ];
 
