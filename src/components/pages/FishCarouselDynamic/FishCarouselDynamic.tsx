@@ -100,18 +100,19 @@ const FishCarouselDynamic = ({ moods }: Props) => {
       clear(autoTmr);
     };
   }, [autoplay, index, moods, loop]);
-
   useEffect(() => {
     audioRef.current = new Audio();
     scheduleAudio(moods[0]);
     setIndex(0);
+
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
-      clear(playTmr);
-      clear(autoTmr);
+
+      (() => clear(playTmr))(); // ✅ wrapped call
+      (() => clear(autoTmr))(); // ✅ wrapped call
     };
   }, [moods, scheduleAudio]);
 
