@@ -10,6 +10,7 @@
  * - Optional autoplay (cycles moods every 4s)
  * - Locks background scroll while open
  */
+
 import {
   useEffect,
   useRef,
@@ -24,17 +25,14 @@ import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
 import styles from "./FishCarouselDynamic.module.css";
-console.log("Mounting FishCarouselDynamic");
 
-// Mood type (one fish mood)
 export interface Mood {
-  id: string; // Unique ID for the mood
-  image: string; // Image URL
-  text: string; // Caption (localized)
-  audio: string; // Audio URL
+  id: string;
+  image: string;
+  text: string;
+  audio: string;
 }
 
-// Component props
 interface Props {
   moods: Mood[];
 }
@@ -42,32 +40,23 @@ interface Props {
 const FishCarouselDynamic = ({ moods }: Props) => {
   const router = useRouter();
 
-  // Carousel state
-  const [index, setIndex] = useState(0); // Current mood index
-  const [autoplay, setAutoplay] = useState(false); // Autoplay toggle
+  const [index, setIndex] = useState(0);
+  const [autoplay, setAutoplay] = useState(false);
 
-  // Audio management and timing
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const playTmr = useRef<ReturnType<typeof setTimeout> | null>(null); // For audio delay
-  const autoTmr = useRef<ReturnType<typeof setTimeout> | null>(null); // For autoplay
-  const hadGesture = useRef(false); // Required to unlock audio on iOS/Chrome
+  const playTmr = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoTmr = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hadGesture = useRef(false);
 
-  // Gesture navigation (touch/wheel)
   const touchStartY = useRef<number | null>(null);
   const lastWheel = useRef(0);
 
-  // Current mood slide
-  const slide = moods[index];
+  const slide = moods?.[index];
 
-  // --- Navigation (manual and autoplay) ---
-  /**
-   * goTo: move to a mood at position i, playing audio
-   * fromUser: if triggered by user gesture, unlock audio
-   */
   const goTo = (i: number, fromUser = false) => {
     if (fromUser) hadGesture.current = true;
     setIndex(() => {
-      const n = (i + moods.length) % moods.length; // wrap around
+      const n = (i + moods.length) % moods.length;
       scheduleAudio(moods[n]);
       return n;
     });
@@ -76,14 +65,11 @@ const FishCarouselDynamic = ({ moods }: Props) => {
   const next = () => goTo(index + 1, true);
   const prev = () => goTo(index - 1, true);
 
-  // --- Audio Scheduling ---
-  /**
-   * Stops any pending audio playback and schedules the new mood's audio
-   * Plays audio after 1s delay (after mood image/text is shown)
-   */
   const clear = (ref: typeof playTmr | typeof autoTmr) => {
-    if (ref.current) clearTimeout(ref.current);
-    ref.current = null;
+    if (ref.current) {
+      clearTimeout(ref.current);
+      ref.current = null;
+    }
   };
 
   const scheduleAudio = (m: Mood) => {
@@ -95,15 +81,12 @@ const FishCarouselDynamic = ({ moods }: Props) => {
       audioRef.current.load();
     }
     playTmr.current = setTimeout(() => {
-      // Play only after user gesture (required on iOS/Chrome)
-      if (hadGesture.current) audioRef.current?.play().catch(() => {});
+      if (hadGesture.current) {
+        audioRef.current?.play().catch(() => {});
+      }
     }, 1000);
   };
 
-  // --- Autoplay Loop ---
-  /**
-   * Starts a timer to advance to next mood every 4 seconds
-   */
   const loop = () => {
     clear(autoTmr);
     if (!autoplay) return;
@@ -113,20 +96,11 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     }, 4000);
   };
 
-  // --- Effects ---
-  /**
-   * Restart autoplay timer when autoplay/index/moods change
-   */
   useEffect(() => {
     loop();
     return () => clear(autoTmr);
-    // eslint-disable-next-line
   }, [autoplay, index, moods]);
 
-  /**
-   * Initialize audio, reset index on new moods array
-   * Clean up timers and audio on unmount
-   */
   useEffect(() => {
     audioRef.current = new Audio();
     scheduleAudio(moods[0]);
@@ -137,20 +111,12 @@ const FishCarouselDynamic = ({ moods }: Props) => {
       clear(playTmr);
       clear(autoTmr);
     };
-    // eslint-disable-next-line
   }, [moods]);
 
-  // --- UI Event Handlers (Touch/Mouse/Wheel) ---
-  /**
-   * Touch start: save Y position
-   */
   const onTouchStart = (e: TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
   };
 
-  /**
-   * Touch end: compare Y movement, trigger prev/next
-   */
   const onTouchEnd = (e: TouchEvent) => {
     if (touchStartY.current === null) return;
     const diff = e.changedTouches[0].clientY - touchStartY.current;
@@ -161,27 +127,20 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     touchStartY.current = null;
   };
 
-  /**
-   * Wheel scroll: trigger prev/next (with debounce)
-   */
   const onWheel = (e: WheelEvent) => {
     const now = Date.now();
-    if (now - lastWheel.current < 500) return; // Debounce: 500ms
+    if (now - lastWheel.current < 500) return;
     lastWheel.current = now;
     hadGesture.current = true;
     e.deltaY > 0 ? next() : prev();
   };
 
-  /**
-   * Mouse click: upper half = prev, lower half = next
-   */
   const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
     hadGesture.current = true;
     if (e.clientY < window.innerHeight / 2) prev();
     else next();
   };
 
-  // --- Prevent background scroll when open ---
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -197,6 +156,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     body.style.overflow = "hidden";
     body.style.position = "fixed";
     body.style.height = "100%";
+
     return () => {
       html.style.overflow = prev.hO;
       html.style.overscrollBehavior = prev.hOS;
@@ -206,9 +166,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     };
   }, []);
 
-  // --- Render UI ---
   if (!slide) {
-    // If moods array is empty, show error message
     return <div className={styles.container}>Տվյալներ չեն գտնվել։</div>;
   }
 
@@ -221,7 +179,6 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         onWheel={onWheel}
         onClick={onClickSlide}
       >
-        {/* Back button to fish select */}
         <div className={styles.backButtonContainer}>
           <button
             className={styles.backButton}
@@ -234,14 +191,12 @@ const FishCarouselDynamic = ({ moods }: Props) => {
           </button>
         </div>
 
-        {/* Caption for current mood */}
         <div className={styles.captionContainer}>
           <div key={`caption-${index}`} className={styles.caption}>
             {slide.text}
           </div>
         </div>
 
-        {/* Mood image */}
         <div className={styles.imageContainer}>
           <Image
             key={index}
@@ -254,19 +209,17 @@ const FishCarouselDynamic = ({ moods }: Props) => {
           />
         </div>
 
-        {/* Autoplay toggle */}
         <button
           className={styles.autoplayBtn}
           onClick={(e) => {
             e.stopPropagation();
             hadGesture.current = true;
-            setAutoplay((a) => !a);
+            setAutoplay((prev) => !prev);
           }}
         >
           {autoplay ? "⏸ Stop" : "▶️ Auto"}
         </button>
 
-        {/* 3D Bubble background */}
         <Canvas
           className={styles.canvasOverlay}
           frameloop="always"
