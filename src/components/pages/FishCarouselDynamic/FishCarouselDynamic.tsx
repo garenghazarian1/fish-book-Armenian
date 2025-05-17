@@ -4,10 +4,10 @@ import {
   useEffect,
   useRef,
   useState,
+  useCallback,
   TouchEvent,
   WheelEvent,
   MouseEvent,
-  useCallback,
 } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -77,8 +77,13 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     [moods, scheduleAudio]
   );
 
-  const next = () => goTo(index + 1, true);
-  const prev = () => goTo(index - 1, true);
+  const next = useCallback(() => {
+    goTo(index + 1, true);
+  }, [goTo, index]);
+
+  const prev = useCallback(() => {
+    goTo(index - 1, true);
+  }, [goTo, index]);
 
   const loop = useCallback(() => {
     clear(autoTmr);
@@ -91,7 +96,9 @@ const FishCarouselDynamic = ({ moods }: Props) => {
 
   useEffect(() => {
     loop();
-    return () => clear(autoTmr);
+    return () => {
+      clear(autoTmr);
+    };
   }, [autoplay, index, moods, loop]);
 
   useEffect(() => {
@@ -99,8 +106,10 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     scheduleAudio(moods[0]);
     setIndex(0);
     return () => {
-      audioRef.current?.pause();
-      audioRef.current = null;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
       clear(playTmr);
       clear(autoTmr);
     };
