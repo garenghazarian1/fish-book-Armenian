@@ -73,6 +73,7 @@ function FishCard({
         className={styles.fishImage}
         priority
       />
+      <div className={styles.fishName}>{fish.name}</div>
       <div className={styles.bubbleBurstWrapper}>
         <BubbleBurst triggerKey={burstKey} />
       </div>

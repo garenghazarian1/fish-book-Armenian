@@ -1,5 +1,8 @@
+/* ===========================
+   🐠 Fish Select Page Layout
+=========================== */
 .fishPage {
-  min-height: 100dvh; /* 🔁 dynamic height to avoid keyboard/browser bar issues */
+  min-height: 100dvh;
   padding: calc(2rem + env(safe-area-inset-top)) 1rem
     calc(2rem + env(safe-area-inset-bottom));
   background: url("/fishBlue/backgroundB.png") top/cover no-repeat;
@@ -26,7 +29,7 @@
   -webkit-background-clip: text;
   color: rgba(255, 255, 255, 0.857);
   animation: floatBreathe 4s ease-in-out infinite;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* 🛠️ improved readability */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* ===========================
@@ -43,7 +46,7 @@
 }
 
 /* ===========================
-   🎴 Individual Fish Card
+   🎴 Fish Card
 =========================== */
 .fishCard {
   background: rgba(255, 255, 255, 0.07);
@@ -52,10 +55,9 @@
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 255, 255, 0.15);
   backdrop-filter: blur(4px);
-
-  /* ✅ Unified, readable shorthand transition */
   transition: background-color 0.3s ease, transform 0.3s ease,
     box-shadow 0.3s ease;
+  text-align: center;
 }
 
 .fishCard:hover {
@@ -76,6 +78,15 @@
   transform: scale(1.05);
 }
 
+/* ✅ New Fish Name Text */
+.fishName {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
 /* ===========================
    🔙 Back Button
 =========================== */
@@ -91,8 +102,6 @@
   font-family: var(--font-cartoon, sans-serif);
   backdrop-filter: blur(2px);
   z-index: 10;
-
-  /* ✅ Optimized shorthand with unified timing and delay */
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
@@ -102,7 +111,7 @@
 }
 
 /* ===========================
-   🌬️ Center Bubble Burst
+   🌬️ Centered Bubble Burst
 =========================== */
 .bubbleBurstWrapper {
   position: absolute;
@@ -127,14 +136,12 @@
 }
 
 /* ===========================
-   📱 Mobile Support: Small Screens
+   📱 Mobile Tweaks
 =========================== */
-
 @media (max-width: 375px) {
   .fishPage {
     padding: 2rem 1rem;
     min-height: 100vh;
-    background-size: cover;
     justify-content: flex-start;
   }
 
@@ -159,58 +166,13 @@
     width: 80px;
   }
 
+  .fishName {
+    font-size: 0.85rem;
+  }
+
   .backButton {
     font-size: 0.9rem;
     padding: 0.5rem 1rem;
     margin-bottom: 1.5rem;
   }
-}
-
-/* @media (max-width: 400px) {
-  .heading {
-    font-size: 1.5rem;
-  }
-
-  .fishGrid {
-    gap: 1rem;
-  }
-
-  .backButton {
-    font-size: 1rem;
-    padding: 0.6rem 1.4rem;
-  }
-} */
-
-/* page.module.css */
-
-.unlockOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.unlockText {
-  background: #1e88e5;
-  color: #fff;
-  font-size: 1.25rem;
-  font-weight: 600;
-  padding: 0.75rem 2rem;
-  border-radius: 9999px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  user-select: none;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.unlockText:hover {
-  background: #1565c0;
-  transform: translateY(-2px);
-}
-
-.unlockText:active {
-  transform: translateY(1px);
 }
