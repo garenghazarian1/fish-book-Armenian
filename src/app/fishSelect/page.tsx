@@ -23,6 +23,11 @@ const fishList = [
     route: "dikogerman",
     src: "/fishDikoGerman/glücklich.png",
   },
+  {
+    name: "Lilit Fish",
+    route: "lilitgerman",
+    src: "/fishLilitGerman/glücklich.png",
+  },
   // Add more fish here
 ];
 
