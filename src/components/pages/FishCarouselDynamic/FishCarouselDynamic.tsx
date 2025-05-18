@@ -111,8 +111,8 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         audioRef.current = null;
       }
 
-      clear(playTmr); // ✅ fixed
-      clear(autoTmr); // ✅ fixed
+      clear(playTmr); // ✅ Direct function call
+      clear(autoTmr); // ✅ Direct function call
     };
   }, [moods, scheduleAudio]);
 
