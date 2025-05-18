@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState, Suspense } from "react";
 import { motion } from "framer-motion";
-import { Canvas } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
+// import { Canvas } from "@react-three/fiber";
+// import { Environment } from "@react-three/drei";
 import { useRouter } from "next/navigation";
 
-import BubbleParticles from "../BubbleParticles/BubbleParticles";
+// import BubbleParticles from "../BubbleParticles/BubbleParticles";
 import BubbleBurst from "../bubble/BubbleBurst/BubbleBurst";
 import BubbleBurstButton from "../bubble/BubbleBurstButton/BubbleBurstButton";
 
@@ -57,7 +57,7 @@ export default function IntroScene() {
 
   return (
     <section className={styles.introWrapper}>
-      <div className={styles.bubbleCanvasContainer}>
+      {/* <div className={styles.bubbleCanvasContainer}>
         <Canvas
           camera={{ position: [0, 0, 2.5], fov: 60 }}
           style={{
@@ -74,7 +74,7 @@ export default function IntroScene() {
             <BubbleParticles count={10} />
           </Suspense>
         </Canvas>
-      </div>
+      </div> */}
 
       {/* Title and subtitle */}
       <motion.div

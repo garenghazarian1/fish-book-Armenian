@@ -11,9 +11,9 @@ import {
 } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Canvas } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
-import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
+// import { Canvas } from "@react-three/fiber";
+// import { Environment } from "@react-three/drei";
+// import BubbleParticles from "@/components/BubbleParticles/BubbleParticles";
 import styles from "./FishCarouselDynamic.module.css";
 
 export interface Mood {
@@ -155,6 +155,10 @@ const FishCarouselDynamic = ({ moods }: Props) => {
   };
 
   useEffect(() => {
+    console.log("Mounted FishCarouselDynamic");
+  }, []);
+
+  useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
     const prev = {
@@ -233,7 +237,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
           {autoplay ? "⏸ Stop" : "▶️ Auto"}
         </button>
 
-        <Canvas
+        {/* <Canvas
           className={styles.canvasOverlay}
           frameloop="always"
           gl={{ antialias: true }}
@@ -243,7 +247,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
           <directionalLight position={[3, 3, 5]} intensity={1.2} />
           <Environment preset="sunset" background={false} />
           <BubbleParticles count={5} />
-        </Canvas>
+        </Canvas> */}
       </div>
     </div>
   );
