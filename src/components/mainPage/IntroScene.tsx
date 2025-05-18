@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, Suspense } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-// import { Canvas } from "@react-three/fiber";
-// import { Environment } from "@react-three/drei";
 import { useRouter } from "next/navigation";
 
-// import BubbleParticles from "../BubbleParticles/BubbleParticles";
 import BubbleBurst from "../bubble/BubbleBurst/BubbleBurst";
 import BubbleBurstButton from "../bubble/BubbleBurstButton/BubbleBurstButton";
 
@@ -57,25 +54,6 @@ export default function IntroScene() {
 
   return (
     <section className={styles.introWrapper}>
-      {/* <div className={styles.bubbleCanvasContainer}>
-        <Canvas
-          camera={{ position: [0, 0, 2.5], fov: 60 }}
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 0,
-            pointerEvents: "none",
-          }}
-        >
-          <ambientLight intensity={0.7} />
-          <directionalLight position={[3, 3, 5]} intensity={1.2} />
-          <Suspense fallback={null}>
-            <Environment preset="sunset" background={false} />
-            <BubbleParticles count={10} />
-          </Suspense>
-        </Canvas>
-      </div> */}
-
       {/* Title and subtitle */}
       <motion.div
         className={styles.titleContainer}
