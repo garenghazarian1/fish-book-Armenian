@@ -1,4 +1,9 @@
-import type { Mood } from "@/components/context/types";
+interface Mood {
+  id: string;
+  image: string;
+  text: string;
+  audio: string;
+}
 
 const moods: Mood[] = [
   {
