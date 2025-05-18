@@ -111,8 +111,8 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         audioRef.current = null;
       }
 
-      clear(playTmr); // ✅ Direct function call
-      clear(autoTmr); // ✅ Direct function call
+      clear(playTmr); // ✅ Line 127
+      clear(autoTmr); // ✅ Line 128
     };
   }, [moods, scheduleAudio]);
 
@@ -124,8 +124,13 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     if (touchStartY.current === null) return;
     const diff = e.changedTouches[0].clientY - touchStartY.current;
     if (Math.abs(diff) > 30) {
-      diff > 0 ? prev() : next();
+      if (diff > 0) {
+        prev();
+      } else {
+        next();
+      }
     }
+
     hadGesture.current = true;
     touchStartY.current = null;
   };
@@ -135,7 +140,12 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     if (now - lastWheel.current < 500) return;
     lastWheel.current = now;
     hadGesture.current = true;
-    e.deltaY > 0 ? next() : prev();
+
+    if (e.deltaY > 0) {
+      next();
+    } else {
+      prev();
+    }
   };
 
   const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
