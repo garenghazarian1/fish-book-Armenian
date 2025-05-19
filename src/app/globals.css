@@ -42,13 +42,14 @@
   --bubble-shadow: rgba(255, 255, 255, 0.3);
 
   --neon-blue: #23e6ff;
+  --btnBg: rgba(255, 255, 255, 0.08);
 }
 
 /* ===================================
    🔤 Base Typography & Global Styles
    =================================== */
 body {
-  background-color: var(--background);
+  /* background-color: var(--background); */
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
   margin: 0;
@@ -68,7 +69,9 @@ body {
   height: 100%; /* fallback */
   overflow-x: hidden;
   overflow-y: auto;
-  background: url("/fishBlue/backgroundB.png") top/cover no-repeat;
+  /* background: url("/fishBlue/backgroundB.png") top/cover no-repeat; */
+  background: url("/fishBlue/backgroundB.png") top/cover no-repeat,
+    var(--blue-dark);
   scroll-behavior: smooth;
 }
 
@@ -76,22 +79,6 @@ body {
 html {
   scroll-padding-top: 80px;
 }
-
-/* ✅ Utility class for fullscreen dynamic height */
-/* .fullHeight {
-  min-height: 100dvh;
-} */
-
-/* ✅ Media Query for Tiny Screens (under 400px) */
-/* @media (max-width: 400px) {
-  .heading {
-    font-size: 1.2rem;
-  }
-
-  .footer {
-    padding: 1rem;
-  }
-} */
 
 /* ================================
 ♿ Accessibility: Reduce Motion

@@ -5,7 +5,7 @@
   min-height: 100dvh;
   padding: calc(2rem + env(safe-area-inset-top)) 1rem
     calc(2rem + env(safe-area-inset-bottom));
-  background: url("/fishBlue/backgroundB.png") top/cover no-repeat;
+  /* background: url("/fishBlue/backgroundB.png") top/cover no-repeat; */
   display: flex;
   flex-direction: column;
   align-items: center;

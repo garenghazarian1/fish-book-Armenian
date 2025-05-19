@@ -1,9 +1,5 @@
-interface Mood {
-  id: string;
-  image: string;
-  text: string;
-  audio: string;
-}
+import type { Mood } from "@/components/pages/data/types";
+
 const moods: Mood[] = [
   {
     id: "happy",

@@ -10,7 +10,7 @@
   z-index: 10;
 
   color: var(--foreground);
-  background-color: var(--background);
+  /* background-color: var(--background); */
   padding-bottom: env(
     safe-area-inset-bottom
   ); /* ✅ safe bottom for iOS/Android */
@@ -24,7 +24,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: linear-gradient(
+  /* background: linear-gradient(
     to bottom,
     #021e3f 0%,
     #033f63 25%,
@@ -32,7 +32,7 @@
     #0392cf 75%,
     #38bdf8 100%
   );
-  background-size: 200% 200%;
+  background-size: 200% 200%; */
   animation: seaFlow 10s ease-in-out infinite;
   opacity: 0.75;
   pointer-events: none;

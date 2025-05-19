@@ -11,15 +11,9 @@ import {
 } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 import styles from "./FishCarouselDynamic.module.css";
-
-export interface Mood {
-  id: string;
-  image: string;
-  text: string;
-  audio: string;
-}
+import Link from "next/link";
+import type { Mood } from "@/components/pages/data/types";
 
 interface Props {
   moods: Mood[];
@@ -30,12 +24,10 @@ const FishCarouselDynamic = ({ moods }: Props) => {
 
   const [index, setIndex] = useState(0);
   const [autoplay, setAutoplay] = useState(false);
-
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playTmr = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoTmr = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hadGesture = useRef(false);
-
   const touchStartY = useRef<number | null>(null);
   const lastWheel = useRef(0);
 
@@ -194,7 +186,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         onWheel={onWheel}
         onClick={onClickSlide}
       >
-        <div className={styles.backButtonContainer}>
+        {/* <div className={styles.backButtonContainer}>
           <button
             className={styles.backButton}
             onClick={(e) => {
@@ -204,8 +196,12 @@ const FishCarouselDynamic = ({ moods }: Props) => {
           >
             ⬅️ Վերադառնալ
           </button>
+        </div>*/}
+        <div className={styles.backButtonContainer}>
+          <Link href="/fishSelect" className={styles.backButton}>
+            ⬅️ Վերադառնալ
+          </Link>
         </div>
-
         <div className={styles.captionContainer}>
           <div key={`caption-${index}`} className={styles.caption}>
             {slide.text}
