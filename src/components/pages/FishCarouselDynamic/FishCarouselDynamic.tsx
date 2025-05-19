@@ -10,7 +10,6 @@ import {
   MouseEvent,
 } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import styles from "./FishCarouselDynamic.module.css";
 import Link from "next/link";
 import type { Mood } from "@/components/pages/data/types";
@@ -20,8 +19,6 @@ interface Props {
 }
 
 const FishCarouselDynamic = ({ moods }: Props) => {
-  const router = useRouter();
-
   const [index, setIndex] = useState(0);
   const [autoplay, setAutoplay] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
