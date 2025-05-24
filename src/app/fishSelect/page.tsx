@@ -19,7 +19,7 @@ const fishList = [
     src: "/fishRed/happy.png",
   },
   {
-    name: "Dikran Fish",
+    name: "Tigran Fish",
     route: "dikogerman",
     src: "/fishDikoGerman/glücklich.png",
   },

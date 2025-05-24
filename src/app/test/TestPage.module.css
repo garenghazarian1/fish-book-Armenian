@@ -1,0 +1,67 @@
+.page {
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.heading {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: #0070f3;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.navButton {
+  font-size: 2rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.carouselViewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carouselTrack {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  width: 100%;
+}
+
+.slide {
+  flex: 0 0 100%;
+  padding: 1rem;
+  text-align: center;
+  background: #eef6f9;
+  border-radius: 12px;
+  scroll-snap-align: start;
+}
+
+.moodImage {
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+.audioPlayer {
+  width: 100%;
+  margin-top: 0.5rem;
+}

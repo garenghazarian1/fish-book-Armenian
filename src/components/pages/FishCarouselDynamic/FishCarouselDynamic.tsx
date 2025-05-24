@@ -183,17 +183,6 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         onWheel={onWheel}
         onClick={onClickSlide}
       >
-        {/* <div className={styles.backButtonContainer}>
-          <button
-            className={styles.backButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push("/fishSelect");
-            }}
-          >
-            ⬅️ Վերադառնալ
-          </button>
-        </div>*/}
         <div className={styles.backButtonContainer}>
           <Link href="/fishSelect" className={styles.backButton}>
             ⬅️ Վերադառնալ
@@ -212,7 +201,8 @@ const FishCarouselDynamic = ({ moods }: Props) => {
             alt={slide.id}
             fill
             sizes="100%"
-            priority
+            priority={index === 0}
+            loading={index === 0 ? "eager" : "lazy"}
             className={styles.image}
           />
         </div>
