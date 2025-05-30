@@ -1,67 +1,50 @@
 .page {
   padding: 2rem;
-  font-family: sans-serif;
+  text-align: center;
+  background: #f5f9fc;
+  min-height: 100vh;
 }
 
 .heading {
   font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.backLink {
-  display: inline-block;
   margin-bottom: 2rem;
-  color: #0070f3;
-  text-decoration: none;
-  font-weight: bold;
 }
 
-.backLink:hover {
-  text-decoration: underline;
-}
-
-.controls {
+.moodGrid {
   display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 2rem;
 }
 
-.navButton {
-  font-size: 2rem;
-  padding: 0.5rem 1rem;
-  background: none;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.carouselViewport {
-  overflow: hidden;
-  width: 100%;
-}
-
-.carouselTrack {
-  display: flex;
-  transition: transform 0.3s ease-in-out;
-  width: 100%;
-}
-
-.slide {
-  flex: 0 0 100%;
+.moodCard {
+  width: 200px;
   padding: 1rem;
-  text-align: center;
-  background: #eef6f9;
-  border-radius: 12px;
-  scroll-snap-align: start;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.moodCard:hover {
+  transform: translateY(-5px);
+}
+
+.moodText {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
 .moodImage {
-  border-radius: 8px;
-  margin-top: 0.5rem;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 1rem;
+  width: 150px;
+  height: 150px;
 }
 
 .audioPlayer {
   width: 100%;
-  margin-top: 0.5rem;
 }

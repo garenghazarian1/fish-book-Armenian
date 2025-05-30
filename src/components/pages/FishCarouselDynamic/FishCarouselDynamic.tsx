@@ -19,17 +19,25 @@ interface Props {
 }
 
 const FishCarouselDynamic = ({ moods }: Props) => {
+  // ========================
+  // 🔁 State & Refs
+  // ========================
   const [index, setIndex] = useState(0);
   const [autoplay, setAutoplay] = useState(false);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playTmr = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoTmr = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const hadGesture = useRef(false);
   const touchStartY = useRef<number | null>(null);
   const lastWheel = useRef(0);
 
   const slide = moods?.[index];
 
+  // ========================
+  // 🧹 Clear timeout helper
+  // ========================
   const clear = (ref: typeof playTmr | typeof autoTmr) => {
     if (ref.current) {
       clearTimeout(ref.current);
@@ -37,6 +45,9 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     }
   };
 
+  // ========================
+  // 🔊 Play audio with delay (manual)
+  // ========================
   const scheduleAudio = useCallback((m: Mood) => {
     clear(playTmr);
     if (audioRef.current) {
@@ -45,6 +56,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
       audioRef.current.src = m.audio;
       audioRef.current.load();
     }
+
     playTmr.current = setTimeout(() => {
       if (hadGesture.current) {
         audioRef.current?.play().catch(() => {});
@@ -52,6 +64,9 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     }, 1000);
   }, []);
 
+  // ========================
+  // 🔁 Go to specific index
+  // ========================
   const goTo = useCallback(
     (i: number, fromUser = false) => {
       if (fromUser) hadGesture.current = true;
@@ -64,6 +79,9 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     [moods, scheduleAudio]
   );
 
+  // ========================
+  // ⏭️ Next / Previous
+  // ========================
   const next = useCallback(() => {
     goTo(index + 1, true);
   }, [goTo, index]);
@@ -72,21 +90,55 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     goTo(index - 1, true);
   }, [goTo, index]);
 
+  // ========================
+  // 🔁 Autoplay loop: play audio, wait 1s, then next
+  // ========================
   const loop = useCallback(() => {
-    clear(autoTmr);
-    if (!autoplay) return;
-    autoTmr.current = setTimeout(() => {
-      next();
-      loop();
-    }, 4000);
-  }, [autoplay, next]);
+    if (!autoplay || !slide) return;
 
+    clear(autoTmr);
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.src = slide.audio;
+      audioRef.current.load();
+
+      audioRef.current.onended = () => {
+        autoTmr.current = setTimeout(() => {
+          next();
+          loop();
+        }, 1000); // ✅ 1 second after audio ends
+      };
+
+      audioRef.current.play().catch(() => {});
+    }
+  }, [autoplay, slide, next]);
+
+  // ========================
+  // 🧠 Autoplay Effect
+  // ========================
   useEffect(() => {
-    loop();
+    if (autoplay) {
+      loop();
+    } else {
+      clear(autoTmr);
+      if (audioRef.current) {
+        audioRef.current.onended = null;
+      }
+    }
+
     return () => {
       clear(autoTmr);
+      if (audioRef.current) {
+        audioRef.current.onended = null;
+      }
     };
-  }, [autoplay, index, moods, loop]);
+  }, [autoplay, index, loop]);
+
+  // ========================
+  // 🧠 On mount: init audio and index
+  // ========================
   useEffect(() => {
     audioRef.current = new Audio();
     scheduleAudio(moods[0]);
@@ -98,11 +150,14 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         audioRef.current = null;
       }
 
-      clear(playTmr); // ✅ Line 127
-      clear(autoTmr); // ✅ Line 128
+      clear(playTmr);
+      clear(autoTmr);
     };
   }, [moods, scheduleAudio]);
 
+  // ========================
+  // 👆 Touch & Scroll Events
+  // ========================
   const onTouchStart = (e: TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
   };
@@ -110,12 +165,10 @@ const FishCarouselDynamic = ({ moods }: Props) => {
   const onTouchEnd = (e: TouchEvent) => {
     if (touchStartY.current === null) return;
     const diff = e.changedTouches[0].clientY - touchStartY.current;
+
     if (Math.abs(diff) > 30) {
-      if (diff > 0) {
-        prev();
-      } else {
-        next();
-      }
+      if (diff > 0) prev();
+      else next();
     }
 
     hadGesture.current = true;
@@ -126,13 +179,10 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     const now = Date.now();
     if (now - lastWheel.current < 500) return;
     lastWheel.current = now;
-    hadGesture.current = true;
 
-    if (e.deltaY > 0) {
-      next();
-    } else {
-      prev();
-    }
+    hadGesture.current = true;
+    if (e.deltaY > 0) next();
+    else prev();
   };
 
   const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
@@ -141,10 +191,9 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     else next();
   };
 
-  useEffect(() => {
-    console.log("Mounted FishCarouselDynamic");
-  }, []);
-
+  // ========================
+  // 🧠 Lock scroll
+  // ========================
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -155,6 +204,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
       bP: body.style.position,
       bH: body.style.height,
     };
+
     html.style.overflow = "hidden";
     html.style.overscrollBehavior = "none";
     body.style.overflow = "hidden";
@@ -170,10 +220,16 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     };
   }, []);
 
+  // ========================
+  // ❌ Fallback: no data
+  // ========================
   if (!slide) {
     return <div className={styles.container}>Տվյալներ չեն գտնվել։</div>;
   }
 
+  // ========================
+  // ✅ UI
+  // ========================
   return (
     <div className={styles.container}>
       <div
@@ -188,6 +244,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
             ⬅️ Վերադառնալ
           </Link>
         </div>
+
         <div className={styles.captionContainer}>
           <div key={`caption-${index}`} className={styles.caption}>
             {slide.text}
