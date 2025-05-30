@@ -185,11 +185,12 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     else prev();
   };
   // play the next slide when click on screen --------------------------
-  const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
-    hadGesture.current = true;
-    if (e.clientY < window.innerHeight / 2) prev();
-    else next();
-  };
+
+  // const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
+  //   hadGesture.current = true;
+  //   if (e.clientY < window.innerHeight / 2) prev();
+  //   else next();
+  // };
   // play the same slide when click on screen --------------------------
 
   const onClickReplayAudio = (e: MouseEvent<HTMLDivElement>) => {
