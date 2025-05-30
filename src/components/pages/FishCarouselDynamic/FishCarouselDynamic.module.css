@@ -423,3 +423,16 @@
     opacity: 1;
   }
 }
+@media only screen and (max-device-width: 375px) and (max-device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait) {
+  /* 🎯 Styles specific to iPhone SE (1st & 2nd Gen) */
+  .image {
+    transform: none !important;
+    scale: 1 !important;
+    rotate: none !important;
+    object-fit: contain !important;
+  }
+
+  .imageContainer {
+    perspective: none !important;
+  }
+}
