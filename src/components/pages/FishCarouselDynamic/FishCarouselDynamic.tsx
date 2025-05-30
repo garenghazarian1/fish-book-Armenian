@@ -184,11 +184,24 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     if (e.deltaY > 0) next();
     else prev();
   };
-
+  // play the next slide when click on screen --------------------------
   const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
     hadGesture.current = true;
     if (e.clientY < window.innerHeight / 2) prev();
     else next();
+  };
+  // play the same slide when click on screen --------------------------
+
+  const onClickReplayAudio = (e: MouseEvent<HTMLDivElement>) => {
+    hadGesture.current = true;
+
+    if (!slide || !audioRef.current) return;
+
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+    audioRef.current.src = slide.audio;
+    audioRef.current.load();
+    audioRef.current.play().catch(() => {});
   };
 
   // ========================
@@ -237,7 +250,8 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         onWheel={onWheel}
-        onClick={onClickSlide}
+        // onClick={onClickSlide}
+        onClick={onClickReplayAudio}
       >
         <div className={styles.backButtonContainer}>
           <Link href="/fishSelect" className={styles.backButton}>
