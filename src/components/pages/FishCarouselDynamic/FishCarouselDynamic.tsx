@@ -193,7 +193,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
   // };
   // play the same slide when click on screen --------------------------
 
-  const onClickReplayAudio = (e: MouseEvent<HTMLDivElement>) => {
+  const onClickReplayAudio = () => {
     hadGesture.current = true;
 
     if (!slide || !audioRef.current) return;
