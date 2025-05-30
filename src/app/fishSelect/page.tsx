@@ -9,22 +9,22 @@ import styles from "./page.module.css";
 
 const fishList = [
   {
-    name: "Blue Fish",
+    name: "Արհեստական ձայն",
     route: "fishcarouseldynamic",
     src: "/fishBlue/happy.png",
   },
   {
-    name: "Red Fish",
+    name: "Տիգրանի և Լիլիթի ձայներով",
     route: "redfishcarousel",
     src: "/fishRed/happy.png",
   },
   {
-    name: "Tigran Fish",
+    name: "Տիգրանի ձայնով (գերմաներեն)",
     route: "dikogerman",
     src: "/fishDikoGerman/glücklich.png",
   },
   {
-    name: "Lilit Fish",
+    name: "Լիլիթի ձայնով (գերմաներեն)",
     route: "lilitgerman",
     src: "/fishLilitGerman/glücklich.png",
   },
