@@ -7,7 +7,7 @@ import {
   useCallback,
   TouchEvent,
   WheelEvent,
-  MouseEvent,
+  // MouseEvent,
 } from "react";
 import Image from "next/image";
 import styles from "./FishCarouselDynamic.module.css";
