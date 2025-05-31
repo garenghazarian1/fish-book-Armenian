@@ -28,6 +28,11 @@ const fishList = [
     route: "lilitgerman",
     src: "/fishLilitGerman/glücklich.png",
   },
+  {
+    name: "Անիի ձայնով ",
+    route: "aniarmenian",
+    src: "/AniFish/carefree.png",
+  },
   // Add more fish here
 ];
 

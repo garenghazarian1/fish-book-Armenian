@@ -17,6 +17,7 @@ const moodLoaders: Record<string, () => Promise<{ default: Mood[] }>> = {
   redfishcarousel: () => import("@/components/pages/data/moods/red"),
   dikogerman: () => import("@/components/pages/data/moods/dikoGerman"),
   lilitgerman: () => import("@/components/pages/data/moods/lilitGerman"),
+  aniarmenian: () => import("@/components/pages/data/moods/aniArmenian"),
 
   // Add more here...
 };
