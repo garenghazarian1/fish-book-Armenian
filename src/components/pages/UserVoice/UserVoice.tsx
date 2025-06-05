@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function UserVoice({ moods }: Props) {
-  const [currentStep, setCurrentStep] = useState(1);
+  // const [currentStep, setCurrentStep] = useState(1);
   const [showModal, setShowModal] = useState(false);
 
   const [showInstructions, setShowInstructions] = useState(false);
@@ -130,7 +130,7 @@ export default function UserVoice({ moods }: Props) {
               {!isRecording ? (
                 <button
                   onClick={() => {
-                    setCurrentStep(index + 1);
+                    // setCurrentStep(index + 1);
                     startRecording(6000, mood.id);
                   }}
                   className={styles.recordBtn}
