@@ -11,19 +11,26 @@ const moodSources: Record<string, () => Promise<{ default: Mood[] }>> = {
   aniArmenian: () => import("@/components/pages/data/moods/aniArmenian"),
   dikogerman: () => import("@/components/pages/data/moods/dikoGerman"),
   lilitgerman: () => import("@/components/pages/data/moods/lilitGerman"),
-  // add more here as you expand
 };
 
 export default function RecordPage() {
   const { model } = useParams();
-  const loader = moodSources[model as string];
   const [moods, setMoods] = useState<Mood[] | null>(null);
 
   useEffect(() => {
-    if (loader) {
-      loader().then((mod) => setMoods(mod.default));
+    if (typeof model === "string") {
+      const loader = moodSources[model];
+      if (loader) {
+        loader().then((mod) => {
+          const enriched = mod.default.map((mood) => ({
+            ...mood,
+            model, // inject model
+          }));
+          setMoods(enriched);
+        });
+      }
     }
-  }, [loader]);
+  }, [model]); // ✅ only depend on `model`
 
   if (!moods) {
     return (

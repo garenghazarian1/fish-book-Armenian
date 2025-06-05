@@ -1,4 +1,3 @@
-// components/pages/UserVoice/UserVoiceCard.tsx
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -24,14 +23,22 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
     setExternalURL,
   } = useRecorder();
 
+  // Use unique key per model+mood
+  const recordingKey = `${mood.model}_${mood.id}`;
+
   useEffect(() => {
-    setExternalURL(mood.id);
-  }, [mood.id, setExternalURL]);
+    setExternalURL(recordingKey);
+  }, [recordingKey, setExternalURL]);
 
   const handlePlay = () => {
     if (!audioURL || !audioRef.current) return;
     audioRef.current.src = audioURL;
     audioRef.current.play().catch(() => {});
+  };
+
+  const handleRedo = async () => {
+    await resetRecording();
+    await setExternalURL(recordingKey);
   };
 
   return (
@@ -55,7 +62,7 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
       <div className={styles.recorder}>
         {!isRecording ? (
           <button
-            onClick={() => startRecording(6000, mood.id)}
+            onClick={() => startRecording(6000, recordingKey)}
             className={styles.recordBtn}
           >
             🎤 Record (max 6s)
@@ -75,14 +82,7 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
             <audio ref={audioRef} controls className={styles.audioPlayer} />
             <div className={styles.actions}>
               <button onClick={handlePlay}>▶️ Play</button>
-              <button
-                onClick={() => {
-                  resetRecording();
-                  setExternalURL(mood.id);
-                }}
-              >
-                ♻️ Redo
-              </button>
+              <button onClick={handleRedo}>♻️ Redo</button>
             </div>
           </div>
         )}

@@ -18,7 +18,7 @@ export default function UserVoice({ moods }: Props) {
   const confirmResetAll = async () => {
     for (const mood of moods) {
       try {
-        await deleteRecording(mood.id);
+        await deleteRecording(`${mood.model}_${mood.id}`);
       } catch (e) {
         console.warn(`Could not delete from IndexedDB: ${mood.id}`, e);
       }
