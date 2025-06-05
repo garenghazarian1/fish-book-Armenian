@@ -33,6 +33,11 @@ const fishList = [
     route: "aniarmenian",
     src: "/AniFish/carefree.png",
   },
+  {
+    name: "Ձայնագրիր",
+    route: "customize", // goes to /fish/customize
+    src: "/icons/microphone.png", // use a mic icon or reuse a fish
+  },
   // Add more fish here
 ];
 

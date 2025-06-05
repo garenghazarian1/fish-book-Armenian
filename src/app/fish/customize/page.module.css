@@ -1,0 +1,119 @@
+/* ===========================
+   🎨 Customize Fish Model Page
+=========================== */
+.wrapper {
+  min-height: 100dvh;
+  padding: calc(2rem + env(safe-area-inset-top)) 1rem
+    calc(2rem + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* background: linear-gradient(to bottom, #022c43, #053b50); */
+  font-family: var(--font-cartoon, sans-serif);
+  color: #e0f7ff;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+.heading {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 2rem;
+  background: linear-gradient(to right, #38bdf8, #60dbfc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: rgba(255, 255, 255, 0.857);
+  animation: floatBreathe 4s ease-in-out infinite;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 800px;
+  justify-items: center;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  transition: transform 0.3s ease, background 0.3s ease;
+  text-align: center;
+}
+
+.card:hover {
+  transform: scale(1.06);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+}
+
+.image {
+  width: 100px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+}
+
+.label {
+  margin-top: 0.6rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes floatBreathe {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.backButton {
+  margin-bottom: 2rem;
+  padding: 0.7rem 1.8rem;
+  font-size: 1.1rem;
+  border: 1px solid #ffffffaa;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  cursor: pointer;
+  font-family: var(--font-cartoon, sans-serif);
+  backdrop-filter: blur(2px);
+  z-index: 10;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.backButton:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  transform: scale(1.05);
+}
+
+@media (max-width: 400px) {
+  .card {
+    padding: 0.8rem;
+  }
+
+  .image {
+    width: 80px;
+  }
+
+  .label {
+    font-size: 0.9rem;
+  }
+
+  .heading {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+}

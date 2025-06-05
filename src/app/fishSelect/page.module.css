@@ -3,8 +3,7 @@
 =========================== */
 .fishPage {
   min-height: 100dvh;
-  padding: calc(2rem + env(safe-area-inset-top)) 1rem
-    calc(2rem + env(safe-area-inset-bottom));
+  padding: 1rem;
   /* background: url("/fishBlue/backgroundB.png") top/cover no-repeat; */
   display: flex;
   flex-direction: column;
@@ -13,8 +12,8 @@
   color: #e0f7ff;
   font-family: var(--font-cartoon, sans-serif);
   text-align: center;
-  box-sizing: border-box;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* ===========================

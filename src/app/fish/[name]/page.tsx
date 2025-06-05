@@ -2,24 +2,50 @@
 
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
-// import type { Mood } from "@/components/context/types";
 import FishCarouselDynamic from "@/components/pages/FishCarouselDynamic/FishCarouselDynamic";
+import UserVoice from "@/components/pages/UserVoice/UserVoice";
 
 export interface Mood {
   id: string;
   image: string;
   text: string;
   audio: string;
+  customAudio?: string;
 }
-// Map the [name] to the correct moods.ts file
-const moodLoaders: Record<string, () => Promise<{ default: Mood[] }>> = {
-  fishcarouseldynamic: () => import("@/components/pages/data/moods/blue"),
-  redfishcarousel: () => import("@/components/pages/data/moods/red"),
-  dikogerman: () => import("@/components/pages/data/moods/dikoGerman"),
-  lilitgerman: () => import("@/components/pages/data/moods/lilitGerman"),
-  aniarmenian: () => import("@/components/pages/data/moods/aniArmenian"),
 
-  // Add more here...
+// Map each route name to both the loader and the carousel component type
+const moodLoaders: Record<
+  string,
+  {
+    loader: () => Promise<{ default: Mood[] }>;
+    component: "default" | "user";
+  }
+> = {
+  fishcarouseldynamic: {
+    loader: () => import("@/components/pages/data/moods/blue"),
+    component: "default",
+  },
+  redfishcarousel: {
+    loader: () => import("@/components/pages/data/moods/red"),
+    component: "default",
+  },
+  dikogerman: {
+    loader: () => import("@/components/pages/data/moods/dikoGerman"),
+    component: "default",
+  },
+  lilitgerman: {
+    loader: () => import("@/components/pages/data/moods/lilitGerman"),
+    component: "default",
+  },
+  aniarmenian: {
+    loader: () => import("@/components/pages/data/moods/aniArmenian"),
+    component: "default",
+  },
+  uservoice: {
+    loader: () => import("@/components/pages/data/moods/blue"),
+    component: "user",
+  },
+  // Add more mappings as needed
 };
 
 export default function FishMoodPage() {
@@ -27,9 +53,9 @@ export default function FishMoodPage() {
   const nameParam = Array.isArray(params.name) ? params.name[0] : params.name;
   const moodKey = nameParam?.toLowerCase();
 
-  const loader = moodKey ? moodLoaders[moodKey] : null;
+  const entry = moodKey ? moodLoaders[moodKey] : null;
 
-  if (!loader) {
+  if (!entry) {
     return (
       <div
         style={{
@@ -46,12 +72,18 @@ export default function FishMoodPage() {
 
   const LazyLoaded = dynamic(
     async () => {
-      const moods = (await loader()).default;
+      const moods = (await entry.loader()).default;
 
-      const FishWrapper = () => <FishCarouselDynamic moods={moods} />;
-      FishWrapper.displayName = "FishWrapper"; // ✅ Avoids eslint warning
+      const Wrapper = () => {
+        return entry.component === "default" ? (
+          <FishCarouselDynamic moods={moods} />
+        ) : (
+          <UserVoice moods={moods} />
+        );
+      };
 
-      return FishWrapper;
+      Wrapper.displayName = "FishWrapper";
+      return Wrapper;
     },
     { ssr: false }
   );
