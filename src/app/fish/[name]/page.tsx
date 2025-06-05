@@ -4,14 +4,15 @@ import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import FishCarouselDynamic from "@/components/pages/FishCarouselDynamic/FishCarouselDynamic";
 import UserVoice from "@/components/pages/UserVoice/UserVoice";
+import type { Mood } from "@/components/pages/data/types";
 
-export interface Mood {
-  id: string;
-  image: string;
-  text: string;
-  audio: string;
-  customAudio?: string;
-}
+// export interface Mood {
+//   id: string;
+//   image: string;
+//   text: string;
+//   audio: string;
+//   customAudio?: string;
+// }
 
 // Map each route name to both the loader and the carousel component type
 const moodLoaders: Record<
@@ -72,7 +73,11 @@ export default function FishMoodPage() {
 
   const LazyLoaded = dynamic(
     async () => {
-      const moods = (await entry.loader()).default;
+      const rawMoods = (await entry.loader()).default;
+      const moods: Mood[] = rawMoods.map((m) => ({
+        ...m,
+        model: moodKey || "", // Add model name to every mood
+      }));
 
       const Wrapper = () => {
         return entry.component === "default" ? (
