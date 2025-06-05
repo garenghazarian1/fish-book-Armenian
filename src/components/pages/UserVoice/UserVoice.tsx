@@ -1,21 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { useState } from "react";
+import Link from "next/link";
 import styles from "./UserVoice.module.css";
-import { useRecorder } from "./useRecorder";
 import { deleteRecording } from "@/utils/audioDB";
 import type { Mood } from "@/components/pages/data/types";
-import Link from "next/link";
+import UserVoiceCard from "./UserVoiceCard";
 
 interface Props {
   moods: Mood[];
 }
 
 export default function UserVoice({ moods }: Props) {
-  // const [currentStep, setCurrentStep] = useState(1);
   const [showModal, setShowModal] = useState(false);
-
   const [showInstructions, setShowInstructions] = useState(false);
 
   const confirmResetAll = async () => {
@@ -45,9 +42,9 @@ export default function UserVoice({ moods }: Props) {
             <p>
               Յուրաքանչյուր ձկան զգացողության համար սեղմեք{" "}
               <strong>«Ձայնագրել»</strong> և խոսեք մինչև{" "}
-              <strong>6 վայրկյան</strong>&#1423;
+              <strong>6 վայրկյան</strong>։
             </p>
-            <p>Ավարտելուց հետո Դուք ավտոմատ կանցնեք հաջորդ ձկանը&#1423;</p>
+            <p>Ավարտելուց հետո Դուք ավտոմատ կանցնեք հաջորդ ձկանը։</p>
           </div>
         )}
       </div>
@@ -87,90 +84,14 @@ export default function UserVoice({ moods }: Props) {
       </div>
 
       {/* 🎣 Mood Recorder Cards */}
-      {moods.map((mood, index) => {
-        const audioRef = useRef<HTMLAudioElement | null>(null);
-        const {
-          isRecording,
-          audioURL,
-          startRecording,
-          stopRecording,
-          resetRecording,
-          setExternalURL,
-        } = useRecorder();
-
-        useEffect(() => {
-          setExternalURL(mood.id); // Fetch from IndexedDB
-        }, [mood.id, setExternalURL]);
-
-        const handlePlay = () => {
-          if (!audioURL || !audioRef.current) return;
-          audioRef.current.src = audioURL;
-          audioRef.current.play().catch(() => {});
-        };
-
-        return (
-          <div key={mood.id} className={styles.voiceCard}>
-            <div className={styles.stepIndicator}>
-              🧭 Քայլ {index + 1} / {moods.length}
-            </div>
-
-            <div className={styles.imageWrapper}>
-              <Image
-                src={mood.image}
-                alt={mood.id}
-                fill
-                sizes="100%"
-                className={styles.image}
-              />
-            </div>
-
-            <div className={styles.caption}>{mood.text}</div>
-
-            <div className={styles.recorder}>
-              {!isRecording ? (
-                <button
-                  onClick={() => {
-                    // setCurrentStep(index + 1);
-                    startRecording(6000, mood.id);
-                  }}
-                  className={styles.recordBtn}
-                >
-                  🎤 Record (max 6s)
-                </button>
-              ) : (
-                <button onClick={stopRecording} className={styles.stopBtn}>
-                  ⏹ Stop
-                </button>
-              )}
-
-              {isRecording && (
-                <div className={styles.recordingIndicator}>🔴 Recording...</div>
-              )}
-
-              {audioURL !== null && (
-                <div className={styles.audioBlock}>
-                  <audio
-                    ref={audioRef}
-                    controls
-                    className={styles.audioPlayer}
-                  />
-                  <div className={styles.actions}>
-                    <button onClick={handlePlay}>▶️ Play</button>
-                    <button
-                      onClick={() => {
-                        resetRecording();
-                        setExternalURL(mood.id); // update immediately
-                      }}
-                    >
-                      ♻️ Redo
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      })}
+      {moods.map((mood, index) => (
+        <UserVoiceCard
+          key={mood.id}
+          mood={mood}
+          index={index}
+          total={moods.length}
+        />
+      ))}
     </div>
   );
 }
