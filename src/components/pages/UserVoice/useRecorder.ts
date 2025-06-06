@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { saveRecording, getRecording, deleteRecording } from "@/utils/audioDB";
 
 export const useRecorder = () => {
@@ -7,6 +7,23 @@ export const useRecorder = () => {
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const currentKey = useRef<string | null>(null);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hadGesture = useRef(false); // ✅ iOS fix
+
+  // === Init audio once
+  useEffect(() => {
+    audioRef.current = new Audio();
+    (audioRef.current as any).playsInline = true; // ✅ for iOS Safari
+  }, []);
+
+  // apply this if didn't worked the first useEffect
+  //   useEffect(() => {
+  //   audioRef.current = new Audio();
+  //   (audioRef.current as any).playsInline = true;
+  //   audioRef.current.autoplay = false;
+  //   audioRef.current.muted = true;
+  // }, []);
 
   const startRecording = async (maxDuration = 6000, key = "") => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -22,6 +39,11 @@ export const useRecorder = () => {
       const blob = new Blob(audioChunks.current, { type: "audio/webm" });
       const url = URL.createObjectURL(blob);
       setAudioURL(url);
+
+      if (audioRef.current) {
+        audioRef.current.src = url;
+        audioRef.current.load(); // ✅ buffer audio for iOS
+      }
 
       if (key) {
         await saveRecording(key, blob);
@@ -59,8 +81,31 @@ export const useRecorder = () => {
     if (blob) {
       const url = URL.createObjectURL(blob);
       setAudioURL(url);
+      if (audioRef.current) {
+        audioRef.current.src = url;
+        audioRef.current.load();
+      }
     }
   }, []);
+
+  const playAudio = async () => {
+    if (!audioRef.current || !audioURL) return;
+    hadGesture.current = true;
+
+    try {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.src = audioURL;
+      audioRef.current.load(); // ✅ ensure ready for iOS
+      await audioRef.current.play();
+    } catch (err) {
+      console.warn("Playback failed:", err);
+    }
+  };
+
+  const handleGesture = () => {
+    hadGesture.current = true;
+  };
 
   return {
     isRecording,
@@ -69,5 +114,8 @@ export const useRecorder = () => {
     stopRecording,
     resetRecording,
     setExternalURL,
+    playAudio, // ✅ Manual playback
+    handleGesture, // ✅ Gesture flag trigger
+    audioRef, // ✅ For UI if needed
   };
 };

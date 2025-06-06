@@ -23,17 +23,25 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
     setExternalURL,
   } = useRecorder();
 
-  // Use unique key per model+mood
   const recordingKey = `${mood.model}_${mood.id}`;
 
   useEffect(() => {
     setExternalURL(recordingKey);
   }, [recordingKey, setExternalURL]);
 
-  const handlePlay = () => {
+  const handlePlay = async () => {
     if (!audioURL || !audioRef.current) return;
-    audioRef.current.src = audioURL;
-    audioRef.current.play().catch(() => {});
+    const audio = audioRef.current;
+    audio.src = audioURL;
+
+    // ✅ iOS-friendly playback
+    (audio as any).playsInline = true;
+    audio.load(); // Ensure it's loaded in memory
+    try {
+      await audio.play();
+    } catch (err) {
+      console.warn("iOS playback failed:", err);
+    }
   };
 
   const handleRedo = async () => {
@@ -79,7 +87,15 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
 
         {audioURL !== null && (
           <div className={styles.audioBlock}>
-            <audio ref={audioRef} controls className={styles.audioPlayer} />
+            {/* ✅ Add playsInline + preload explicitly */}
+            <audio
+              ref={audioRef}
+              className={styles.audioPlayer}
+              controls
+              preload="auto"
+              // @ts-ignore
+              playsInline
+            />
             <div className={styles.actions}>
               <button onClick={handlePlay}>▶️ Play</button>
               <button onClick={handleRedo}>♻️ Redo</button>
