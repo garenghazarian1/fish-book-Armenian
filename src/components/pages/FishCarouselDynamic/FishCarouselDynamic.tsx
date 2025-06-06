@@ -10,7 +10,6 @@ import {
 } from "react";
 import Image from "next/image";
 import styles from "./FishCarouselDynamic.module.css";
-import { useRouter } from "next/navigation";
 import BubbleBurstBack from "@/components/bubble/BubbleBurst/BubbleBurst";
 import { motion } from "framer-motion";
 import type { Mood } from "@/components/pages/data/types";
