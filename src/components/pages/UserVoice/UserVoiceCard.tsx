@@ -31,17 +31,20 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
 
   const handlePlay = async () => {
     if (!audioURL || !audioRef.current) return;
-
     const audio = audioRef.current;
 
-    audio.src = audioURL;
-    audio.setAttribute("playsinline", "true"); // ✅ Type-safe iOS support
-    audio.load();
-
     try {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = audioURL;
+      audio.load();
+      audio.muted = false;
+      audio.volume = 1.0;
+      audio.setAttribute("playsinline", "true");
+
       await audio.play();
     } catch (err) {
-      console.warn("iOS playback failed:", err);
+      console.warn("Playback failed:", err);
     }
   };
 
