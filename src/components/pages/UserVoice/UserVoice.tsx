@@ -51,7 +51,7 @@ export default function UserVoice({ moods }: Props) {
 
       {/* 🔄 Reset All Recordings Button + Modal */}
       <div className={styles.resetWrapper}>
-        <Link href="/fish/customize" className={styles.backButton}>
+        <Link href="/customize" className={styles.backButton}>
           🔙 Վերադառնալ
         </Link>
         <button

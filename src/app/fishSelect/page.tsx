@@ -35,7 +35,7 @@ const fishList = [
   },
   {
     name: "Ձայնագրիր",
-    route: "customize", // goes to /fish/customize
+    route: "/customize", // goes to /customize
     src: "/icons/microphone.png", // use a mic icon or reuse a fish
   },
   // Add more fish here
@@ -67,8 +67,13 @@ function FishCard({
     setBurstKey((k) => k + 1);
     audioRef.current?.play().catch(() => {});
 
+    const isAbsolute = fish.route.startsWith("/");
+    const targetRoute = isAbsolute
+      ? fish.route
+      : `/fishSelect/fish/${fish.route}`;
+
     setTimeout(() => {
-      router.push(`/fish/${fish.route}`);
+      router.push(targetRoute);
     }, 700);
   };
 

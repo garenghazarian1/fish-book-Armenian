@@ -39,7 +39,7 @@ export default function CustomizeFishPage() {
   const router = useRouter();
 
   const handleSelect = (modelKey: string) => {
-    router.push(`/fish/record/${modelKey}`);
+    router.push(`/customize/record/${modelKey}`);
   };
 
   return (
