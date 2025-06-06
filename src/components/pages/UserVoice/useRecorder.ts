@@ -29,7 +29,10 @@ export const useRecorder = () => {
     };
 
     mediaRecorder.current.onstop = async () => {
-      const blob = new Blob(audioChunks.current, { type: "audio/webm" });
+      const blob = new Blob(audioChunks.current, {
+        type: "audio/ogg; codecs=opus",
+      });
+
       const url = URL.createObjectURL(blob);
       setAudioURL(url);
 
