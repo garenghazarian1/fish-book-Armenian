@@ -31,12 +31,13 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
 
   const handlePlay = async () => {
     if (!audioURL || !audioRef.current) return;
-    const audio = audioRef.current;
-    audio.src = audioURL;
 
-    // ✅ iOS-friendly playback
-    (audio as any).playsInline = true;
-    audio.load(); // Ensure it's loaded in memory
+    const audio = audioRef.current;
+
+    audio.src = audioURL;
+    audio.setAttribute("playsinline", "true"); // ✅ Type-safe iOS support
+    audio.load();
+
     try {
       await audio.play();
     } catch (err) {
@@ -87,14 +88,11 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
 
         {audioURL !== null && (
           <div className={styles.audioBlock}>
-            {/* ✅ Add playsInline + preload explicitly */}
             <audio
               ref={audioRef}
               className={styles.audioPlayer}
               controls
               preload="auto"
-              // @ts-ignore
-              playsInline
             />
             <div className={styles.actions}>
               <button onClick={handlePlay}>▶️ Play</button>

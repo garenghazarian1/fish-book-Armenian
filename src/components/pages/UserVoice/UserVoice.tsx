@@ -15,7 +15,7 @@ export default function UserVoice({ moods }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
 
-  const confirmResetAll = async () => {
+  const confirmResetAll = async (): Promise<void> => {
     for (const mood of moods) {
       try {
         await deleteRecording(`${mood.model}_${mood.id}`);

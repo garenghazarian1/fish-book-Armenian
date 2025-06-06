@@ -11,19 +11,12 @@ export const useRecorder = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hadGesture = useRef(false); // ✅ iOS fix
 
-  // === Init audio once
+  // ✅ Initialize audio with iOS-friendly playsinline attribute
   useEffect(() => {
-    audioRef.current = new Audio();
-    (audioRef.current as any).playsInline = true; // ✅ for iOS Safari
+    const audio = new Audio();
+    audio.setAttribute("playsinline", "true"); // ✅ Safe way for iOS autoplay
+    audioRef.current = audio;
   }, []);
-
-  // apply this if didn't worked the first useEffect
-  //   useEffect(() => {
-  //   audioRef.current = new Audio();
-  //   (audioRef.current as any).playsInline = true;
-  //   audioRef.current.autoplay = false;
-  //   audioRef.current.muted = true;
-  // }, []);
 
   const startRecording = async (maxDuration = 6000, key = "") => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -42,7 +35,7 @@ export const useRecorder = () => {
 
       if (audioRef.current) {
         audioRef.current.src = url;
-        audioRef.current.load(); // ✅ buffer audio for iOS
+        audioRef.current.load(); // ✅ buffer for iOS
       }
 
       if (key) {
@@ -114,8 +107,8 @@ export const useRecorder = () => {
     stopRecording,
     resetRecording,
     setExternalURL,
-    playAudio, // ✅ Manual playback
-    handleGesture, // ✅ Gesture flag trigger
-    audioRef, // ✅ For UI if needed
+    playAudio,
+    handleGesture,
+    audioRef,
   };
 };
