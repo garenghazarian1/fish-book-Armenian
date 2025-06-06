@@ -77,6 +77,7 @@ export const useRecorder = () => {
   };
 
   const setExternalURL = useCallback(async (key: string) => {
+    currentKey.current = key;
     const blob = await getRecording(key);
     if (blob) {
       const url = URL.createObjectURL(blob);

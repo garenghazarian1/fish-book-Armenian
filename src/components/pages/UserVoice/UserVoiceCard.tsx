@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./UserVoice.module.css";
 import { useRecorder } from "./useRecorder";
