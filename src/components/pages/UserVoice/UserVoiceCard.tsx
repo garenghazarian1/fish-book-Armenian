@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./UserVoice.module.css";
 import { useRecorder } from "./useRecorder";
@@ -13,7 +13,6 @@ interface Props {
 }
 
 export default function UserVoiceCard({ mood, index, total }: Props) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const {
     isRecording,
     audioURL,
@@ -24,27 +23,31 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
   } = useRecorder();
 
   const recordingKey = `${mood.model}_${mood.id}`;
+  const [standaloneAudio, setStandaloneAudio] =
+    useState<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     setExternalURL(recordingKey);
   }, [recordingKey, setExternalURL]);
 
-  const handlePlay = async () => {
-    if (!audioURL || !audioRef.current) return;
-    const audio = audioRef.current;
-
-    try {
-      audio.pause();
-      audio.currentTime = 0;
-      audio.src = audioURL;
-      audio.load();
+  useEffect(() => {
+    // Create new Audio instance when audioURL changes
+    if (audioURL) {
+      const audio = new Audio(audioURL);
+      audio.preload = "auto";
       audio.muted = false;
-      audio.volume = 1.0;
-      audio.setAttribute("playsinline", "true");
+      audio.volume = 1;
+      audio.setAttribute("playsinline", "true"); // ✅ iOS support
+      setStandaloneAudio(audio);
+    }
+  }, [audioURL]);
 
-      await audio.play();
+  const handlePlay = async () => {
+    if (!standaloneAudio) return;
+    try {
+      await standaloneAudio.play();
     } catch (err) {
-      console.warn("Playback failed:", err);
+      console.warn("Standalone audio playback failed:", err);
     }
   };
 
@@ -91,12 +94,6 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
 
         {audioURL !== null && (
           <div className={styles.audioBlock}>
-            <audio
-              ref={audioRef}
-              className={styles.audioPlayer}
-              controls
-              preload="auto"
-            />
             <div className={styles.actions}>
               <button onClick={handlePlay}>▶️ Play</button>
               <button onClick={handleRedo}>♻️ Redo</button>
