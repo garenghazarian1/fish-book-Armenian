@@ -298,6 +298,53 @@
   transform: scale(1.05);
 }
 
+/* deleteButton  */
+
+.deletedCard {
+  padding: 2rem;
+  text-align: center;
+  background: #dff0d8;
+  color: #3c763d;
+  border: 2px solid #a4d4a2;
+  border-radius: 12px;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fadeOut {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+.fadeOut {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.4s ease-in-out;
+}
+
+.deletedMsg {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+  color: green;
+  background-color: #f1fff1;
+  border-radius: 1rem;
+}
+
 /* 📱 Mobile Optimization */
 @media (max-width: 400px) {
   .voiceCard {

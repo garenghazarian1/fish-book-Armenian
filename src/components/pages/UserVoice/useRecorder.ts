@@ -100,6 +100,10 @@ export const useRecorder = () => {
     hadGesture.current = true;
   };
 
+  const setAudioURLPublic = (url: string | null) => {
+    setAudioURL(url);
+  };
+
   return {
     isRecording,
     audioURL,
@@ -110,5 +114,6 @@ export const useRecorder = () => {
     playAudio,
     handleGesture,
     audioRef,
+    setAudioURL: setAudioURLPublic,
   };
 };

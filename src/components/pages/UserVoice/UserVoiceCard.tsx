@@ -1,9 +1,8 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./UserVoice.module.css";
 import { useRecorder } from "./useRecorder";
+import { deleteRecording } from "@/utils/audioDB";
 import type { Mood } from "@/components/pages/data/types";
 
 interface Props {
@@ -13,6 +12,10 @@ interface Props {
 }
 
 export default function UserVoiceCard({ mood, index, total }: Props) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeletedMsg, setShowDeletedMsg] = useState(false);
+
   const {
     isRecording,
     audioURL,
@@ -20,40 +23,61 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
     stopRecording,
     resetRecording,
     setExternalURL,
+    playAudio,
+    audioRef,
+    setAudioURL,
   } = useRecorder();
 
   const recordingKey = `${mood.model}_${mood.id}`;
-  const [standaloneAudio, setStandaloneAudio] =
-    useState<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    setExternalURL(recordingKey);
-  }, [recordingKey, setExternalURL]);
-
-  useEffect(() => {
-    // Create new Audio instance when audioURL changes
-    if (audioURL) {
-      const audio = new Audio(audioURL);
-      audio.preload = "auto";
-      audio.muted = false;
-      audio.volume = 1;
-      audio.setAttribute("playsinline", "true"); // ✅ iOS support
-      setStandaloneAudio(audio);
+    if (!showDeletedMsg) {
+      setExternalURL(recordingKey);
     }
-  }, [audioURL]);
+  }, [recordingKey, setExternalURL, showDeletedMsg]);
 
-  const handlePlay = async () => {
-    if (!standaloneAudio) return;
-    try {
-      await standaloneAudio.play();
-    } catch (err) {
-      console.warn("Standalone audio playback failed:", err);
+  useEffect(() => {
+    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    const handleEnded = () => setIsPlaying(false);
+    const handlePause = () => setIsPlaying(false);
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("pause", handlePause);
+    return () => {
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("pause", handlePause);
+    };
+  }, [audioRef]);
+
+  const handlePlayClick = async () => {
+    if (!audioRef.current) return;
+    if (!isPlaying) {
+      setIsPlaying(true);
+      await playAudio();
+    } else {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
     }
   };
 
   const handleRedo = async () => {
     await resetRecording();
     await setExternalURL(recordingKey);
+    setIsPlaying(false);
+  };
+
+  const confirmDelete = async () => {
+    await deleteRecording(recordingKey);
+    setAudioURL(null); // ✅ clear blob URL from state
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = ""; // ✅ force remove from <audio>
+    }
+    setIsPlaying(false);
+    setShowDeletedMsg(true);
+    setShowDeleteModal(false);
+    setTimeout(() => setShowDeletedMsg(false), 2000);
   };
 
   return (
@@ -92,15 +116,45 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
           <div className={styles.recordingIndicator}>🔴 Recording...</div>
         )}
 
-        {audioURL !== null && (
+        {showDeletedMsg && (
+          <div className={styles.deletedMsg}>✅ Ձայնը ջնջված է</div>
+        )}
+
+        {!isRecording && audioURL && !showDeletedMsg && (
           <div className={styles.audioBlock}>
+            <audio
+              ref={audioRef}
+              className={styles.audioPlayer}
+              preload="auto"
+              // @ts-ignore
+              playsInline
+            />
             <div className={styles.actions}>
-              <button onClick={handlePlay}>▶️ Play</button>
+              <button onClick={handlePlayClick}>
+                {isPlaying ? "⏹ Stop" : "▶️ Play"}
+              </button>
               <button onClick={handleRedo}>♻️ Redo</button>
+              <button onClick={() => setShowDeleteModal(true)}>
+                🗑️ Delete
+              </button>
             </div>
           </div>
         )}
       </div>
+
+      {showDeleteModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <p>Ջնջե՞լ այս ձայնագրությունը։</p>
+            <div className={styles.modalActions}>
+              <button onClick={() => setShowDeleteModal(false)}>
+                ❌ Չեղարկել
+              </button>
+              <button onClick={confirmDelete}>✅ Ջնջել</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
