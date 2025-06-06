@@ -345,6 +345,28 @@
   border-radius: 1rem;
 }
 
+.generateWrapper {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.generateBtn {
+  background: #0b7285;
+  color: white;
+  font-size: 1.1rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease;
+}
+
+.generateBtn:hover {
+  background: #099268;
+}
+
 /* 📱 Mobile Optimization */
 @media (max-width: 400px) {
   .voiceCard {

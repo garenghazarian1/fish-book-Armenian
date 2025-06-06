@@ -6,14 +6,6 @@ import FishCarouselDynamic from "@/components/pages/FishCarouselDynamic/FishCaro
 import UserVoice from "@/components/pages/UserVoice/UserVoice";
 import type { Mood } from "@/components/pages/data/types";
 
-// export interface Mood {
-//   id: string;
-//   image: string;
-//   text: string;
-//   audio: string;
-//   customAudio?: string;
-// }
-
 // Map each route name to both the loader and the carousel component type
 const moodLoaders: Record<
   string,
