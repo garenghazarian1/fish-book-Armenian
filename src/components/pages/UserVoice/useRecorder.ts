@@ -9,18 +9,25 @@ export const useRecorder = () => {
   const currentKey = useRef<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const hadGesture = useRef(false); // ✅ iOS fix
+  const hadGesture = useRef(false);
 
-  // ✅ Initialize audio with iOS-friendly playsinline attribute
   useEffect(() => {
     const audio = new Audio();
-    audio.setAttribute("playsinline", "true"); // ✅ Safe way for iOS autoplay
+    audio.setAttribute("playsinline", "true"); // iOS fix
     audioRef.current = audio;
   }, []);
 
   const startRecording = async (maxDuration = 6000, key = "") => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder.current = new MediaRecorder(stream);
+
+    // ✅ Prefer audio/mp4 if supported for iOS playback compatibility
+    const preferredMimeType = MediaRecorder.isTypeSupported("audio/mp4")
+      ? "audio/mp4"
+      : "audio/webm";
+
+    mediaRecorder.current = new MediaRecorder(stream, {
+      mimeType: preferredMimeType,
+    });
     audioChunks.current = [];
     currentKey.current = key;
 
@@ -29,16 +36,13 @@ export const useRecorder = () => {
     };
 
     mediaRecorder.current.onstop = async () => {
-      const blob = new Blob(audioChunks.current, {
-        type: "audio/ogg; codecs=opus",
-      });
-
+      const blob = new Blob(audioChunks.current, { type: preferredMimeType });
       const url = URL.createObjectURL(blob);
       setAudioURL(url);
 
       if (audioRef.current) {
         audioRef.current.src = url;
-        audioRef.current.load(); // ✅ buffer for iOS
+        audioRef.current.load();
       }
 
       if (key) {
@@ -92,7 +96,7 @@ export const useRecorder = () => {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       audioRef.current.src = audioURL;
-      audioRef.current.load(); // ✅ ensure ready for iOS
+      audioRef.current.load();
       await audioRef.current.play();
     } catch (err) {
       console.warn("Playback failed:", err);
