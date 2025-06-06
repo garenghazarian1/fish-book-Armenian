@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import FishCarouselDynamic from "@/components/pages/FishCarouselDynamic/FishCarouselDynamic";
+import FishCarouselDynamicRecord from "@/components/pages/FishCarouselDynamicRecord/FishCarouselDynamicRecord";
 import { getRecording } from "@/utils/audioDB";
 import type { Mood } from "@/components/pages/data/types";
 
@@ -47,7 +47,7 @@ const GeneratedVoicePage = () => {
   if (userMoods.length === 0)
     return <div>❌ Ձայնագրություններ չեն գտնվել։</div>;
 
-  return <FishCarouselDynamic moods={userMoods} />;
+  return <FishCarouselDynamicRecord moods={userMoods} />;
 };
 
 export default GeneratedVoicePage;

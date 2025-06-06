@@ -14,6 +14,15 @@
   z-index: 10;
 }
 
+/* .canvasOverlay {
+  position: absolute !important;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; 
+  z-index: 0 !important; 
+} */
+
 .carousel {
   width: 100%;
   height: 100%;
@@ -21,6 +30,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  /* background-color: var(--background); */
+  /* background: url("/fishBlue/backgroundB.png") top/cover no-repeat,
+    var(--blue-dark); */
+  /* isolation: isolate; */
+  /* keeps backdrop blur local */
   z-index: 10;
 }
 
@@ -408,26 +422,4 @@
     transform: translate(0) rotate(0deg) scale(1);
     opacity: 1;
   }
-}
-
-.backButton {
-  position: relative;
-  padding: 0.6rem 1.5rem;
-
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  transition: all 0.25s ease;
-  z-index: 10;
-}
-
-.bubbleBurstWrapper {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 2;
 }

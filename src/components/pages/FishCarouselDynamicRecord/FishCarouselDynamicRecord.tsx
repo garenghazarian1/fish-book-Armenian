@@ -7,20 +7,18 @@ import {
   useCallback,
   TouchEvent,
   WheelEvent,
+  // MouseEvent,
 } from "react";
 import Image from "next/image";
-import styles from "./FishCarouselDynamic.module.css";
-import { useRouter } from "next/navigation";
+import styles from "./FishCarouselDynamicRecord.module.css";
 import Link from "next/link";
-import BubbleBurstBack from "@/components/bubble/BubbleBurst/BubbleBurst";
-import { motion } from "framer-motion";
 import type { Mood } from "@/components/pages/data/types";
 
 interface Props {
   moods: Mood[];
 }
 
-const FishCarouselDynamic = ({ moods }: Props) => {
+const FishCarouselDynamicRecord = ({ moods }: Props) => {
   // ========================
   // 🔁 State & Refs
   // ========================
@@ -36,43 +34,6 @@ const FishCarouselDynamic = ({ moods }: Props) => {
   const lastWheel = useRef(0);
 
   const slide = moods?.[index];
-
-  const router = useRouter();
-  const [hasMounted, setHasMounted] = useState(false);
-
-  const [isExiting, setIsExiting] = useState(false);
-
-  // ========================
-  // 🔙 Back button: bubble animation setup
-  // ========================
-  const [burstKey, setBurstKey] = useState(0);
-  const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    setHasMounted(true); // ✅ prevent SSR mismatch
-    bubbleSoundRef.current = new Audio("/sounds/bubble.mp3");
-    bubbleSoundRef.current.volume = 0.7;
-  }, []);
-
-  useEffect(() => {
-    if (isExiting) {
-      const timer = setTimeout(() => {
-        window.location.href = "/fishSelect"; // 💥 Avoid router.push to delay page swap
-      }, 600); // Match this to your animation duration
-
-      return () => clearTimeout(timer);
-    }
-  }, [isExiting]);
-
-  // Handle back button click with animation + sound + vibration
-  const handleBackClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setBurstKey((k) => k + 1);
-    bubbleSoundRef.current?.play().catch(() => {});
-    if (navigator.vibrate) navigator.vibrate(50);
-
-    setIsExiting(true); // ✅ Trigger exit state
-  };
 
   // ========================
   // 🧹 Clear timeout helper
@@ -223,10 +184,15 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     if (e.deltaY > 0) next();
     else prev();
   };
+  // play the next slide when click on screen --------------------------
 
-  // ========================
-  // 🔁 Replay audio on click
-  // ========================
+  // const onClickSlide = (e: MouseEvent<HTMLDivElement>) => {
+  //   hadGesture.current = true;
+  //   if (e.clientY < window.innerHeight / 2) prev();
+  //   else next();
+  // };
+  // play the same slide when click on screen --------------------------
+
   const onClickReplayAudio = () => {
     hadGesture.current = true;
 
@@ -272,16 +238,7 @@ const FishCarouselDynamic = ({ moods }: Props) => {
   // ❌ Fallback: no data
   // ========================
   if (!slide) {
-    return (
-      <motion.div
-        className={styles.container}
-        initial={{ opacity: 1, x: 0 }}
-        animate={{ opacity: isExiting ? 0 : 1, x: isExiting ? 100 : 0 }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-      >
-        Տվյալներ չեն գտնվել։
-      </motion.div>
-    );
+    return <div className={styles.container}>Տվյալներ չեն գտնվել։</div>;
   }
 
   // ========================
@@ -294,23 +251,13 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         onWheel={onWheel}
+        // onClick={onClickSlide}
         onClick={onClickReplayAudio}
       >
-        {/* 🔙 Back Button with Bubble Animation */}
         <div className={styles.backButtonContainer}>
-          <motion.button
-            className={styles.backButton}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleBackClick}
-          >
+          <Link href="/fishSelect" className={styles.backButton}>
             ⬅️ Վերադառնալ
-            {hasMounted && (
-              <div className={styles.bubbleBurstWrapper}>
-                <BubbleBurstBack triggerKey={burstKey} />
-              </div>
-            )}
-          </motion.button>
+          </Link>
         </div>
 
         <div className={styles.captionContainer}>
@@ -332,7 +279,6 @@ const FishCarouselDynamic = ({ moods }: Props) => {
           />
         </div>
 
-        {/* ▶️ Autoplay Toggle Button */}
         <button
           className={styles.autoplayBtn}
           onClick={(e) => {
@@ -348,4 +294,4 @@ const FishCarouselDynamic = ({ moods }: Props) => {
   );
 };
 
-export default FishCarouselDynamic;
+export default FishCarouselDynamicRecord;

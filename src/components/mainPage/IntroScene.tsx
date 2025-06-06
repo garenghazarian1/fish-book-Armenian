@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-
 import BubbleBurst from "../bubble/BubbleBurst/BubbleBurst";
 import BubbleBurstButton from "../bubble/BubbleBurstButton/BubbleBurstButton";
 

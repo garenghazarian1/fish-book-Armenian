@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import BubbleBurst from "@/components/bubble/BubbleBurstButton/BubbleBurstButton";
+import BubbleBurstBack from "@/components/bubble/BubbleBurst/BubbleBurst";
 import styles from "./page.module.css";
 
 const fishList = [
@@ -103,6 +104,26 @@ function FishCard({
 
 export default function FishSelectPage() {
   const router = useRouter();
+  const [burstKey, setBurstKey] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // ✅ Used to delay rendering of BubbleBurstBack until client-side hydration
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true); // ⬅️ Delay rendering dynamic client-only content
+    audioRef.current = new Audio("/sounds/bubble.mp3");
+    audioRef.current.volume = 0.7;
+  }, []);
+
+  const handleBackClick = () => {
+    setBurstKey((k) => k + 1);
+    audioRef.current?.play().catch(() => {});
+    if (navigator.vibrate) navigator.vibrate(50);
+    setTimeout(() => {
+      router.push("/");
+    }, 600);
+  };
 
   return (
     <div className={styles.fishPage}>
@@ -119,9 +140,14 @@ export default function FishSelectPage() {
         className={styles.backButton}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => router.push("/")}
+        onClick={handleBackClick}
       >
         ⬅️ Վերադառնալ
+        {hasMounted && (
+          <div className={styles.bubbleBurstWrapper}>
+            <BubbleBurstBack triggerKey={burstKey} />
+          </div>
+        )}
       </motion.button>
 
       <motion.div
