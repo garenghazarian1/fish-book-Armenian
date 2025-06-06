@@ -11,7 +11,6 @@ import {
 import Image from "next/image";
 import styles from "./FishCarouselDynamic.module.css";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import BubbleBurstBack from "@/components/bubble/BubbleBurst/BubbleBurst";
 import { motion } from "framer-motion";
 import type { Mood } from "@/components/pages/data/types";
@@ -37,7 +36,6 @@ const FishCarouselDynamic = ({ moods }: Props) => {
 
   const slide = moods?.[index];
 
-  const router = useRouter();
   const [hasMounted, setHasMounted] = useState(false);
 
   const [isExiting, setIsExiting] = useState(false);
