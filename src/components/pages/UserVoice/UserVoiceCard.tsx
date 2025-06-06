@@ -126,9 +126,9 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
               ref={audioRef}
               className={styles.audioPlayer}
               preload="auto"
-              // @ts-ignore
-              playsInline
+              playsInline={true}
             />
+
             <div className={styles.actions}>
               <button onClick={handlePlayClick}>
                 {isPlaying ? "⏹ Stop" : "▶️ Play"}
