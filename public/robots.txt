@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://babyban.kids
+
+# Sitemaps
+Sitemap: https://babyban.kids/sitemap.xml
