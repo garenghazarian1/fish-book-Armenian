@@ -4,7 +4,6 @@
 .fishPage {
   min-height: 100dvh;
   padding: 1rem;
-  /* background: url("/fishBlue/backgroundB.png") top/cover no-repeat; */
   display: flex;
   flex-direction: column;
   align-items: center;

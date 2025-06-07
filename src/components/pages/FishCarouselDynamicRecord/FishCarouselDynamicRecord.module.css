@@ -14,15 +14,6 @@
   z-index: 10;
 }
 
-/* .canvasOverlay {
-  position: absolute !important;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; 
-  z-index: 0 !important; 
-} */
-
 .carousel {
   width: 100%;
   height: 100%;
@@ -30,11 +21,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  /* background-color: var(--background); */
-  /* background: url("/fishBlue/backgroundB.png") top/cover no-repeat,
-    var(--blue-dark); */
-  /* isolation: isolate; */
-  /* keeps backdrop blur local */
   z-index: 10;
 }
 

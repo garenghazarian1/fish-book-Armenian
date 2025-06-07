@@ -6,7 +6,6 @@
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  background-color: #001d2e;
 }
 
 /* Each mood fills one full screen */
@@ -22,7 +21,6 @@
   text-align: center;
   color: #e0f7ff;
   font-family: var(--font-cartoon, sans-serif);
-  background: url("/fishBlue/backgroundB.png") top/cover no-repeat;
   box-sizing: border-box;
 }
 

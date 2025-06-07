@@ -69,9 +69,7 @@ body {
   height: 100%; /* fallback */
   overflow-x: hidden;
   overflow-y: auto;
-  /* background: url("/fishBlue/backgroundB.png") top/cover no-repeat; */
-  background: url("/fishBlue/backgroundB.png") top/cover no-repeat,
-    var(--blue-dark);
+  background: url("/backgroundB.webp") top/cover no-repeat, var(--blue-dark);
   scroll-behavior: smooth;
 }
 
