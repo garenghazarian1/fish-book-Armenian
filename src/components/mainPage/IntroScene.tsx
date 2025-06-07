@@ -12,7 +12,7 @@ export default function IntroScene() {
   const [burstKeyButton, setBurstKeyButton] = useState(0);
   const [hasMounted, setHasMounted] = useState(false);
   // const [showSubtitle, setShowSubtitle] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
+  // const [isTouch, setIsTouch] = useState(false);
 
   const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function IntroScene() {
   useEffect(() => {
     setHasMounted(true);
     if (typeof window !== "undefined") {
-      setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
+      // setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
       bubbleSoundRef.current = new Audio("/sounds/bubble.mp3");
       bubbleSoundRef.current.volume = 0.7;
     }
