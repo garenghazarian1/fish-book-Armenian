@@ -9,27 +9,27 @@ const fishOptions = [
   {
     name: "Կապույտ ձուկ",
     modelKey: "blue",
-    src: "/fishBlue/happy.png",
+    src: "/fishBlue/happy.webp",
   },
   {
     name: "Կարմիր ձուկ",
     modelKey: "red",
-    src: "/fishRed/happy.png",
+    src: "/fishRed/happy.webp",
   },
   {
     name: "Անի ձուկ",
     modelKey: "aniArmenian",
-    src: "/AniFish/carefree.png",
+    src: "/AniFish/carefree.webp",
   },
   {
     name: "Տիգրանի ձայնով (գերմաներեն)",
     modelKey: "dikogerman",
-    src: "/fishDikoGerman/glücklich.png",
+    src: "/fishDikoGerman/glücklich.webp",
   },
   {
     name: "Լիլիթի ձայնով (գերմաներեն)",
     modelKey: "lilitgerman",
-    src: "/fishLilitGerman/glücklich.png",
+    src: "/fishLilitGerman/glücklich.webp",
   },
 
   // Add more models here...

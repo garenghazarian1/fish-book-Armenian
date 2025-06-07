@@ -69,7 +69,7 @@ export default function IntroScene() {
           <span className={styles.wordRed}>Սկսենք&nbsp;</span>
           <span className={styles.wordBlue}>հույզերի&nbsp;</span>
           <span className={styles.wordOrange}>ծովաշխարհ</span>
-          {hasMounted && (
+          {burstKeyTitle > 0 && (
             <div className={styles.bubbleBurstWrapper}>
               <BubbleBurst triggerKey={burstKeyTitle} />
             </div>

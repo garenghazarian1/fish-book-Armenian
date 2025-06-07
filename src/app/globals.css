@@ -53,7 +53,6 @@ body {
   box-sizing: border-box;
   height: 100%; /* fallback */
   min-height: 100vh;
-
   overflow-x: hidden;
   overflow-y: auto;
   background: url("/backgroundB.webp") top/cover no-repeat, var(--blue-dark);

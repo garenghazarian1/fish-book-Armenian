@@ -43,7 +43,6 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  /* background: url("/caustics.png") repeat; */
   background-size: cover;
   animation: causticDrift 18s ease-in-out infinite;
   mix-blend-mode: overlay;

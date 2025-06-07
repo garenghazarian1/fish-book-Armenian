@@ -128,8 +128,8 @@
   -webkit-text-fill-color: transparent;
   background-repeat: no-repeat;
   background-size: 500% 500%;
-  animation: floatBreathe 3.5s ease-in-out infinite,
-    gradientShift 3s ease-in-out infinite;
+  animation: floatBreathe 3.5s ease-in-out infinite 3s,
+    gradientShift 3s ease-in-out infinite 3s;
 }
 
 .wordRed {
