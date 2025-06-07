@@ -276,7 +276,23 @@ const FishCarouselDynamic = ({ moods }: Props) => {
         animate={{ opacity: isExiting ? 0 : 1, x: isExiting ? 100 : 0 }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
       >
-        Տվյալներ չեն գտնվել։
+        <div className={styles.backButtonContainer}>
+          <motion.button
+            className={styles.backButton}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleBackClick}
+          >
+            ⬅️ Վերադառնալ
+            {hasMounted && (
+              <div className={styles.bubbleBurstWrapper}>
+                <BubbleBurstBack triggerKey={burstKey} />
+              </div>
+            )}
+          </motion.button>
+        </div>
+
+        <div className={styles.captionContainer}>Տվյալներ չեն գտնվել։</div>
       </motion.div>
     );
   }

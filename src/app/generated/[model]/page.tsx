@@ -5,11 +5,13 @@ import { useParams } from "next/navigation";
 import FishCarouselDynamicRecord from "@/components/pages/FishCarouselDynamicRecord/FishCarouselDynamicRecord";
 import { getRecording } from "@/utils/audioDB";
 import type { Mood } from "@/components/pages/data/types";
+import { useRouter } from "next/navigation";
 
 const GeneratedVoicePage = () => {
   const { model } = useParams();
   const [userMoods, setUserMoods] = useState<Mood[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const loadMoods = async () => {
@@ -44,8 +46,18 @@ const GeneratedVoicePage = () => {
   }, [model]);
 
   if (loading) return <div>⏳ Ստուգվում է ձայնագրությունները…</div>;
-  if (userMoods.length === 0)
-    return <div>❌ Ձայնագրություններ չեն գտնվել։</div>;
+  if (userMoods.length === 0) {
+    return (
+      <div className="container">
+        <div className="backButtonContainer">
+          <button className="backButton" onClick={() => router.back()}>
+            ⬅️ Վերադառնալ
+          </button>
+        </div>
+        <div className="captionContainer">❌ Ձայնագրություններ չեն գտնվել։</div>
+      </div>
+    );
+  }
 
   return <FishCarouselDynamicRecord moods={userMoods} />;
 };

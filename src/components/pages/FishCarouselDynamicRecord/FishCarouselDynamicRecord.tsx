@@ -13,6 +13,7 @@ import Image from "next/image";
 import styles from "./FishCarouselDynamicRecord.module.css";
 import Link from "next/link";
 import type { Mood } from "@/components/pages/data/types";
+import { useRouter } from "next/navigation";
 
 interface Props {
   moods: Mood[];
@@ -22,6 +23,7 @@ const FishCarouselDynamicRecord = ({ moods }: Props) => {
   // ========================
   // 🔁 State & Refs
   // ========================
+  const router = useRouter();
   const [index, setIndex] = useState(0);
   const [autoplay, setAutoplay] = useState(false);
 
@@ -238,7 +240,17 @@ const FishCarouselDynamicRecord = ({ moods }: Props) => {
   // ❌ Fallback: no data
   // ========================
   if (!slide) {
-    return <div className={styles.container}>Տվյալներ չեն գտնվել։</div>;
+    return (
+      <div className={styles.container}>
+        <div className={styles.backButtonContainer}>
+          <button className={styles.backButton} onClick={() => router.back()}>
+            ⬅️ Վերադառնալ
+          </button>
+        </div>
+
+        <div className={styles.captionContainer}>Տվյալներ չեն գտնվել։</div>
+      </div>
+    );
   }
 
   // ========================
