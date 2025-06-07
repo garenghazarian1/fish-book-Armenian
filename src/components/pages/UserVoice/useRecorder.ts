@@ -7,58 +7,76 @@ export const useRecorder = () => {
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const audioChunks = useRef<Blob[]>([]);
   const currentKey = useRef<string | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hadGesture = useRef(false);
 
   useEffect(() => {
     const audio = new Audio();
-    audio.setAttribute("playsinline", "true"); // iOS fix
+    audio.setAttribute("playsinline", "true"); // iOS playback fix
     audioRef.current = audio;
   }, []);
 
   const startRecording = async (maxDuration = 6000, key = "") => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
 
-    // ✅ Prefer audio/mp4 if supported for iOS playback compatibility
-    const preferredMimeType = MediaRecorder.isTypeSupported("audio/mp3")
-      ? "audio/mp3"
-      : "audio/webm";
+      const preferredMimeType = MediaRecorder.isTypeSupported(
+        "audio/webm;codecs=opus"
+      )
+        ? "audio/webm;codecs=opus"
+        : "audio/webm";
 
-    mediaRecorder.current = new MediaRecorder(stream, {
-      mimeType: preferredMimeType,
-    });
-    audioChunks.current = [];
-    currentKey.current = key;
+      const recorder = new MediaRecorder(stream, {
+        mimeType: preferredMimeType,
+      });
+      mediaRecorder.current = recorder;
+      audioChunks.current = [];
+      currentKey.current = key;
 
-    mediaRecorder.current.ondataavailable = (e) => {
-      audioChunks.current.push(e.data);
-    };
+      recorder.ondataavailable = (e) => {
+        audioChunks.current.push(e.data);
+        console.log("Data chunk size:", e.data.size);
+      };
 
-    mediaRecorder.current.onstop = async () => {
-      const blob = new Blob(audioChunks.current, { type: preferredMimeType });
-      const url = URL.createObjectURL(blob);
-      setAudioURL(url);
+      recorder.onstart = () => {
+        console.log("Recording started");
+      };
 
-      if (audioRef.current) {
-        audioRef.current.src = url;
-        audioRef.current.load();
-      }
+      recorder.onstop = () => {
+        console.log("Recording stopped");
+        const blob = new Blob(audioChunks.current, { type: preferredMimeType });
+        const url = URL.createObjectURL(blob);
+        setAudioURL(url);
 
-      if (key) {
-        await saveRecording(key, blob);
-      }
-    };
+        if (audioRef.current) {
+          audioRef.current.src = url;
+          audioRef.current.load();
+        }
 
-    mediaRecorder.current.start();
-    setIsRecording(true);
+        if (key) {
+          saveRecording(key, blob); // Avoid await to prevent delay
+        }
 
-    setTimeout(() => {
-      if (mediaRecorder.current?.state === "recording") {
-        mediaRecorder.current.stop();
-        setIsRecording(false);
-      }
-    }, maxDuration);
+        // ✅ Stop mic access
+        stream.getTracks().forEach((track) => track.stop());
+        streamRef.current = null;
+      };
+
+      recorder.start();
+      setIsRecording(true);
+
+      setTimeout(() => {
+        if (mediaRecorder.current?.state === "recording") {
+          mediaRecorder.current.stop();
+          setIsRecording(false);
+        }
+      }, maxDuration);
+    } catch (error) {
+      console.error("Failed to start recording:", error);
+    }
   };
 
   const stopRecording = () => {
@@ -91,9 +109,9 @@ export const useRecorder = () => {
 
   const playAudio = async () => {
     if (!audioRef.current || !audioURL) return;
-    hadGesture.current = true;
 
     try {
+      hadGesture.current = true;
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       audioRef.current.src = audioURL;
