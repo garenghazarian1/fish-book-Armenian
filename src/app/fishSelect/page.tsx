@@ -37,7 +37,7 @@ const fishList = [
   {
     name: "Ձայնագրիր",
     route: "/customize", // goes to /customize
-    src: "/icons/microphone.webp", // use a mic icon or reuse a fish
+    src: "/icons/microphone.png", // use a mic icon or reuse a fish
   },
   // Add more fish here
 ];

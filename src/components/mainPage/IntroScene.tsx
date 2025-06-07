@@ -5,14 +5,13 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import BubbleBurst from "../bubble/BubbleBurst/BubbleBurst";
 import BubbleBurstButton from "../bubble/BubbleBurstButton/BubbleBurstButton";
-
 import styles from "./IntroScene.module.css";
 
 export default function IntroScene() {
   const [burstKeyTitle, setBurstKeyTitle] = useState(0);
   const [burstKeyButton, setBurstKeyButton] = useState(0);
   const [hasMounted, setHasMounted] = useState(false);
-  const [showSubtitle, setShowSubtitle] = useState(false);
+  // const [showSubtitle, setShowSubtitle] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
 
   const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
@@ -29,17 +28,17 @@ export default function IntroScene() {
 
   const handleTitleInteraction = () => {
     setBurstKeyTitle((k) => k + 1);
-    setShowSubtitle((prev) => !prev);
-    if (navigator.vibrate) navigator.vibrate(40);
+    // setShowSubtitle((prev) => !prev);
+    if (navigator.vibrate) navigator.vibrate(80);
     bubbleSoundRef.current?.play().catch(() => {});
   };
 
   const handleHover = () => {
-    if (!isTouch) setShowSubtitle(true);
+    // if (!isTouch) setShowSubtitle(true);
   };
 
   const handleLeave = () => {
-    if (!isTouch) setShowSubtitle(false);
+    // if (!isTouch) setShowSubtitle(false);
   };
 
   const handleStartClick = () => {
@@ -76,30 +75,12 @@ export default function IntroScene() {
           )}
         </h1>
 
-        <motion.p
-          className={styles.subtitle}
-          animate={{
-            opacity: showSubtitle ? 1 : 0,
-            y: showSubtitle ? 20 : -20,
-            pointerEvents: showSubtitle ? "auto" : "none",
-          }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
+        <p className={styles.subtitle}>
           Այստեղ կծանոթանաս 13 ձկների, որոնք ցույց են տալիս իրենց հույզերն ու
           զգացմունքները։
-        </motion.p>
+        </p>
 
-        <motion.p
-          className={styles.subtitle}
-          animate={{
-            opacity: showSubtitle ? 1 : 0,
-            y: showSubtitle ? 20 : -20,
-            pointerEvents: showSubtitle ? "auto" : "none",
-          }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          2 տաեկանից սկսած
-        </motion.p>
+        <p className={styles.subtitle}>2 տաեկանից սկսած</p>
       </motion.div>
 
       {/* CTA Button */}
