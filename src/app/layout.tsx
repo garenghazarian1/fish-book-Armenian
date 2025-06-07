@@ -59,7 +59,7 @@ export default function RootLayout({
       <body
         className={`${notoArmenian.variable} ${fredoka.variable} antialiased`}
       >
-        {children}
+        <main>{children}</main>
         <Analytics />
       </body>
     </html>
