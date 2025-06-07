@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Sans_Armenian, Fredoka } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import styles from "./layout.module.css";
 
 // Armenian font
 const notoArmenian = Noto_Sans_Armenian({
@@ -59,7 +60,7 @@ export default function RootLayout({
       <body
         className={`${notoArmenian.variable} ${fredoka.variable} antialiased`}
       >
-        <main>{children}</main>
+        <main className={styles.main}>{children}</main>
         <Analytics />
       </body>
     </html>
