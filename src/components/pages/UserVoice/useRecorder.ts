@@ -21,8 +21,8 @@ export const useRecorder = () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
     // ✅ Prefer audio/mp4 if supported for iOS playback compatibility
-    const preferredMimeType = MediaRecorder.isTypeSupported("audio/mp4")
-      ? "audio/mp4"
+    const preferredMimeType = MediaRecorder.isTypeSupported("audio/mp3")
+      ? "audio/mp3"
       : "audio/webm";
 
     mediaRecorder.current = new MediaRecorder(stream, {

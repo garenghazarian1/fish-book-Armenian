@@ -11,8 +11,6 @@ export default function IntroScene() {
   const [burstKeyTitle, setBurstKeyTitle] = useState(0);
   const [burstKeyButton, setBurstKeyButton] = useState(0);
   const [hasMounted, setHasMounted] = useState(false);
-  // const [showSubtitle, setShowSubtitle] = useState(false);
-  // const [isTouch, setIsTouch] = useState(false);
 
   const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
@@ -20,7 +18,6 @@ export default function IntroScene() {
   useEffect(() => {
     setHasMounted(true);
     if (typeof window !== "undefined") {
-      // setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
       bubbleSoundRef.current = new Audio("/sounds/bubble.mp3");
       bubbleSoundRef.current.volume = 0.7;
     }
@@ -28,17 +25,8 @@ export default function IntroScene() {
 
   const handleTitleInteraction = () => {
     setBurstKeyTitle((k) => k + 1);
-    // setShowSubtitle((prev) => !prev);
     if (navigator.vibrate) navigator.vibrate(80);
     bubbleSoundRef.current?.play().catch(() => {});
-  };
-
-  const handleHover = () => {
-    // if (!isTouch) setShowSubtitle(true);
-  };
-
-  const handleLeave = () => {
-    // if (!isTouch) setShowSubtitle(false);
   };
 
   const handleStartClick = () => {
@@ -59,12 +47,7 @@ export default function IntroScene() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2 }}
       >
-        <h1
-          className={styles.title}
-          onPointerDown={handleTitleInteraction}
-          onPointerEnter={handleHover}
-          onPointerLeave={handleLeave}
-        >
+        <h1 className={styles.title} onPointerDown={handleTitleInteraction}>
           <span className={styles.wordRed}>Սկսենք&nbsp;</span>
           <span className={styles.wordBlue}>հույզերի&nbsp;</span>
           <span className={styles.wordOrange}>ծովաշխարհ</span>
