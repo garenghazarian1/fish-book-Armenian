@@ -12,32 +12,32 @@ const fishList = [
   {
     name: "Արհեստական ձայն",
     route: "fishcarouseldynamic",
-    src: "/fishBlue/happy.png",
+    src: "/fishBlue/happy.webp",
   },
   {
     name: "Տիգրանի և Լիլիթի ձայներով",
     route: "redfishcarousel",
-    src: "/fishRed/happy.png",
+    src: "/fishRed/happy.webp",
   },
   {
     name: "Տիգրանի ձայնով (գերմաներեն)",
     route: "dikogerman",
-    src: "/fishDikoGerman/glücklich.png",
+    src: "/fishDikoGerman/glücklich.webp",
   },
   {
     name: "Լիլիթի ձայնով (գերմաներեն)",
     route: "lilitgerman",
-    src: "/fishLilitGerman/glücklich.png",
+    src: "/fishLilitGerman/glücklich.webp",
   },
   {
     name: "Անիի ձայնով ",
     route: "aniarmenian",
-    src: "/AniFish/carefree.png",
+    src: "/AniFish/carefree.webp",
   },
   {
     name: "Ձայնագրիր",
     route: "/customize", // goes to /customize
-    src: "/icons/microphone.png", // use a mic icon or reuse a fish
+    src: "/icons/microphone.webp", // use a mic icon or reuse a fish
   },
   // Add more fish here
 ];
