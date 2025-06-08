@@ -5,7 +5,7 @@ const moods: Mood[] = [
     id: "happy",
     image: "/fishBlue/happy.webp",
     text: "Ես ուրախ եմ",
-    audio: "/sounds/ai/yesOraxEm.m4a",
+    audio: "/sounds/ai/yesOraxEm.mp3",
     model: "blue",
   },
   {

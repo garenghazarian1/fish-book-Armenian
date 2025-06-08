@@ -52,7 +52,7 @@
   text-align: center;
   position: relative;
   z-index: 2;
-  pointer-events: none;
+  pointer-events: auto;
   margin-bottom: 1rem;
 }
 
@@ -217,7 +217,7 @@
 /* ================================
 🐟 Fish Area (3D Support)
 ================================ */
-.canvasContainer {
+/* .canvasContainer {
   position: absolute;
   top: 10px;
   left: 0;
@@ -229,7 +229,7 @@
   inset: 0;
   pointer-events: auto;
   z-index: 1;
-}
+} */
 
 .bubbleCanvasContainer {
   position: absolute;
@@ -392,4 +392,21 @@
     background-color: #3399ff;
     color: #ffffff;
   }
+}
+
+/* audio icon  */
+.playAudioButton {
+  background: none;
+  border: none;
+  color: var(--foreground);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.playAudioButton:hover,
+.playAudioButton:focus {
+  transform: scale(1.1);
+  outline: none;
 }

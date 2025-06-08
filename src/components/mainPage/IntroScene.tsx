@@ -11,7 +11,7 @@ export default function IntroScene() {
   const [burstKeyTitle, setBurstKeyTitle] = useState(0);
   const [burstKeyButton, setBurstKeyButton] = useState(0);
   const [hasMounted, setHasMounted] = useState(false);
-
+  const introAudioRef = useRef<HTMLAudioElement | null>(null);
   const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
 
@@ -20,6 +20,9 @@ export default function IntroScene() {
     if (typeof window !== "undefined") {
       bubbleSoundRef.current = new Audio("/sounds/bubble.mp3");
       bubbleSoundRef.current.volume = 0.7;
+
+      introAudioRef.current = new Audio("/sounds/intro.mp3"); // Your voice file
+      introAudioRef.current.volume = 1;
     }
   }, []);
 
@@ -36,6 +39,10 @@ export default function IntroScene() {
     setTimeout(() => {
       router.push("/fishSelect");
     }, 1000);
+  };
+
+  const handlePlayAudio = () => {
+    introAudioRef.current?.play().catch(() => {});
   };
 
   return (
@@ -64,6 +71,21 @@ export default function IntroScene() {
         </p>
 
         <p className={styles.subtitle}>2 տաեկանից սկսած</p>
+        <button
+          onClick={handlePlayAudio}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handlePlayAudio();
+            }
+          }}
+          className={styles.playAudioButton}
+          tabIndex={0}
+          role="button"
+          aria-label="Լսել բացատրությունը ձայնով"
+        >
+          🔊
+        </button>
       </motion.div>
 
       {/* CTA Button */}
