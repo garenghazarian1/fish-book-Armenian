@@ -9,10 +9,7 @@ import type { Mood } from "@/components/pages/data/types";
 // Map each route name to both the loader and the carousel component type
 const moodLoaders: Record<
   string,
-  {
-    loader: () => Promise<{ default: Mood[] }>;
-    component: "default" | "user";
-  }
+  { loader: () => Promise<{ default: Mood[] }>; component: "default" | "user" }
 > = {
   fishcarouseldynamic: {
     loader: () => import("@/components/pages/data/moods/blue"),
@@ -22,22 +19,23 @@ const moodLoaders: Record<
     loader: () => import("@/components/pages/data/moods/red"),
     component: "default",
   },
-  dikogerman: {
-    loader: () => import("@/components/pages/data/moods/dikoGerman"),
+  "diko-german": {
+    loader: () => import("@/components/pages/data/moods/diko-german"),
     component: "default",
   },
-  lilitgerman: {
-    loader: () => import("@/components/pages/data/moods/lilitGerman"),
+  "lilit-german": {
+    loader: () => import("@/components/pages/data/moods/lilit-german"),
     component: "default",
   },
-  aniarmenian: {
-    loader: () => import("@/components/pages/data/moods/aniArmenian"),
+  "ani-armenian": {
+    loader: () => import("@/components/pages/data/moods/ani-armenian"),
     component: "default",
   },
   uservoice: {
     loader: () => import("@/components/pages/data/moods/blue"),
     component: "user",
   },
+
   // Add more mappings as needed
 };
 

@@ -22,17 +22,17 @@ const fishList = [
   },
   {
     name: "Տիգրանի ձայնով (գերմաներեն)",
-    route: "dikogerman",
+    route: "diko-german",
     src: "/fishDikoGerman/glücklich.webp",
   },
   {
     name: "Լիլիթի ձայնով (գերմաներեն)",
-    route: "lilitgerman",
+    route: "lilit-german",
     src: "/fishLilitGerman/glücklich.webp",
   },
   {
     name: "Անիի ձայնով ",
-    route: "aniarmenian",
+    route: "ani-armenian",
     src: "/AniFish/carefree.webp",
   },
   {

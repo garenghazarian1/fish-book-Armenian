@@ -1,0 +1,169 @@
+/* =========================== */
+/* 🎙️ UserVoice Layout Styles */
+/* =========================== */
+
+.voiceWrapper {
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  padding: 0 1rem;
+  background: linear-gradient(to bottom, var(--blue-dark), var(--blue));
+}
+
+/* 🔝 Sticky Instructions */
+.instructions {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  color: var(--blue-light);
+  padding: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0 0 12px 12px;
+  font-family: var(--font-cartoon);
+}
+
+.toggleHint {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  opacity: 0.6;
+}
+
+.instructionText {
+  font-size: 1rem;
+  padding-top: 0.5rem;
+  color: var(--blue-light);
+  line-height: 1.6;
+}
+
+/* 🔄 Reset All Button Area */
+.resetWrapper {
+  position: sticky;
+  top: 6rem;
+  z-index: 10;
+  text-align: center;
+  padding: 1rem 0;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.backButton,
+.resetAllBtn,
+.generateBtn {
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+  text-align: center;
+  border-radius: 10px;
+  border: none;
+  color: var(--foreground);
+  cursor: pointer;
+  font-family: var(--font-cartoon);
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  width: 90%;
+  max-width: 320px;
+}
+
+.backButton {
+  background: linear-gradient(to right, var(--orange-dark), var(--orange));
+}
+.backButton:hover {
+  background: var(--orange);
+}
+
+.resetAllBtn {
+  background: linear-gradient(to right, var(--red-dark), var(--red));
+}
+.resetAllBtn:hover {
+  background: var(--red);
+}
+
+.generateWrapper {
+  margin-top: 0.8rem;
+}
+
+.generateBtn {
+  background: linear-gradient(to right, var(--blue-dark), var(--blue-shiny));
+}
+.generateBtn:hover {
+  background: var(--blue);
+}
+
+/* 🧼 Modal Styling */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: var(--background);
+  color: var(--foreground);
+  padding: 2rem;
+  border-radius: 14px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.modalTitle {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cancelBtn,
+.confirmBtn {
+  flex: 1;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cancelBtn {
+  background: var(--blue);
+  color: white;
+}
+.cancelBtn:hover {
+  background: var(--blue-shiny);
+}
+
+.confirmBtn {
+  background: var(--red);
+  color: white;
+}
+.confirmBtn:hover {
+  background: var(--red-shiny);
+}

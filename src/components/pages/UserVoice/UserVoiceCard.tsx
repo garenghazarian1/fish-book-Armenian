@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import styles from "./UserVoice.module.css";
+import styles from "./UserVoiceCard.module.css";
 import { useRecorder } from "./useRecorder";
 import { deleteRecording } from "@/utils/audioDB";
 import type { Mood } from "@/components/pages/data/types";
@@ -104,16 +104,16 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
             onClick={() => startRecording(6000, recordingKey)}
             className={styles.recordBtn}
           >
-            🎤 Record (max 6s)
+            🎤 Ձայնագրել (առավելագույնը 6վ)
           </button>
         ) : (
           <button onClick={stopRecording} className={styles.stopBtn}>
-            ⏹ Stop
+            ⏹ Կանգ
           </button>
         )}
 
         {isRecording && (
-          <div className={styles.recordingIndicator}>🔴 Recording...</div>
+          <div className={styles.recordingIndicator}>🔴 Ձայնագրվում է...</div>
         )}
 
         {showDeletedMsg && (
@@ -131,12 +131,10 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
 
             <div className={styles.actions}>
               <button onClick={handlePlayClick}>
-                {isPlaying ? "⏹ Stop" : "▶️ Play"}
+                {isPlaying ? "⏹ Դադարեցնել" : "▶️ Նվագարկել"}
               </button>
-              <button onClick={handleRedo}>♻️ Redo</button>
-              <button onClick={() => setShowDeleteModal(true)}>
-                🗑️ Delete
-              </button>
+              <button onClick={handleRedo}>♻️ Կրկնել</button>
+              <button onClick={() => setShowDeleteModal(true)}>🗑️ Ջնջել</button>
             </div>
           </div>
         )}

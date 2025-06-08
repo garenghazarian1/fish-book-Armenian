@@ -20,17 +20,17 @@ const fishOptions = [
   },
   {
     name: "Անի ձուկ",
-    modelKey: "aniArmenian",
+    modelKey: "ani-armenian",
     src: "/AniFish/carefree.webp",
   },
   {
     name: "Տիգրանի ձայնով (գերմաներեն)",
-    modelKey: "dikogerman",
+    modelKey: "diko-german",
     src: "/fishDikoGerman/glücklich.webp",
   },
   {
     name: "Լիլիթի ձայնով (գերմաներեն)",
-    modelKey: "lilitgerman",
+    modelKey: "lilit-german",
     src: "/fishLilitGerman/glücklich.webp",
   },
 

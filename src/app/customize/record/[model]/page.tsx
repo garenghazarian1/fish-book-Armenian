@@ -8,9 +8,9 @@ import UserVoice from "@/components/pages/UserVoice/UserVoice";
 const moodSources: Record<string, () => Promise<{ default: Mood[] }>> = {
   blue: () => import("@/components/pages/data/moods/blue"),
   red: () => import("@/components/pages/data/moods/red"),
-  aniArmenian: () => import("@/components/pages/data/moods/aniArmenian"),
-  dikogerman: () => import("@/components/pages/data/moods/dikoGerman"),
-  lilitgerman: () => import("@/components/pages/data/moods/lilitGerman"),
+  "ani-armenian": () => import("@/components/pages/data/moods/ani-armenian"),
+  "diko-german": () => import("@/components/pages/data/moods/diko-german"),
+  "lilit-german": () => import("@/components/pages/data/moods/lilit-german"),
 };
 
 export default function RecordPage() {

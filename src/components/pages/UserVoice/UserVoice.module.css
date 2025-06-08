@@ -2,28 +2,34 @@
    🎙️ Record Voice Fullscreen Layout
 =========================== */
 .voiceWrapper {
-  height: 100dvh;
+  height: 100vh;
+  width: 100vw;
   overflow-y: scroll;
+  overflow-x: hidden;
+
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
 }
 
-/* Each mood fills one full screen */
-.voiceCard {
-  scroll-snap-align: start;
-  height: 100dvh;
-  padding: calc(2rem + env(safe-area-inset-top)) 1rem
-    calc(2rem + env(safe-area-inset-bottom));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #e0f7ff;
-  font-family: var(--font-cartoon, sans-serif);
-  box-sizing: border-box;
+.h2 {
+  font-size: 0.8rem;
+  font-weight: lighter;
 }
 
+.toggleHint {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: lighter;
+  opacity: 0.6;
+}
+
+.instructionText {
+  font-size: 0.8rem;
+  font-weight: lighter;
+  color: #a2ccd4;
+}
+
+/* end */
 .imageWrapper {
   position: relative;
   width: 220px;
@@ -124,55 +130,12 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.toggleHint {
-  margin-left: 0.5rem;
-  font-size: 0.9rem;
-  opacity: 0.6;
-}
-
 /* 🧭 Mood Progress (Mood 2 of 6) */
 .stepIndicator {
   font-size: 0.95rem;
   margin-bottom: 1rem;
   color: #aeeffb;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* 🔄 Reset All Button Area */
-.resetWrapper {
-  position: sticky;
-  top: 3.5rem;
-  z-index: 9;
-  text-align: center;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.resetAllBtn {
-  display: inline-block;
-  margin: 0 auto;
-  padding: 0.6rem;
-  font-size: 1rem;
-  text-align: center;
-  border: 1px solid #ffaaaa;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
-  cursor: pointer;
-  font-family: var(--font-cartoon, sans-serif);
-  backdrop-filter: blur(4px);
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  max-width: 90%;
-  white-space: nowrap;
-}
-
-.resetAllBtn:hover {
-  background-color: rgba(255, 204, 204, 0.25);
-  transform: scale(1.05);
 }
 
 /* 🔴 Recording Indicator */
@@ -198,103 +161,6 @@
 }
 
 /* -------------------------------- */
-/* Modal Overlay */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100dvh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-/* Modal Box */
-.modal {
-  background-color: #ffffff;
-  color: #001d2e;
-  padding: 2rem;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 350px;
-  text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  font-family: var(--font-cartoon, sans-serif);
-}
-
-.modalTitle {
-  font-size: 1.1rem;
-  margin-bottom: 1.5rem;
-  line-height: 1.4;
-}
-
-/* Modal Buttons */
-.modalActions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.confirmBtn,
-.cancelBtn {
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  border: none;
-  transition: background 0.2s ease;
-  min-width: 110px;
-}
-
-.confirmBtn {
-  background-color: #0288d1;
-  color: #fff;
-  border: 1px solid #4fc3f7;
-}
-
-.confirmBtn:hover {
-  background-color: #03a9f4;
-  color: #000;
-}
-
-.cancelBtn {
-  background-color: #e0e0e0;
-  color: #222;
-  border: 1px solid #aaa;
-}
-
-.cancelBtn:hover {
-  background-color: #d5d5d5;
-}
-
-.backButton {
-  display: inline-block;
-  margin-bottom: 0.3rem;
-  padding: 0.6rem;
-  font-size: 1rem;
-  text-align: center;
-  border: 1px solid #ffffff55;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
-  cursor: pointer;
-  font-family: var(--font-cartoon, sans-serif);
-  backdrop-filter: blur(4px);
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  z-index: 10;
-  max-width: 90%;
-  white-space: nowrap;
-}
-
-.backButton:hover {
-  background-color: rgba(255, 255, 255, 0.18);
-  transform: scale(1.05);
-}
 
 /* deleteButton  */
 
@@ -343,28 +209,6 @@
   border-radius: 1rem;
 }
 
-.generateWrapper {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.generateBtn {
-  background: #0b7285;
-  color: white;
-  font-size: 1.1rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease;
-}
-
-.generateBtn:hover {
-  background: #099268;
-}
-
 /* 📱 Mobile Optimization */
 @media (max-width: 400px) {
   .voiceCard {
@@ -387,21 +231,5 @@
 
   .audioPlayer {
     width: 160px;
-  }
-
-  .resetAllBtn {
-    font-size: 0.9rem;
-    padding: 0.5rem;
-    max-width: 100%;
-    white-space: normal;
-    line-height: 1.3;
-  }
-
-  .backButton {
-    font-size: 0.9rem;
-    padding: 0.5rem;
-    max-width: 100%;
-    white-space: normal;
-    line-height: 1.3;
   }
 }
