@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import styles from "./page.module.css";
+import { useEffect, useRef, useState } from "react";
+import BubbleBurstBack from "@/components/bubble/BubbleBurst/BubbleBurst";
 
 const fishOptions = [
   {
@@ -37,13 +39,28 @@ const fishOptions = [
 
 export default function CustomizeFishPage() {
   const router = useRouter();
+  const [burstBack, setBurstBack] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleSelect = (modelKey: string) => {
     router.push(`/customize/record/${modelKey}`);
   };
 
+  useEffect(() => {
+    audioRef.current = new Audio("/sounds/bubble.mp3");
+    audioRef.current.volume = 0.7;
+  }, []);
+
+  const handleBackClick = () => {
+    setBurstBack((k) => k + 1);
+    audioRef.current?.play().catch(() => {});
+    if (navigator.vibrate) navigator.vibrate(50);
+    setTimeout(() => {
+      router.push("/fishSelect");
+    }, 600);
+  };
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.fishPage}>
       <motion.h1
         className={styles.heading}
         initial={{ opacity: 0, y: -30 }}
@@ -54,17 +71,24 @@ export default function CustomizeFishPage() {
       </motion.h1>
 
       {/* ⬅️ Back Button */}
-      <motion.button
-        className={styles.backButton}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => router.push("/fishSelect")}
-      >
-        ⬅️ Վերադառնալ
-      </motion.button>
+      <div className={styles.buttonRow}>
+        <motion.button
+          className={styles.backButton}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleBackClick}
+        >
+          ⬅️ Վերադառնալ
+          {burstBack > 0 && (
+            <div className={styles.bubbleBurstWrapper}>
+              <BubbleBurstBack triggerKey={burstBack} />
+            </div>
+          )}
+        </motion.button>
+      </div>
 
       <motion.div
-        className={styles.grid}
+        className={styles.fishFlex}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -72,7 +96,7 @@ export default function CustomizeFishPage() {
         {fishOptions.map((fish) => (
           <div
             key={fish.modelKey}
-            className={styles.card}
+            className={styles.fishCard}
             onClick={() => handleSelect(fish.modelKey)}
           >
             <Image
@@ -80,9 +104,9 @@ export default function CustomizeFishPage() {
               alt={fish.name}
               width={160}
               height={160}
-              className={styles.image}
+              className={styles.fishImage}
             />
-            <p className={styles.label}>{fish.name}</p>
+            <p className={styles.fishName}>{fish.name}</p>
           </div>
         ))}
       </motion.div>

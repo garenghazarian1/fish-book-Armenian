@@ -36,6 +36,12 @@ export default function IntroScene() {
     setBurstKeyButton((k) => k + 1);
     bubbleSoundRef.current?.play().catch(() => {});
     if (navigator.vibrate) navigator.vibrate(50);
+
+    // ✅ Stop the intro audio before leaving
+    if (introAudioRef.current) {
+      introAudioRef.current.pause();
+      introAudioRef.current.currentTime = 0;
+    }
     setTimeout(() => {
       router.push("/fishSelect");
     }, 1000);
