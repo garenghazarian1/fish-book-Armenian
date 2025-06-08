@@ -18,7 +18,7 @@ const FishImage = ({ src, alt, index, priority = false }: FishImageProps) => {
         src={src}
         alt={alt}
         fill
-        sizes="100%"
+        sizes="80%"
         priority={priority}
         loading={priority ? "eager" : "lazy"}
         className={styles.image}
