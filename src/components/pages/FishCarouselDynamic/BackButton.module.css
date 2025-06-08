@@ -1,0 +1,52 @@
+.backButtonContainer {
+  width: 45vw;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem;
+}
+
+.backButton {
+  width: 100%;
+  padding: 0.6rem 1.5rem;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--foreground);
+  background: var(--btnBg);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px) saturate(150%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.3s;
+  user-select: none;
+  position: relative;
+  z-index: 10;
+
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Show "..." if text is too long */
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateY(-2px);
+}
+
+.backButton:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.bubbleBurstWrapper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@media (max-width: 400px) {
+  .backButton {
+    font-size: 0.7rem;
+  }
+}

@@ -1,0 +1,109 @@
+.captionContainer {
+  width: 60%;
+  height: 20%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 2rem;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+  height: 70%;
+  font-family: var(--font-cartoon);
+  font-size: 2rem;
+  color: var(--foreground);
+  text-align: center;
+  border-radius: 65% 35% 65% 35% / 35% 65% 35% 65%;
+  background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.05)
+    )
+    border-box;
+  backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  transform-style: preserve-3d;
+  animation: tiltDrop 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    floatPulse 3s cubic-bezier(0.45, 0.05, 0.55, 0.95) 0.7s infinite,
+    bubbleMorph 12s ease-in-out 0.7s infinite;
+  will-change: transform, border-radius;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+}
+
+@keyframes tiltDrop {
+  0% {
+    transform: translateY(-80px) rotateX(25deg);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(6px) rotateX(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes floatPulse {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.04);
+  }
+}
+
+@keyframes bubbleMorph {
+  0% {
+    border-radius: 65% 35% 65% 35% / 35% 65% 35% 65%;
+    transform: scale(1);
+  }
+  25% {
+    border-radius: 55% 45% 70% 30% / 45% 55% 30% 70%;
+  }
+  50% {
+    border-radius: 70% 30% 60% 40% / 30% 70% 40% 60%;
+    transform: scale(1.035);
+  }
+  75% {
+    border-radius: 60% 40% 75% 25% / 40% 60% 25% 75%;
+  }
+  100% {
+    border-radius: 65% 35% 65% 35% / 35% 65% 35% 65%;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caption {
+    animation: none;
+    filter: none;
+  }
+}
+
+@media (max-width: 970px) {
+  .caption {
+    width: 80%;
+    font-size: 1.2rem;
+  }
+}
+@media (max-width: 570px) {
+  .caption {
+    width: 80%;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .caption {
+    width: 90%;
+    font-size: 0.9rem;
+  }
+}

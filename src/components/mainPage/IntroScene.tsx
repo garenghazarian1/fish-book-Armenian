@@ -24,6 +24,14 @@ export default function IntroScene() {
       introAudioRef.current = new Audio("/sounds/intro.mp3"); // Your voice file
       introAudioRef.current.volume = 1;
     }
+
+    return () => {
+      // ✅ Cleanup: Stop and reset the audio on unmount
+      if (introAudioRef.current) {
+        introAudioRef.current.pause();
+        introAudioRef.current.currentTime = 0;
+      }
+    };
   }, []);
 
   const handleTitleInteraction = () => {
