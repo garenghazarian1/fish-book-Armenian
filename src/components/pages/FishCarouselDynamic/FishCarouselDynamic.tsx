@@ -121,7 +121,6 @@ const FishCarouselDynamic = ({ moods }: Props) => {
   // Init audio on mount
   useEffect(() => {
     audioRef.current = new Audio();
-    scheduleAudio(moods[0]);
     setIndex(0);
 
     return () => {

@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import BubbleBurstBack from "@/components/bubble/BubbleBurst/BubbleBurst";
 import styles from "./BackButton.module.css";
 
 const BackButton = () => {
-  const router = useRouter();
   const [burstKey, setBurstKey] = useState<number | null>(null);
   const [isExiting, setIsExiting] = useState(false);
   const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
