@@ -1,8 +1,7 @@
 .imageContainer {
   position: relative;
-  width: 90vw;
-  height: 60vh; /* give it more vertical space */
-  max-height: 70vh;
+  width: 80%;
+  height: 25%; /* give space without dominating screen */
   margin: 2rem auto;
   display: flex;
   align-items: center;
@@ -10,29 +9,33 @@
 }
 
 .image {
-  padding: 1rem;
   width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center;
+
   transition: opacity 0.4s ease-in-out, filter 0.4s ease-in-out,
     box-shadow 0.4s ease-in-out, transform 0.4s ease-in-out;
+
   animation: revolveScale 1s forwards;
+
   filter: saturate(1.25) contrast(1.1) brightness(1.05)
     drop-shadow(0 0 6px var(--neon-blue)) drop-shadow(0 0 12px var(--neon-blue));
+
   transform: rotateX(54deg) rotateY(56deg) rotateZ(93deg)
     translate3d(28px, 53px, 80px) scale3d(1.82, 1.37, 1.7) skew(22deg, 18deg);
 }
 
-/* Optional: Give more room on small screens */
+/* ✅ Media query for SE / small devices */
 @media (max-width: 400px) {
   .imageContainer {
-    height: 70vh;
+    width: 90%;
+    height: 25%;
+    margin: 0.3rem;
   }
 
   .image {
-    padding: 0.5rem;
-    transform: rotateZ(90deg) scale(1.1); /* Optional: simplify transform for better fit */
+    transform: rotateZ(0deg) scale(1); /* ⬅️ Simplified for small screens */
   }
 }
 
