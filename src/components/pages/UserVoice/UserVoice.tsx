@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
 import styles from "./UserVoice.module.css";
 import { deleteRecording } from "@/utils/audioDB";
 import type { Mood } from "@/components/pages/data/types";
