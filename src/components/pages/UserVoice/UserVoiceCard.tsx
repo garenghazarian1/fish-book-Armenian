@@ -93,6 +93,7 @@ export default function UserVoiceCard({ mood, index, total }: Props) {
           fill
           sizes="100%"
           className={styles.image}
+          priority
         />
       </div>
 
