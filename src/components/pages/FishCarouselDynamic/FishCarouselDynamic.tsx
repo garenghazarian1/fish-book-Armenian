@@ -144,7 +144,11 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     const diff = e.changedTouches[0].clientY - touchStartY.current;
 
     if (Math.abs(diff) > 30) {
-      diff > 0 ? prev() : next();
+      if (diff > 0) {
+        prev();
+      } else {
+        next();
+      }
     }
 
     hadGesture.current = true;
@@ -157,7 +161,8 @@ const FishCarouselDynamic = ({ moods }: Props) => {
     lastWheel.current = now;
 
     hadGesture.current = true;
-    e.deltaY > 0 ? next() : prev();
+    if (e.deltaY > 0) next();
+    else prev();
   };
 
   // Replay current audio on click
