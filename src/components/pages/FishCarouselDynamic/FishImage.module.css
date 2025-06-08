@@ -1,14 +1,18 @@
 .imageContainer {
   position: relative;
-  width: 80%;
-  height: 50%;
-  margin: 2rem;
+  width: 90vw;
+  height: 60vh; /* give it more vertical space */
+  max-height: 70vh;
+  margin: 2rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .image {
   padding: 1rem;
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: center;
   transition: opacity 0.4s ease-in-out, filter 0.4s ease-in-out,
@@ -18,6 +22,18 @@
     drop-shadow(0 0 6px var(--neon-blue)) drop-shadow(0 0 12px var(--neon-blue));
   transform: rotateX(54deg) rotateY(56deg) rotateZ(93deg)
     translate3d(28px, 53px, 80px) scale3d(1.82, 1.37, 1.7) skew(22deg, 18deg);
+}
+
+/* Optional: Give more room on small screens */
+@media (max-width: 400px) {
+  .imageContainer {
+    height: 70vh;
+  }
+
+  .image {
+    padding: 0.5rem;
+    transform: rotateZ(90deg) scale(1.1); /* Optional: simplify transform for better fit */
+  }
 }
 
 @keyframes revolveScale {
