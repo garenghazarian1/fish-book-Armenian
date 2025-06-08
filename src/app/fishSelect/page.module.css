@@ -1,13 +1,12 @@
-/* ===========================
-   🐠 Fish Select Page Layout
-=========================== */
+/* ===============================
+   🐠 Fish Select Page (Mobile First)
+================================== */
 .fishPage {
   min-height: 100dvh;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   color: #e0f7ff;
   font-family: var(--font-cartoon, sans-serif);
   text-align: center;
@@ -15,68 +14,78 @@
   overflow-y: auto;
 }
 
-/* ===========================
+/* ===============================
    🧠 Animated Heading
-=========================== */
+================================== */
 .heading {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
   background: linear-gradient(to right, #38bdf8, #60dbfc);
   background-clip: text;
   -webkit-background-clip: text;
-  color: rgba(255, 255, 255, 0.857);
+  color: rgba(255, 255, 255, 0.9);
   animation: floatBreathe 4s ease-in-out infinite;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  will-change: transform;
 }
 
-/* ===========================
-   🐟 Grid of Fish Cards
-=========================== */
-.fishGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1.5rem;
+/* ===============================
+   🐟 Flex Grid of Fish Cards
+================================== */
+.fishFlex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
   width: 100%;
-  max-width: 800px;
-  justify-items: center;
-  margin-top: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-/* ===========================
+/* ===============================
    🎴 Fish Card
-=========================== */
+================================== */
 .fishCard {
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 14px;
-  padding: 1rem;
+  flex: 1 0 50%;
+  max-width: 50%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 255, 255, 0.15);
-  backdrop-filter: blur(4px);
-  transition: background-color 0.3s ease, transform 0.3s ease,
-    box-shadow 0.3s ease;
-  text-align: center;
+  outline: none;
 }
 
-.fishCard:hover {
-  transform: scale(1.07);
-  background: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+.fishCard:hover,
+.fishCard:focus {
+  transform: scale(1.03);
+  z-index: 2;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
 }
 
+.fishCard:focus {
+  outline: 2px solid #60dbfc;
+  outline-offset: -2px;
+}
+
+/* ===============================
+   🐟 Image & Text
+================================== */
 .fishImage {
-  width: 100px;
+  width: 60%;
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
   transition: transform 0.3s ease;
 }
 
-.fishCard:hover .fishImage {
-  transform: scale(1.05);
-}
-
-/* ✅ New Fish Name Text */
 .fishName {
   margin-top: 0.5rem;
   font-size: 1rem;
@@ -85,13 +94,21 @@
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-/* ===========================
+/* ===============================
    🔙 Back Button
-=========================== */
+================================== */
+
+.buttonRow {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
 .backButton {
-  margin-bottom: 2rem;
-  padding: 0.7rem 1.8rem;
-  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
   border: 1px solid #ffffffaa;
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.08);
@@ -99,7 +116,6 @@
   cursor: pointer;
   font-family: var(--font-cartoon, sans-serif);
   backdrop-filter: blur(2px);
-  z-index: 10;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
@@ -108,9 +124,9 @@
   transform: scale(1.05);
 }
 
-/* ===========================
-   🌬️ Centered Bubble Burst
-=========================== */
+/* ===============================
+   🌬️ Bubble Burst Centering
+================================== */
 .bubbleBurstWrapper {
   position: absolute;
   top: 50%;
@@ -120,9 +136,9 @@
   z-index: 0;
 }
 
-/* ===========================
+/* ===============================
    🌊 Floating Animation
-=========================== */
+================================== */
 @keyframes floatBreathe {
   0%,
   100% {
@@ -133,44 +149,28 @@
   }
 }
 
-/* ===========================
-   📱 Mobile Tweaks
-=========================== */
-@media (max-width: 375px) {
-  .fishPage {
-    padding: 2rem 1rem;
-    min-height: 100vh;
-    justify-content: flex-start;
+/* ===============================
+   💻 Responsive Breakpoints
+================================== */
+@media (max-width: 400px) {
+  .fishCard {
+    flex: 1 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media (min-width: 769px) {
+  .fishCard {
+    flex: 1 0 33.33%;
+    max-width: 33.33%;
   }
 
   .heading {
-    font-size: 1.35rem;
-    line-height: 1.3;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-
-  .fishGrid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 1rem;
-  }
-
-  .fishCard {
-    padding: 0.8rem;
-    border-radius: 10px;
-  }
-
-  .fishImage {
-    width: 80px;
-  }
-
-  .fishName {
-    font-size: 0.85rem;
+    font-size: 2.5rem;
   }
 
   .backButton {
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    padding: 0.7rem 1.8rem;
   }
 }
