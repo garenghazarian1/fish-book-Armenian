@@ -50,18 +50,19 @@ export default function UserVoice({ moods }: Props) {
             <p>
               Յուրաքանչյուր ձկան զգացողության համար սեղմեք{" "}
               <strong>«Ձայնագրել»</strong> և խոսեք մինչև{" "}
-              <strong>6 վայրկյան</strong>։
+              <strong>6 վայրկյան</strong>
             </p>
             <p>Ավարտելուց հետո Դուք ավտոմատ կանցնեք հաջորդ ձկանը։</p>
           </div>
         )}
       </div>
-
-      <UserVoiceActions
-        model={moods[0]?.model || ""}
-        onConfirmResetAll={confirmResetAll}
-      />
-
+      {/* 🎣 action buttons */}
+      <div className={styles.actionButtons}>
+        <UserVoiceActions
+          model={moods[0]?.model || ""}
+          onConfirmResetAll={confirmResetAll}
+        />
+      </div>
       {/* 🎣 Mood Cards */}
       {moods.map((mood, index) => (
         <UserVoiceCard

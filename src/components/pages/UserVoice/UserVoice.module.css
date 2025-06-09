@@ -6,9 +6,24 @@
   width: 100vw;
   overflow-y: scroll;
   overflow-x: hidden;
-
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+}
+
+/* 🔝 Sticky Instructions */
+.instructions {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .h2 {
@@ -29,207 +44,11 @@
   color: #a2ccd4;
 }
 
+.actionButtons {
+  position: fixed;
+  top: 4rem;
+  left: 0;
+  z-index: 20;
+}
+
 /* end */
-.imageWrapper {
-  position: relative;
-  width: 220px;
-  height: 220px;
-  margin-bottom: 1rem;
-}
-
-.image {
-  object-fit: contain;
-}
-
-.caption {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #ffffff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-  margin-bottom: 1.2rem;
-}
-
-.recorder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.recordBtn,
-.stopBtn {
-  padding: 0.6rem 1.4rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  background-color: #4fc3f7;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.stopBtn {
-  background-color: #ef5350;
-}
-
-.recordBtn:hover {
-  background-color: #039be5;
-}
-
-.stopBtn:hover {
-  background-color: #e53935;
-}
-
-.audioBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.audioPlayer {
-  display: none;
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.4rem;
-}
-
-.actions button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid #60dbfc;
-  border-radius: 6px;
-  color: #ffffff;
-  font-size: 0.85rem;
-  padding: 0.3rem 0.8rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.actions button:hover {
-  background-color: #60dbfc;
-  color: #000;
-}
-
-/* 🔝 Sticky Instructions */
-.instructions {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(6px);
-  color: #fff;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* 🧭 Mood Progress (Mood 2 of 6) */
-.stepIndicator {
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  color: #aeeffb;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* 🔴 Recording Indicator */
-.recordingIndicator {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  color: #ff6b6b;
-  background: rgba(255, 0, 0, 0.1);
-  padding: 0.2rem 0.8rem;
-  border-radius: 8px;
-  animation: blink 1s infinite;
-  font-weight: bold;
-}
-
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.2;
-  }
-}
-
-/* -------------------------------- */
-
-/* deleteButton  */
-
-.deletedCard {
-  padding: 2rem;
-  text-align: center;
-  background: #dff0d8;
-  color: #3c763d;
-  border: 2px solid #a4d4a2;
-  border-radius: 12px;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  animation: popIn 0.3s ease-out;
-}
-
-@keyframes popIn {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.fadeOut {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.4s ease;
-  pointer-events: none;
-}
-
-.fadeOut {
-  opacity: 0;
-  transform: scale(0.95);
-  transition: all 0.4s ease-in-out;
-}
-
-.deletedMsg {
-  text-align: center;
-  font-size: 1.2rem;
-  padding: 2rem;
-  color: green;
-  background-color: #f1fff1;
-  border-radius: 1rem;
-}
-
-/* 📱 Mobile Optimization */
-@media (max-width: 400px) {
-  .voiceCard {
-    padding: 1.5rem 1rem;
-  }
-
-  .imageWrapper {
-    width: 160px;
-    height: 160px;
-  }
-
-  .caption {
-    font-size: 1.1rem;
-  }
-
-  .recordBtn,
-  .stopBtn {
-    font-size: 0.85rem;
-  }
-
-  .audioPlayer {
-    width: 160px;
-  }
-}
