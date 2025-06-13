@@ -403,10 +403,11 @@
   cursor: pointer;
   transition: transform 0.2s ease;
   cursor: pointer;
+  outline: none;
 }
 
 .playAudioButton:hover,
 .playAudioButton:focus {
   transform: scale(1.1);
-  outline: none;
+  outline: 2px solid var(--blue-light);
 }

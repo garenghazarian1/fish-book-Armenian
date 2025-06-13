@@ -14,6 +14,7 @@ export default function IntroScene() {
   const introAudioRef = useRef<HTMLAudioElement | null>(null);
   const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
   const router = useRouter();
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
@@ -55,9 +56,36 @@ export default function IntroScene() {
     }, 1000);
   };
 
-  const handlePlayAudio = () => {
-    introAudioRef.current?.play().catch(() => {});
+  const handleToggleAudio = () => {
+    const audio = introAudioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+      audio.currentTime = 0; // Optional: reset to beginning
+      setIsPlaying(false);
+    } else {
+      audio
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {});
+    }
   };
+
+  // 🛑 Reset playing state when audio ends
+  useEffect(() => {
+    const audio = introAudioRef.current;
+    if (!audio) return;
+
+    const handleEnded = () => setIsPlaying(false);
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, []);
 
   return (
     <section className={styles.introWrapper}>
@@ -86,19 +114,21 @@ export default function IntroScene() {
 
         <p className={styles.subtitle}>2 տաեկանից սկսած</p>
         <button
-          onClick={handlePlayAudio}
+          onClick={handleToggleAudio}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              handlePlayAudio();
+              handleToggleAudio();
             }
           }}
           className={styles.playAudioButton}
           tabIndex={0}
           role="button"
-          aria-label="Լսել բացատրությունը ձայնով"
+          aria-label={
+            isPlaying ? "Կանգնեցնել ձայնը" : "Լսել բացատրությունը ձայնով"
+          }
         >
-          🔊
+          {isPlaying ? "⏹️" : "🔊"}
         </button>
       </motion.div>
 

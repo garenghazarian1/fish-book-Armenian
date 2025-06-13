@@ -83,7 +83,16 @@ function FishCard({
       whileHover={{ scale: 1.1, rotate: 2 }}
       whileTap={{ scale: 0.95 }}
       onClick={handleClick}
-      style={{ position: "relative" }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleClick(e as any); // You may cast to any to match types
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`Ընտրիր ձուկը՝ ${fish.name}`}
+      style={{ position: "relative", outline: "none" }}
     >
       <Image
         src={fish.src}
