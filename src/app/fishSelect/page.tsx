@@ -60,8 +60,7 @@ function FishCard({
     router.prefetch(`/fish/${fish.route}`);
   }, [router, fish.route]);
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleClick = () => {
     if (clickDisabled) return;
     setClickDisabled(true);
     setBurstKey((k) => k + 1);
@@ -86,7 +85,7 @@ function FishCard({
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          handleClick(e as any); // You may cast to any to match types
+          handleClick();
         }
       }}
       tabIndex={0}
