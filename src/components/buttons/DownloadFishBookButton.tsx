@@ -19,7 +19,7 @@ export default function DownloadFishBookButton() {
         marginTop: "1.5rem",
         padding: "12px 24px",
         fontSize: "1rem",
-        backgroundColor: "#d62828",
+        backgroundColor: "rgba(255, 255, 255, 0.08)",
         color: "white",
         borderRadius: "8px",
         border: "none",

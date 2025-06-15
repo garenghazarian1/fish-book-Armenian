@@ -85,8 +85,16 @@ export default function FishMoodPage() {
   );
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <div style={{ marginBottom: "2rem" }}>
+    <div
+      style={{
+        padding: "0.5rem",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ marginBottom: "0.5rem" }}>
         <DownloadFishBookButton />
       </div>
       <LazyLoaded />

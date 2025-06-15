@@ -48,7 +48,9 @@ export default function IntroScene() {
     sound
       .play()
       .then(() => {})
-      .catch((err) => {});
+      .catch((err) => {
+        console.error(err); // prevents lint error
+      });
 
     // Step 2: Delayed navigation
     setTimeout(() => {
