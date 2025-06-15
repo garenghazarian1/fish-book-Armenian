@@ -189,14 +189,14 @@ export function generateFishBookHtml(moods: Mood[], model: string): string {
       </div>
     </section>
 
+     <!-- Mood pages -->
     ${moods
       .map(
         (m, i) => `
         <section class="page">
-         <p>${m.text}</p>
-          <img src="${absolute(m.image)}" alt="Fish mood" />
-          
-          <p>${m.longText}</p>
+          <p>${m.text}</p>
+          <img src="${absolute(m.image)}" alt="Fish mood ${m.id}" />
+          ${m.longText ? `<p>${m.longText}</p>` : ""}
           <span class="page-number">${i + 1}</span>
         </section>`
       )
