@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import puppeteer from "puppeteer";
 import type { Mood } from "@/components/pages/data/types";
-import { generateFishBookHtml } from "@/components/lib/generateFishBookHtml"; // ✅ your separate file
+import { generateFishBookHtml } from "@/components/lib/generateFishBookHtml"; // ✅ Import here
 
-/* ----------------------------------------------------------
-   Map fish-model → dynamic mood loader
----------------------------------------------------------- */
 const moodLoaders: Record<
   string,
   { loader: () => Promise<{ default: Mood[] }> }
@@ -27,12 +24,8 @@ const moodLoaders: Record<
   },
 };
 
-/* ----------------------------------------------------------
-   GET /api/generate-fishbook/[model]
----------------------------------------------------------- */
 export async function GET(req: NextRequest) {
   const model = req.nextUrl.pathname.split("/").pop()?.toLowerCase();
-
   const entry = model ? moodLoaders[model] : undefined;
 
   if (!entry) {
@@ -42,15 +35,15 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  /* 1️⃣ Load mood data */
+  // 1️⃣ Load moods
   const moods = (await entry.loader()).default;
 
-  /* 2️⃣ Generate HTML via shared function */
-  const html = generateFishBookHtml(moods, model ?? "fishbook");
+  // 2️⃣ Generate HTML using your new function
+  const html = generateFishBookHtml(moods, model || "fishbook");
 
-  /* 3️⃣ Render to PDF using Puppeteer */
+  // 3️⃣ Render HTML to PDF using Puppeteer
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: "new", // use 'new' for latest Puppeteer compatibility
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
@@ -65,7 +58,7 @@ export async function GET(req: NextRequest) {
 
   await browser.close();
 
-  /* 4️⃣ Return PDF */
+  // 4️⃣ Return PDF response
   return new NextResponse(pdf, {
     status: 200,
     headers: {
