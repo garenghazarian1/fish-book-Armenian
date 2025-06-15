@@ -6,16 +6,16 @@ export function generateFishBookHtml(moods: Mood[], model: string): string {
     return `${base}${src}`;
   };
 
-  const pages = moods
-    .map(
-      (m, i) => `
-        <section class="page">
-          <img src="${absolute(m.image)}" alt="Fish mood" />
-          <p>${m.text}</p>
-          <span class="page-number">${i + 1}</span>
-        </section>`
-    )
-    .join("");
+  //   const pages = moods
+  //     .map(
+  //       (m, i) => `
+  //         <section class="page">
+  //           <img src="${absolute(m.image)}" alt="Fish mood" />
+  //           <p>${m.text}</p>
+  //           <span class="page-number">${i + 1}</span>
+  //         </section>`
+  //     )
+  //     .join("");
 
   return `
   <html lang="hy">
