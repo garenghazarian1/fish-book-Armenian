@@ -110,13 +110,64 @@ export default function BookPreview() {
   border-radius: 16px;
 }
 
+.intro-page {
+  height: 100vh;
+  position: relative;
+  background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), var(--bg-image) top / cover no-repeat;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+  padding: 60px;
+  page-break-after: always;
+}
+
+.intro-text {
+  max-width: 640px;
+  font-family: var(--display-font);
+}
+
+.intro-text h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: var(--accent);
+  text-shadow: 2px 2px #000;
+}
+
+.intro-text p {
+  font-size: 20px;
+  margin-bottom: 16px;
+  line-height: 1.6;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.intro-text .age {
+  font-size: 18px;
+  color: #fff9c4;
+}
+
+.intro-text .authors {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.intro-text .year {
+  font-size: 14px;
+  display: block;
+  margin-top: 4px;
+  color: #ccc;
+}
+
+
 
         .page img {
-          width: 280px;
+          width: 400px;
           margin-bottom: 20px;
         }
 
         .page p {
+        font-family: var(--display-font);
           font-size: 22px;
           color: #fff;
           text-align: center;
@@ -150,6 +201,29 @@ export default function BookPreview() {
           text-decoration: none;
           margin-top: 12px;
         }
+
+        .legal {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #eee;
+  text-align: center;
+  max-width: 480px;
+  line-height: 1.6;
+}
+
+.legal h3,
+.legal h4 {
+  font-size: 16px;
+  margin-bottom: 6px;
+  color: var(--accent);
+  text-shadow: 1px 1px #000;
+}
+
+.legal a {
+  color: #fff;
+  text-decoration: underline;
+}
+
       </style>
 
       <section class="cover">
@@ -159,13 +233,43 @@ export default function BookPreview() {
   </div>
   <img src="/fishRed/happy.webp" alt="Fish cover" />
 </section>
+<section class="intro-page">
+  <div class="intro-text">
+    <h1>Սկսենք հույզերի ծովաշխարհ</h1>
+    <p>
+      Այստեղ կծանոթանաս <strong>13 ձկների</strong>, որոնք ցույց են տալիս իրենց հույզերն ու զգացմունքները։
+    </p>
+    <p class="age">Հարմար է 2 տարեկանից սկսած։</p>
+    <p class="authors">
+      Ստեղծվել է Կարէն Ղազարեանի եւ Նաիրա Պետրոսյանի կողմից<br />
+      <span class="year">©2025</span>
+    </p>
+  </div>
+</section>
 
       ${pages}
 
-      <section class="ending">
-        <h2>Շնորհակալություն 📘</h2>
-        <a href="https://babyban.kids">👉 babyban.kids</a>
-      </section>
+     <section class="ending">
+  <h2>Շնորհակալություն 📘</h2>
+  <a href="https://babyban.kids">👉 babyban.kids</a>
+
+  <div class="legal">
+    <h3>Պատասխանատու՝ §5 TMG համաձայն</h3>
+    <p>
+      Կարէն Ղազարեան<br />
+      Ottilie-Hoffmann-Str. 40<br />
+      28213 Bremen<br />
+      Գերմանիա
+    </p>
+
+    <h4>Կապի Տվյալներ</h4>
+    <p>
+      Հեռախոս՝ <a href="tel:+4915257398979">+49 152 573 98979</a><br />
+      Էլ. փոստ՝ <a href="mailto:garenghazarian1@gmail.com">garenghazarian1@gmail.com</a>
+    </p>
+  </div>
+</section>
+
     `;
 
     setHtml(htmlContent);

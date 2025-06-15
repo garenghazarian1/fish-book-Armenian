@@ -5,4 +5,5 @@ export interface Mood {
   audio: string;
   customAudio?: string;
   model: string;
+  longText: string;
 }
