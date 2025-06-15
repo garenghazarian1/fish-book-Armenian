@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import FishCarouselDynamic from "@/components/pages/FishCarouselDynamic/FishCarouselDynamic";
 import UserVoice from "@/components/pages/UserVoice/UserVoice";
 import type { Mood } from "@/components/pages/data/types";
+import DownloadFishBookButton from "@/components/buttons/DownloadFishBookButton";
 
 // Map each route name to both the loader and the carousel component type
 const moodLoaders: Record<
@@ -83,5 +84,12 @@ export default function FishMoodPage() {
     { ssr: false }
   );
 
-  return <LazyLoaded />;
+  return (
+    <div style={{ padding: "1rem" }}>
+      <div style={{ marginBottom: "2rem" }}>
+        <DownloadFishBookButton />
+      </div>
+      <LazyLoaded />
+    </div>
+  );
 }

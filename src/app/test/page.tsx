@@ -1,10 +1,9 @@
 "use client";
-import styles from "./TestPage.module.css";
-
+import IntroSenceTest from "@/components/mainPagetest/IntroSceneTest";
 export default function TestPage() {
   return (
     <>
-      <h1 className={styles.moodGrid}>hi</h1>
+      <IntroSenceTest />
     </>
   );
 }

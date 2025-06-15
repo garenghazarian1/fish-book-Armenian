@@ -9,7 +9,7 @@ import styles from "./IntroScene.module.css";
 
 export default function IntroScene() {
   const [burstKeyTitle, setBurstKeyTitle] = useState(0);
-  const [burstKeyButton, setBurstKeyButton] = useState(0);
+  const [burstKeyButton, setBurstKeyButton] = useState<number | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
   const introAudioRef = useRef<HTMLAudioElement | null>(null);
   const bubbleSoundRef = useRef<HTMLAudioElement | null>(null);
@@ -42,7 +42,8 @@ export default function IntroScene() {
   };
 
   const handleStartClick = () => {
-    setBurstKeyButton((k) => k + 1);
+    setBurstKeyButton((prev) => (prev === null ? 0 : prev + 1));
+
     bubbleSoundRef.current?.play().catch(() => {});
     if (navigator.vibrate) navigator.vibrate(50);
 
@@ -149,7 +150,7 @@ export default function IntroScene() {
             className={styles.startButton}
           >
             Սկսել
-            {hasMounted && (
+            {hasMounted && burstKeyButton !== null && (
               <div className={styles.bubbleBurstWrapper}>
                 <BubbleBurstButton triggerKey={burstKeyButton} />
               </div>
