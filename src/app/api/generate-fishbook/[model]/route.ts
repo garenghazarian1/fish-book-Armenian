@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import puppeteer from "puppeteer";
 import type { Mood } from "@/components/pages/data/types";
 
@@ -29,12 +29,10 @@ const moodLoaders: Record<
 /* ----------------------------------------------------------
    GET /api/generate-fishbook/[model]
 ---------------------------------------------------------- */
-export async function GET(
-  _req: Request,
-  { params }: { params: { model: string } }
-) {
-  const key = params.model?.toLowerCase();
-  const entry = moodLoaders[key];
+export async function GET(req: NextRequest) {
+  const model = req.nextUrl.pathname.split("/").pop()?.toLowerCase();
+
+  const entry = model ? moodLoaders[model] : undefined;
 
   if (!entry) {
     return NextResponse.json(
@@ -43,35 +41,30 @@ export async function GET(
     );
   }
 
-  /* 1️⃣  Load mood data */
+  /* 1️⃣ Load mood data */
   const moods = (await entry.loader()).default;
 
-  /* 2️⃣  Build HTML with global styles */
+  /* 2️⃣ Build HTML with global styles */
   const html = `
   <html lang="hy">
     <head>
       <meta charset="UTF-8" />
-      <title>${key}</title>
+      <title>${model}</title>
 
       <!-- Armenian base font -->
       <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian&display=swap" rel="stylesheet">
-
-      <!-- Cartoon display font -->
       <style>
         @font-face {
           font-family: 'Cartoon';
           src: url('https://babyban.kids/fonts/Cartoon/Cartoon.ttf') format('truetype');
-          font-weight: normal;
-          font-style: normal;
           font-display: swap;
         }
       </style>
 
-      <!-- Layout & background styles -->
       <style>
         :root {
           --bg-image: url('https://babyban.kids/backgroundB.webp');
-          --bg-overlay: rgba(0,0,0,0.4);       /* 40 % tint */
+          --bg-overlay: rgba(0,0,0,0.4);
           --base-font: 'Noto Sans Armenian', sans-serif;
           --display-font: 'Cartoon', var(--base-font);
           --accent: #ffdd57;
@@ -81,10 +74,7 @@ export async function GET(
 
         body { font-family: var(--base-font); }
 
-        /* ---------- Shared full-page background ---------- */
-        .page,
-        .cover,
-        .ending {
+        .page, .cover, .ending {
           position: relative;
           height: 100vh;
           display: flex;
@@ -94,9 +84,8 @@ export async function GET(
           page-break-after: always;
           overflow: hidden;
         }
-        .page::before,
-        .cover::before,
-        .ending::before {
+
+        .page::before, .cover::before, .ending::before {
           content: "";
           position: absolute;
           inset: 0;
@@ -104,34 +93,81 @@ export async function GET(
           z-index: -1;
         }
 
-        /* ---------- Cover ---------- */
-        .cover { font-family: var(--display-font); color: #fff; text-align: center; }
-        .cover h1 { font-size: 48px; color: var(--accent); text-shadow: 2px 2px #000; }
-        .cover h2 { font-size: 24px; margin: 12px 0 24px; text-shadow: 1px 1px #000; }
-        .cover img { width: 240px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .cover {
+          font-family: var(--display-font);
+          color: #fff;
+          text-align: center;
+        }
 
-        /* ---------- Mood pages ---------- */
-        .page img { width: 280px; margin-bottom: 20px; }
-        .page p   { font-size: 22px; color: #fff; text-align: center; text-shadow: 1px 1px 2px #000; padding: 0 20px; }
-        .page-number { position: absolute; bottom: 32px; right: 40px; font-size: 14px; color: #eee; }
+        .cover h1 {
+          font-size: 48px;
+          color: var(--accent);
+          text-shadow: 2px 2px #000;
+        }
 
-        /* ---------- Ending ---------- */
-        .ending { font-family: var(--display-font); text-align: center; color: #fff; page-break-after: avoid; }
-        .ending h2 { font-size: 32px; color: var(--accent); text-shadow: 2px 2px #000; }
-        .ending a  { font-size: 20px; color: #fff; text-decoration: none; margin-top: 12px; }
+        .cover h2 {
+          font-size: 24px;
+          margin: 12px 0 24px;
+          text-shadow: 1px 1px #000;
+        }
+
+        .cover img {
+          width: 240px;
+          border-radius: 16px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .page img {
+          width: 280px;
+          margin-bottom: 20px;
+        }
+
+        .page p {
+          font-size: 22px;
+          color: #fff;
+          text-align: center;
+          text-shadow: 1px 1px 2px #000;
+          padding: 0 20px;
+        }
+
+        .page-number {
+          position: absolute;
+          bottom: 32px;
+          right: 40px;
+          font-size: 14px;
+          color: #eee;
+        }
+
+        .ending {
+          font-family: var(--display-font);
+          text-align: center;
+          color: #fff;
+          page-break-after: avoid;
+        }
+
+        .ending h2 {
+          font-size: 32px;
+          color: var(--accent);
+          text-shadow: 2px 2px #000;
+        }
+
+        .ending a {
+          font-size: 20px;
+          color: #fff;
+          text-decoration: none;
+          margin-top: 12px;
+        }
       </style>
     </head>
 
     <body>
 
-      <!-- 📘 Cover -->
       <section class="cover">
         <h1>Զգացմունքների Ձկնիկը</h1>
         <h2>Խաղային ուսուցում փոքրիկների համար</h2>
         <img src="${absolute("/fishRed/happy.webp")}" alt="Fish cover" />
       </section>
 
-      <!-- 🐟 Mood pages -->
       ${moods
         .map(
           (m, i) => `
@@ -143,36 +179,38 @@ export async function GET(
         )
         .join("")}
 
-      <!-- 🙏 Ending -->
       <section class="ending">
         <h2>Շնորհակալություն 📘</h2>
         <a href="https://babyban.kids">👉 babyban.kids</a>
       </section>
 
     </body>
-  </html>`;
+  </html>
+  `;
 
-  /* 3️⃣  Render to PDF */
+  /* 3️⃣ Render to PDF */
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "networkidle0" });
 
   const pdf = await page.pdf({
     format: "A4",
     landscape: true,
-    printBackground: true, // keep background & overlay
+    printBackground: true,
   });
+
   await browser.close();
 
-  /* 4️⃣  Return */
+  /* 4️⃣ Return PDF */
   return new NextResponse(pdf, {
     status: 200,
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="${key}-fishbook.pdf"`,
+      "Content-Disposition": `attachment; filename="${model}-fishbook.pdf"`,
     },
   });
 }
