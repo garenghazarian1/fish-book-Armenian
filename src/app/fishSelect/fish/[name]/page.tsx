@@ -95,7 +95,7 @@ export default function FishMoodPage() {
       }}
     >
       <div style={{ marginBottom: "0.5rem" }}>
-        <DownloadFishBookButton />
+        <DownloadFishBookButton model={moodKey} />
       </div>
       <LazyLoaded />
     </div>

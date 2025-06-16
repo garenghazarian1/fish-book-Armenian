@@ -1,14 +1,13 @@
 "use client";
 
-import { useParams } from "next/navigation";
+interface Props {
+  model: string | undefined;
+}
 
-export default function DownloadFishBookButton() {
-  const params = useParams();
-  const model = Array.isArray(params.name) ? params.name[0] : params.name;
-
+export default function DownloadFishBookButton({ model }: Props) {
   const download = () => {
     if (!model) return;
-    const url = `/api/generate-fishbook/${model}`;
+    const url = `/BooksPdf/${model}-fishbook.pdf`;
     window.open(url, "_blank");
   };
 
