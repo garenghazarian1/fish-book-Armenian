@@ -174,7 +174,8 @@ export function generateFishBookHtml(moods: Mood[], model: string): string {
         <h1>Զգացմունքների Ձկնիկը</h1>
         <h2>Խաղային ուսուցում փոքրիկների համար</h2>
       </div>
-      <img src="${absolute("/fishRed/happy.webp")}" alt="Fish cover" />
+      const coverImage = absolute(moods[0]?.image ?? "/fallback/cover.webp");
+
     </section>
 
     <section class="intro-page">
